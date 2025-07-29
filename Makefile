@@ -1,5 +1,5 @@
 NAME = minirt
-SRC =	main.c ft_window.c ft_render.c
+SRC =	main.c ft_window.c ft_render.c vec3.c ray.c render_utils.c
 
 OBJ_DIR = ./dir/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
