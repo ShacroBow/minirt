@@ -52,9 +52,7 @@ static bool	solve_cy_quadratic(double a, double b, double c, double *t)
 		return (false);
 	t0 = (-b - sqrt(discriminant)) / (2 * a);
 	t1 = (-b + sqrt(discriminant)) / (2 * a);
-	if (t0 > EPSILON && (t0 < t1 |
-
-| t1 <= EPSILON))
+	if (t0 > EPSILON && (t0 < t1 || t1 <= EPSILON))
 		*t = t0;
 	else if (t1 > EPSILON)
 		*t = t1;

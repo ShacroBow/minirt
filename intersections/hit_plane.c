@@ -12,9 +12,7 @@ bool	hit_plane(const t_plane *pl, const t_ray *ray, double t_max,
 		return (false);
 	p0_to_o = vec_sub(pl->point, ray->origin);
 	t = vec_dot(p0_to_o, pl->normal) / denom;
-	if (t < EPSILON |
-
-| t >= t_max)
+	if (t < EPSILON || t >= t_max)
 		return (false);
 	rec->t = t;
 	rec->point = vec_add(ray->origin, vec_mult(ray->direction, t));

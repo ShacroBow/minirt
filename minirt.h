@@ -7,7 +7,8 @@
 # include <math.h>
 # include <fcntl.h>
 # include <unistd.h>
-# include "mlx.h"
+# include <mlx.h>
+# include "libft/libft.h"
 
 // --- Constants ---
 # define WIDTH 1024
@@ -50,6 +51,8 @@ typedef struct s_camera
 	double	fov;
 	bool	is_set;
 	// Pre-calculated viewport values
+	double viewport_height;
+	double viewport_width;
 	t_vec3	horizontal;
 	t_vec3	vertical;
 	t_point	lower_left_corner;

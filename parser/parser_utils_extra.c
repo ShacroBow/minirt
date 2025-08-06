@@ -1,75 +1,63 @@
 #include "../minirt.h"
 
-static bool	is_digit(char c)
+/*
+** parse a 3D vector from a string
+*/
+bool    parse_vector(char *str, t_vec3 *vec)
 {
-	return (c >= '0' && c <= '9');
+    char **parts = ft_split(str, ',');
+    if (!parts || count_tokens(parts) != 3)
+    {
+        free_tokens(parts);
+        return false;
+    }
+    vec->x = ft_atof(parts[0]);
+    vec->y = ft_atof(parts[1]);
+    vec->z = ft_atof(parts[2]);
+    free_tokens(parts);
+    return true;
 }
 
-double	ft_atof(const char *str)
+/*
+** parse a color vector from a string
+*/
+bool    parse_color(char *str, t_color *color)
 {
-	double	res;
-	double	power;
-	int		sign;
-
-	res = 0.0;
-	power = 1.0;
-	sign = 1;
-	while (*str == ' ' |
-
-| (*str >= 9 && *str <= 13))
-		str++;
-	if (*str == '-' |
-
-| *str == '+')
-	{
-		if (*str == '-')
-			sign = -1;
-		str++;
-	}
-	while (is_digit(*str))
-		res = res * 10.0 + (*str++ - '0');
-	if (*str == '.')
-	{
-		str++;
-		while (is_digit(*str))
-		{
-			res = res * 10.0 + (*str++ - '0');
-			power *= 10.0;
-		}
-	}
-	return (sign * res / power);
+    char **parts = ft_split(str, ',');
+    if (!parts || count_tokens(parts) != 3)
+    {
+        free_tokens(parts);
+        return false;
+    }
+    color->x = ft_atof(parts[0]);
+    color->y = ft_atof(parts[1]);
+    color->z = ft_atof(parts[2]);
+    free_tokens(parts);
+    return true;
 }
 
-bool	parse_vector(char *str, t_vec3 *vec)
+/*
+** parse ratio (e.g. ambient or light ratio) from parts[0]
+*/
+double  parse_ratio(char *str)
 {
-	char	**parts;
+    double  ratio;
 
-	parts = ft_split(str, ',');
-	if (count_tokens(parts)!= 3)
-	{
-		free_tokens(parts);
-		return (false);
-	}
-	vec->x = ft_atof(parts);
-	vec->y = ft_atof(parts[1]);
-	vec->z = ft_atof(parts[2]);
-	free_tokens(parts);
-	return (true);
+    ratio = ft_atof(str);
+    if (ratio < 0.0 || ratio > 1.0)
+        exit_error("Error: ratio must be between 0.0 and 1.0");
+    return (ratio);
 }
 
-bool	parse_color(char *str, t_color *color)
+/*
+** parse Field of View from parts[0]
+*/
+int     parse_fov(char *str)
 {
-	char	**parts;
+    int fov;
 
-	parts = ft_split(str, ',');
-	if (count_tokens(parts)!= 3)
-	{
-		free_tokens(parts);
-		return (false);
-	}
-	color->x = ft_atof(parts);
-	color->y = ft_atof(parts[1]);
-	color->z = ft_atof(parts[2]);
-	free_tokens(parts);
-	return (true);
+    fov = (int)ft_atof(str);
+    if (fov < 0 || fov > 180)
+        exit_error("Error: FOV must be between 0 and 180");
+    return (fov);
 }

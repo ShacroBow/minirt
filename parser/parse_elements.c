@@ -121,9 +121,7 @@ void	parse_cylinder(t_scene *scene, char **tokens)
 	cy->normal = vec_normalize(cy->normal);
 	cy->diameter = ft_atof(tokens[3]);
 	cy->height = ft_atof(tokens[4]);
-	if (cy->diameter <= 0 |
-
-| cy->height <= 0)
+	if (cy->diameter <= 0 || cy->height <= 0)
 		exit_error("Error: Cylinder diameter and height must be positive.");
 	new_obj = safe_malloc(sizeof(t_object));
 	new_obj->type = CYLINDER;

@@ -17,16 +17,11 @@ static char	*read_file_content(int fd)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read < 0)
-		{
-			free(content);
-			free(buffer);
-			exit_error("Error: Could not read from file.");
-		}
+			exit_error("Error: reading scene file");
 		buffer[bytes_read] = '\0';
-		temp = safe_malloc(ft_strlen(content) + ft_strlen(buffer) + 1);
-		sprintf(temp, "%s%s", content, buffer);
-		free(content);
-		content = temp;
+		temp = content;
+		content = ft_strjoin(content, buffer);
+		free(temp);
 	}
 	free(buffer);
 	return (content);
@@ -37,35 +32,35 @@ void	parse_line(char *line, t_scene *scene)
 	char	**tokens;
 
 	tokens = ft_split(line, ' ');
-	if (!tokens ||!tokens)
+	if (!tokens)
 	{
 		free_tokens(tokens);
-		return ;
+		return;
 	}
-	if (ft_strncmp(tokens, "A", 2) == 0)
+	if (tokens[0] && ft_strncmp(tokens[0], "A", 2) == 0)
 		parse_ambient(scene, tokens);
-	else if (ft_strncmp(tokens, "C", 2) == 0)
+	else if (tokens[0] && ft_strncmp(tokens[0], "C", 2) == 0)
 		parse_camera(scene, tokens);
-	else if (ft_strncmp(tokens, "L", 2) == 0)
+	else if (tokens[0] && ft_strncmp(tokens[0], "L", 2) == 0)
 		parse_light(scene, tokens);
-	else if (ft_strncmp(tokens, "sp", 3) == 0)
+	else if (tokens[0] && ft_strncmp(tokens[0], "sp", 3) == 0)
 		parse_sphere(scene, tokens);
-	else if (ft_strncmp(tokens, "pl", 3) == 0)
+	else if (tokens[0] && ft_strncmp(tokens[0], "pl", 3) == 0)
 		parse_plane(scene, tokens);
-	else if (ft_strncmp(tokens, "cy", 3) == 0)
+	else if (tokens[0] && ft_strncmp(tokens[0], "cy", 3) == 0)
 		parse_cylinder(scene, tokens);
-	else if (tokens!= '#' && tokens!= '\n')
-		exit_error("Error: Unknown identifier in scene file.");
+	else if (tokens[0][0] != '#' && tokens[0][0] != '\0')
+		exit_error("Error: Invalid identifier in scene file.");
 	free_tokens(tokens);
 }
 
-t_scene	*parse_scene(const char *filename)
+t_scene	*parse_file(char *filename)
 {
 	int		fd;
 	char	*file_content;
 	char	**lines;
-	int		i;
 	t_scene	*scene;
+	int		i;
 
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
@@ -85,4 +80,9 @@ t_scene	*parse_scene(const char *filename)
 	free_tokens(lines);
 	validate_scene(scene);
 	return (scene);
+}
+
+t_scene *parse_scene(const char *filename)
+{
+    return parse_file((char *)filename);
 }
