@@ -1,5 +1,14 @@
 NAME = minirt
-SRC =	main.c ft_window.c ft_render.c vec3.c ray.c render_utils.c
+SRC =	main.c $(SRCS_PARSER) $(SRCS_VECTORS) $(SRCS_INTERSECTIONS) $(SRCS_RENDER) \
+		$(SRCS_UTILS)
+
+SRCS_PARSER = parser/parser.c parser/parser_utils.c parser/validation.c \
+              parser/parse_elements.c parser/parse_utils_extra.c
+SRCS_VECTORS = vectors/vec_operations_1.c vectors/vec_operations_2.c
+SRCS_INTERSECTIONS = intersections/hit_sphere.c intersections/hit_plane.c \
+                     intersections/hit_cylinder.c intersections/intersections.c
+SRCS_RENDER = render/render.c render/shading.c render/camera.c render/color.c
+SRCS_UTILS = utils/error.c utils/memory.c utils/string_utils.c
 
 OBJ_DIR = ./dir/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
