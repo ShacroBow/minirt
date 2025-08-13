@@ -7,7 +7,7 @@
 # include <math.h>
 # include <fcntl.h>
 # include <unistd.h>
-# include <mlx.h>
+# include "minilibx-linux/mlx.h"
 # include "libft/libft.h"
 
 // --- Constants ---

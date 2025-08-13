@@ -3,10 +3,10 @@ SRC =	main.c $(SRCS_PARSER) $(SRCS_VECTORS) $(SRCS_INTERSECTIONS) $(SRCS_RENDER)
 		$(SRCS_UTILS)
 
 SRCS_PARSER = parser/parser.c parser/parser_utils.c parser/validation.c \
-              parser/parse_elements.c parser/parser_utils_extra.c
+			  parser/parse_elements.c parser/parser_utils_extra.c
 SRCS_VECTORS = vectors/vec_operations_1.c vectors/vec_operations_2.c
 SRCS_INTERSECTIONS = intersections/hit_sphere.c intersections/hit_plane.c \
-                     intersections/hit_cylinder.c intersections/intersections.c
+					 intersections/hit_cylinder.c intersections/intersections.c
 SRCS_RENDER = render/render.c render/shading.c render/camera.c render/color.c
 SRCS_UTILS = utils/error.c utils/memory.c utils/string_utils.c libft/ft_atof.c
 
@@ -18,7 +18,8 @@ LIBFT_PATH = ./libft/
 LIBFT = libft.a
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g -I.
-LIBFLAGS = -L. $(LIBFT_PATH)$(LIBFT) -lmlx -lX11 -lXext -lm
+MLX_PATH = ./minilibx-linux/
+LIBFLAGS = -L$(MLX_PATH) -lmlx -L. $(LIBFT_PATH)$(LIBFT) -lX11 -lXext -lm
 
 
 all: $(NAME)
@@ -26,7 +27,7 @@ all: $(NAME)
 #bonus: $(NAME_BONUS)
 
 $(NAME): $(OBJ_DIR) $(OBJ) $(LIBFT_PATH)$(LIBFT)
-	$(CC) $(OBJ) $(CFLAGS) -o $(NAME) $(LIBFLAGS)
+	$(CC) $(OBJ) $(CFLAGS) -I$(MLX_PATH) -o $(NAME) $(LIBFLAGS)
 
 $(NAME_BONUS): $(OBJ_DIR) $(OBJ_BONUS) $(LIBFT_PATH)$(LIBFT)
 	$(CC) $(OBJ_BONUS) $(CFLAGS) -o $@ $(LIBFLAGS)

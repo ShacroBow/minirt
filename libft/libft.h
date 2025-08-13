@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmashkoo <kmashkoo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kha <kha@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 11:45:06 by kmashkoo          #+#    #+#             */
-/*   Updated: 2025/07/09 14:52:25 by kmashkoo         ###   ########.fr       */
+/*   Updated: 2025/08/09 22:47:15 by kha              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,5 +82,8 @@ char	*ft_strndup(const char *s, size_t n);
 /* same as atoi_base for special behaviour and atoi for normal behaviour
 len counts how many digits were consumed.*/
 long	ft_atol(const char *nptr, int *len);
+/* string to double. Skips space, handles multiple signs, 
+leading zeros, optional fraction. Returns 0.0 on all other input. */
+double	ft_atof(const char *str);
 
 #endif

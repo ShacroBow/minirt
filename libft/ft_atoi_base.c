@@ -6,7 +6,7 @@
 /*   By: kmashkoo <kmashkoo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 16:17:20 by kmashkoo          #+#    #+#             */
-/*   Updated: 2025/04/18 16:23:53 by kmashkoo         ###   ########.fr       */
+/*   Updated: 2025/08/09 19:45:00 by kha              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,25 +57,28 @@ int	ft_atoi_base(const char *str, int base)
 	}
 	return (res * j);
 }
-/* 
-int main(int argc, char *argv[])
+
+
+/* #include <stdio.h>
+int	main(int argc, char **argv)
 {
+	int	base;
+	int	value;
+
 	if (argc != 3)
 	{
 		printf("Usage: %s <number_string> <base>\n", argv[0]);
-		return 1;
+		return (1);
 	}
-	// Parse the base argument.
-	int base = ft_atoi_base(argv[2], 10);
-	// if (base < 2 || base > 16)
-	// {
-	// 	printf("Error: Base must be between 2 and 16.\n");
-	// 	return 1;
-	// }
-
-	// Convert the string to an int based on the provided base.
-	int result = ft_atoi_base(argv[1], base);
-	printf("conversion of \"%s\" in base %d is: %d\n", argv[1], base, result);
-
-	return 0;
+	base = ft_atoi_base(argv[2], 10);
+	if (base < 2 || base > 16)
+	{
+		printf("Error: base must be 2..16 (got %d)\n", base);
+		return (1);
+	}
+	value = ft_atoi_base(argv[1], base);
+	printf("Input: %s | Base: %d | Result: %d\n", argv[1], base, value);
+	printf("Checks: 42(dec)= %d | 2A(hex)= %d | 101010(bin)= %d\n",
+		ft_atoi_base("42", 10), ft_atoi_base("2A", 16), ft_atoi_base("101010", 2));
+	return (0);
 } */
