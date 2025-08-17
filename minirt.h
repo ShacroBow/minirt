@@ -1,7 +1,6 @@
 #ifndef MINIRT_H
 # define MINIRT_H
 
-# include <stdio.h>
 # include <stdlib.h>
 # include <stdbool.h>
 # include <math.h>
@@ -10,39 +9,47 @@
 # include "minilibx-linux/mlx.h"
 # include "libft/libft.h"
 
-// --- Constants ---
-# define WIDTH 1024
-# define HEIGHT 768
+/* --- Constants --- */
+# define WIDTH 640
+# define HEIGHT 350
 # define EPSILON 1e-6
 # define SHININESS 32.0
+# define AA_SAMPLES 4
+# define DISPLAY_GAMMA 2.2
+# define ENABLE_AA 1
+# define ENABLE_GAMMA 1
+# define ENABLE_POST_AA 0
+# define POST_AA_SIZE 3
+# define EDGE_AA_STRENGTH 0.85
+# define EDGE_AA_THRESHOLD 25.0
 
-// --- Core Data Structures ---
+/* --- Core Data Structures --- */
 
-// Vector / Point / Color
+/* Vector / Point / Color */
 typedef struct s_vec3
 {
-	double x;
-	double y;
-	double z;
-}	t_vec3;
+	double	x;
+	double	y;
+	double	z;
+}t_vec3;
 
-typedef t_vec3	t_point;
-typedef t_vec3	t_color;
+typedef t_vec3					t_point;
+typedef t_vec3					t_color;
 
-// Ray
+/* Ray */
 typedef struct s_ray
 {
 	t_point	origin;
 	t_vec3	direction;
-}	t_ray;
+}t_ray;
 
-// Scene Elements
+/* Scene Elements */
 typedef struct s_ambient_light
 {
 	double	ratio;
 	t_color	color;
 	bool	is_set;
-}	t_ambient_light;
+}t_ambient_light;
 
 typedef struct s_camera
 {
@@ -50,13 +57,13 @@ typedef struct s_camera
 	t_vec3	normal;
 	double	fov;
 	bool	is_set;
-	// Pre-calculated viewport values
-	double viewport_height;
-	double viewport_width;
+	/* Pre-calculated viewport values */
+	double	viewport_height;
+	double	viewport_width;
 	t_vec3	horizontal;
 	t_vec3	vertical;
 	t_point	lower_left_corner;
-}	t_camera;
+}t_camera;
 
 typedef struct s_light
 {
@@ -64,27 +71,27 @@ typedef struct s_light
 	double			ratio;
 	t_color			color;
 	struct s_light	*next;
-}	t_light;
+}t_light;
 
-// Geometric Objects
+/* Geometric Objects */
 typedef enum e_object_type
 {
 	SPHERE,
 	PLANE,
 	CYLINDER
-}	t_object_type;
+}t_object_type;
 
 typedef struct s_sphere
 {
 	t_point	center;
 	double	diameter;
-}	t_sphere;
+}t_sphere;
 
 typedef struct s_plane
 {
 	t_point	point;
 	t_vec3	normal;
-}	t_plane;
+}t_plane;
 
 typedef struct s_cylinder
 {
@@ -92,7 +99,7 @@ typedef struct s_cylinder
 	t_vec3	normal;
 	double	diameter;
 	double	height;
-}	t_cylinder;
+}t_cylinder;
 
 typedef struct s_object
 {
@@ -100,9 +107,9 @@ typedef struct s_object
 	void			*shape_data;
 	t_color			color;
 	struct s_object	*next;
-}	t_object;
+}t_object;
 
-// Hit Record
+/* Hit Record */
 typedef struct s_hit_record
 {
 	t_point	point;
@@ -110,16 +117,16 @@ typedef struct s_hit_record
 	t_color	color;
 	double	t;
 	bool	front_face;
-}	t_hit_record;
+}t_hit_record;
 
-// Main Scene/Program Structure
+/* Main Scene/Program Structure */
 typedef struct s_scene
 {
 	t_ambient_light	ambient_light;
 	t_camera		camera;
 	t_light			*lights;
 	t_object		*objects;
-}	t_scene;
+}t_scene;
 
 typedef struct s_mlx_data
 {
@@ -130,20 +137,20 @@ typedef struct s_mlx_data
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
-}	t_mlx_data;
+}t_mlx_data;
 
 typedef struct s_program
 {
 	t_scene		*scene;
 	t_mlx_data	mlx;
-}	t_program;
+}t_program;
 
-// --- Function Prototypes ---
+/* --- Function Prototypes --- */
 
-// main.c
-int				main(int argc, char **argv);
+/* main.c */
+int			main(int argc, char **argv);
 
-// --- Parser ---
+/* --- Parser --- */
 t_scene			*parse_scene(const char *filename);
 void			parse_line(char *line, t_scene *scene);
 void			parse_ambient(t_scene *scene, char **tokens);
@@ -153,7 +160,7 @@ void			parse_sphere(t_scene *scene, char **tokens);
 void			parse_plane(t_scene *scene, char **tokens);
 void			parse_cylinder(t_scene *scene, char **tokens);
 
-// Parser Utils
+/* Parser Utils */
 bool			parse_vector(char *str, t_vec3 *vec);
 bool			parse_color(char *str, t_color *color);
 double			ft_atof(const char *str);
@@ -161,14 +168,14 @@ char			**ft_split(char const *s, char c);
 int				count_tokens(char **tokens);
 void			free_tokens(char **tokens);
 
-// Parser Validation
+/* Parser Validation */
 void			validate_color(t_color color);
 void			validate_normalized_vector(t_vec3 vec);
 void			validate_ratio(double ratio);
 void			validate_fov(double fov);
 void			validate_scene(t_scene *scene);
 
-// --- Vectors ---
+/* --- Vectors --- */
 t_vec3			vec_add(t_vec3 v1, t_vec3 v2);
 t_vec3			vec_sub(t_vec3 v1, t_vec3 v2);
 t_vec3			vec_mult(t_vec3 v, double scalar);
@@ -180,33 +187,37 @@ double			vec_length(t_vec3 v);
 t_vec3			vec_normalize(t_vec3 v);
 t_vec3			vec_reflect(t_vec3 v, t_vec3 n);
 
-// --- Intersections ---
-bool			hit(const t_object *world, const t_ray *ray, double t_max,
-					t_hit_record *rec);
-bool			hit_sphere(const t_sphere *sp, const t_ray *ray, double t_max,
-					t_hit_record *rec);
-bool			hit_plane(const t_plane *pl, const t_ray *ray, double t_max,
-					t_hit_record *rec);
-bool			hit_cylinder(const t_cylinder *cy, const t_ray *ray,
-					double t_max, t_hit_record *rec);
+/* --- Intersections --- */
+bool			 hit(const t_object *world, const t_ray *ray, double t_max,
+				 t_hit_record *rec);
+bool			 hit_sphere(const t_sphere *sp, const t_ray *ray, double t_max,
+				 t_hit_record *rec);
+bool			 hit_plane(const t_plane *pl, const t_ray *ray, double t_max,
+				 t_hit_record *rec);
+bool			 hit_cylinder(const t_cylinder *cy, const t_ray *ray,
+				 double t_max, t_hit_record *rec);
 
-// --- Render ---
+/* --- Render --- */
+void			setup_camera(t_camera *cam, double aspect_ratio);
+int				color_to_int(t_color color);
+void			my_mlx_pixel_put(t_mlx_data *data, int x, int y, int color);
 void			render(t_program *prog);
+
+/* Shading / Rays */
 t_color			trace_ray(const t_ray *ray, const t_scene *scene);
 t_color			phong_shading(const t_hit_record *rec, const t_scene *scene);
-void			setup_camera(t_camera *cam, double aspect_ratio);
 t_ray			create_ray(const t_camera *cam, double u, double v);
-void			my_mlx_pixel_put(t_mlx_data *data, int x, int y, int color);
-int				color_to_int(t_color color);
+
+/* Color utils */
 t_color			color_mult(t_color c1, t_color c2);
 t_color			color_add(t_color c1, t_color c2);
 t_color			color_scale(t_color c, double scalar);
+t_color			color_gamma(t_color c, double gamma);
 
-// --- Utils ---
+/* --- Utils --- */
 void			exit_error(const char *message);
 void			*safe_malloc(size_t size);
 void			free_scene(t_scene *scene);
-size_t			ft_strlen(const char *s);
-int				ft_strncmp(const char *s1, const char *s2, size_t n);
+bool			has_extension(const char *filename, const char *ext);
 
 #endif

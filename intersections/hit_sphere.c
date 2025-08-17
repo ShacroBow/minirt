@@ -23,21 +23,22 @@ static bool	solve_quadratic(double a, double b, double c, double *t)
 	return (false);
 }
 
-bool	hit_sphere(const t_sphere *sp, const t_ray *ray, double t_max,
-		t_hit_record *rec)
+static void	sphere_coeffs(const t_sphere *sp, const t_ray *ray,
+			double *a, double *b, double *c)
 {
+	double	r;
 	t_vec3	oc;
-	double	a;
-	double	b;
-	double	c;
-	double	t;
 
 	oc = vec_sub(ray->origin, sp->center);
-	a = vec_length_squared(ray->direction);
-	b = 2.0 * vec_dot(oc, ray->direction);
-	c = vec_length_squared(oc) - (sp->diameter / 2.0) * (sp->diameter / 2.0);
-	if (!solve_quadratic(a, b, c, &t) || t >= t_max)
-		return (false);
+	*a = vec_length_squared(ray->direction);
+	*b = 2.0 * vec_dot(oc, ray->direction);
+	r = sp->diameter * 0.5;
+	*c = vec_length_squared(oc) - (r * r);
+}
+
+static void	set_sphere_hit(const t_sphere *sp, const t_ray *ray, double t,
+			t_hit_record *rec)
+{
 	rec->t = t;
 	rec->point = vec_add(ray->origin, vec_mult(ray->direction, t));
 	rec->normal = vec_normalize(vec_sub(rec->point, sp->center));
@@ -48,5 +49,19 @@ bool	hit_sphere(const t_sphere *sp, const t_ray *ray, double t_max,
 	}
 	else
 		rec->front_face = true;
+}
+
+bool	hit_sphere(const t_sphere *sp, const t_ray *ray, double t_max,
+		t_hit_record *rec)
+{
+	double	a;
+	double	b;
+	double	c;
+	double	t;
+
+	sphere_coeffs(sp, ray, &a, &b, &c);
+	if (!solve_quadratic(a, b, c, &t) || t >= t_max)
+		return (false);
+	set_sphere_hit(sp, ray, t, rec);
 	return (true);
 }

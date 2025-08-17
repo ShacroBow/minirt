@@ -49,7 +49,7 @@ t_color	phong_shading(const t_hit_record *rec, const t_scene *scene)
 		{
 			final_color = color_add(final_color,
 					color_mult(rec->color, calculate_diffuse(rec, current_light,
-							light_dir)));
+						light_dir)));
 			final_color = color_add(final_color,
 					calculate_specular(rec, current_light, light_dir, scene));
 		}

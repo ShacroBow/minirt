@@ -1,44 +1,52 @@
 #include "../minirt.h"
 
+static bool	try_hit_object(const t_object *obj, const t_ray *ray,
+			double t_max, t_hit_record *out)
+{
+	t_hit_record	tmp;
+
+	if (obj->type == SPHERE && hit_sphere(obj->shape_data, ray, t_max, &tmp))
+	{
+		*out = tmp;
+		out->color = obj->color;
+		return (true);
+	}
+	if (obj->type == PLANE && hit_plane(obj->shape_data, ray, t_max, &tmp))
+	{
+		*out = tmp;
+		out->color = obj->color;
+		return (true);
+	}
+	if (obj->type == CYLINDER
+		&& hit_cylinder(obj->shape_data, ray, t_max, &tmp))
+	{
+		*out = tmp;
+		out->color = obj->color;
+		return (true);
+	}
+	return (false);
+}
+
 bool	hit(const t_object *world, const t_ray *ray, double t_max,
 		t_hit_record *rec)
 {
-	const t_object	*current_obj;
-	t_hit_record	temp_rec;
-	bool			hit_anything;
-	double			closest_so_far;
+	const t_object	*cur;
+	t_hit_record	best;
+	bool			hit_any;
+	double			closest;
 
-	hit_anything = false;
-	closest_so_far = t_max;
-	current_obj = world;
-	while (current_obj)
+	hit_any = false;
+	closest = t_max;
+	cur = world;
+	while (cur)
 	{
-		if (current_obj->type == SPHERE && hit_sphere(current_obj->shape_data,
-				ray, closest_so_far, &temp_rec))
+		if (try_hit_object(cur, ray, closest, &best))
 		{
-			hit_anything = true;
-			closest_so_far = temp_rec.t;
-			*rec = temp_rec;
-			rec->color = current_obj->color;
+			hit_any = true;
+			closest = best.t;
+			*rec = best;
 		}
-		else if (current_obj->type == PLANE && hit_plane(current_obj->shape_data,
-				ray, closest_so_far, &temp_rec))
-		{
-			hit_anything = true;
-			closest_so_far = temp_rec.t;
-			*rec = temp_rec;
-			rec->color = current_obj->color;
-		}
-		else if (current_obj->type == CYLINDER
-			&& hit_cylinder(current_obj->shape_data, ray, closest_so_far,
-				&temp_rec))
-		{
-			hit_anything = true;
-			closest_so_far = temp_rec.t;
-			*rec = temp_rec;
-			rec->color = current_obj->color;
-		}
-		current_obj = current_obj->next;
+		cur = cur->next;
 	}
-	return (hit_anything);
+	return (hit_any);
 }

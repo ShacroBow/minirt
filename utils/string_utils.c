@@ -1,25 +1,15 @@
 #include "../minirt.h"
 
-size_t	ft_strlen(const char *s)
+bool	has_extension(const char *filename, const char *ext)
 {
-	size_t	i;
+	size_t	len;
+	size_t	ext_len;
 
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < n && (s1[i] || s2[i]))
-	{
-		if (s1[i] != s2[i])
-			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-		i++;
-	}
-	return (0);
+	if (!filename || !ext)
+		return (false);
+	len = ft_strlen(filename);
+	ext_len = ft_strlen(ext);
+	if (len < ext_len)
+		return (false);
+	return (ft_strncmp(filename + (len - ext_len), ext, ext_len) == 0);
 }

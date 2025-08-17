@@ -1,19 +1,21 @@
 #include "../minirt.h"
 
-bool	hit_plane(const t_plane *pl, const t_ray *ray, double t_max,
-		t_hit_record *rec)
+static bool	plane_t(const t_plane *pl, const t_ray *ray, double *t)
 {
 	double	denom;
-	double	t;
-	t_vec3	p0_to_o;
+	t_vec3	diff;
 
 	denom = vec_dot(ray->direction, pl->normal);
 	if (fabs(denom) < EPSILON)
 		return (false);
-	p0_to_o = vec_sub(pl->point, ray->origin);
-	t = vec_dot(p0_to_o, pl->normal) / denom;
-	if (t < EPSILON || t >= t_max)
-		return (false);
+	diff = vec_sub(pl->point, ray->origin);
+	*t = vec_dot(diff, pl->normal) / denom;
+	return (*t > EPSILON);
+}
+
+static void	set_plane_hit(const t_plane *pl, const t_ray *ray, double t,
+			t_hit_record *rec)
+{
 	rec->t = t;
 	rec->point = vec_add(ray->origin, vec_mult(ray->direction, t));
 	rec->normal = pl->normal;
@@ -24,5 +26,15 @@ bool	hit_plane(const t_plane *pl, const t_ray *ray, double t_max,
 	}
 	else
 		rec->front_face = true;
+}
+
+bool	hit_plane(const t_plane *pl, const t_ray *ray, double t_max,
+		t_hit_record *rec)
+{
+	double	t;
+
+	if (!plane_t(pl, ray, &t) || t >= t_max)
+		return (false);
+	set_plane_hit(pl, ray, t, rec);
 	return (true);
 }

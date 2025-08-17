@@ -33,8 +33,8 @@ void	parse_camera(t_scene *scene, char **tokens)
 
 void	parse_light(t_scene *scene, char **tokens)
 {
-	t_light	*new_light;
-	t_light	*current;
+	t_light *new_light;
+	t_light *current;
 
 	if (count_tokens(tokens) != 4)
 		exit_error("Error: Incorrect number of arguments for light.");
@@ -56,51 +56,4 @@ void	parse_light(t_scene *scene, char **tokens)
 			current = current->next;
 		current->next = new_light;
 	}
-}
-
-void	parse_sphere(t_scene *scene, char **tokens)
-{
-	t_object	*new_obj;
-	t_sphere	*sp;
-
-	if (count_tokens(tokens) != 4)
-		exit_error("Error: Incorrect number of arguments for sphere.");
-	sp = safe_malloc(sizeof(t_sphere));
-	if (!parse_vector(tokens[1], &sp->center))
-		exit_error("Error: Invalid vector format for sphere center.");
-	sp->diameter = ft_atof(tokens[2]);
-	if (sp->diameter <= 0)
-		exit_error("Error: Sphere diameter must be positive.");
-	new_obj = safe_malloc(sizeof(t_object));
-	new_obj->type = SPHERE;
-	new_obj->shape_data = sp;
-	if (!parse_color(tokens[3], &new_obj->color))
-		exit_error("Error: Invalid color format for sphere.");
-	validate_color(new_obj->color);
-	new_obj->next = scene->objects;
-	scene->objects = new_obj;
-}
-
-void	parse_plane(t_scene *scene, char **tokens)
-{
-	t_object	*new_obj;
-	t_plane		*pl;
-
-	if (count_tokens(tokens) != 4)
-		exit_error("Error: Incorrect number of arguments for plane.");
-	pl = safe_malloc(sizeof(t_plane));
-	if (!parse_vector(tokens[1], &pl->point))
-		exit_error("Error: Invalid vector format for plane point.");
-	if (!parse_vector(tokens[2], &pl->normal))
-		exit_error("Error: Invalid vector format for plane normal.");
-	validate_normalized_vector(pl->normal);
-	pl->normal = vec_normalize(pl->normal);
-	new_obj = safe_malloc(sizeof(t_object));
-	new_obj->type = PLANE;
-	new_obj->shape_data = pl;
-	if (!parse_color(tokens[3], &new_obj->color))
-		exit_error("Error: Invalid color format for plane.");
-	validate_color(new_obj->color);
-	new_obj->next = scene->objects;
-	scene->objects = new_obj;
 }
