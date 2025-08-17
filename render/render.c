@@ -1,9 +1,5 @@
 #include "../minirt.h"
 
-#ifndef AA_SAMPLES
-# define AA_SAMPLES 1
-#endif
-
 t_color	trace_ray(const t_ray *ray, const t_scene *scene)
 {
 	t_hit_record	rec;
@@ -19,20 +15,34 @@ static t_color	render_pixel(t_program *prog, int x, int y, double inv_w, double 
 	double	v;
 	t_ray	ray;
 	t_color	sum;
-	int		i;
 
-#if ENABLE_AA && AA_SAMPLES == 4
+#if ENABLE_AA
 	sum = (t_color){0, 0, 0};
-	i = 0;
-	while (i < 4)
+	int s;
+	int grid;
+	int i;
+	int j;
+	double ox;
+	double oy;
+	grid = (int)ceil(sqrt((double)AA_SAMPLES));
+	s = 0;
+	while (s < AA_SAMPLES)
 	{
-		u = ((double)x + ((i & 1) ? 0.75 : 0.25)) * inv_w;
-		v = ((double)y + ((i < 2) ? 0.25 : 0.75)) * inv_h;
+		i = s % grid;
+		j = s / grid;
+		ox = ((double)i + (double)rand() / (double)RAND_MAX) / (double)grid;
+		oy = ((double)j + (double)rand() / (double)RAND_MAX) / (double)grid;
+		u = ((double)x + ox) * inv_w;
+		v = ((double)y + oy) * inv_h;
+		if (u >= 1.0)
+			u = 1.0 - 1e-9;
+		if (v >= 1.0)
+			v = 1.0 - 1e-9;
 		ray = create_ray(&prog->scene->camera, u, v);
 		sum = color_add(sum, trace_ray(&ray, prog->scene));
-		i++;
+		s++;
 	}
-	sum = color_scale(sum, 0.25);
+	sum = color_scale(sum, 1.0 / (double)AA_SAMPLES);
 #else
 	u = ((double)x + 0.5) * inv_w;
 	v = ((double)y + 0.5) * inv_h;
@@ -54,8 +64,11 @@ void	render(t_program *prog)
 	t_color	c;
 
 	setup_camera(&prog->scene->camera, (double)WIDTH / (double)HEIGHT);
-	inv_w = 1.0 / (WIDTH - 1);
-	inv_h = 1.0 / (HEIGHT - 1);
+	inv_w = 1.0 / (double)WIDTH;
+	inv_h = 1.0 / (double)HEIGHT;
+
+	fprintf(stdout, "Rendering... 0%%\r");
+	fflush(stdout);
 	y = 0;
 	while (y < HEIGHT)
 	{
@@ -66,8 +79,13 @@ void	render(t_program *prog)
 			my_mlx_pixel_put(&prog->mlx, x, y, color_to_int(c));
 			x++;
 		}
+		int percent = (int)(((long long)(y + 1) * 100) / HEIGHT);
+		fprintf(stdout, "Rendering... %d%%\r", percent);
+		fflush(stdout);
 		y++;
 	}
 	mlx_put_image_to_window(prog->mlx.mlx_ptr, prog->mlx.win_ptr,
 		prog->mlx.img_ptr, 0, 0);
+	fprintf(stdout, "Done rendering.       \n");
+	fflush(stdout);
 }

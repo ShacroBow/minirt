@@ -1,27 +1,55 @@
 #ifndef MINIRT_H
 # define MINIRT_H
 
+# include <stdio.h>
 # include <stdlib.h>
 # include <stdbool.h>
 # include <math.h>
 # include <fcntl.h>
 # include <unistd.h>
-# include "minilibx-linux/mlx.h"
+# include "mlx.h"
 # include "libft/libft.h"
 
-/* --- Constants --- */
-# define WIDTH 640
-# define HEIGHT 350
+/* --- Constants (single source of truth) --- */
+# define WIDTH 55
+# define HEIGHT 55
 # define EPSILON 1e-6
 # define SHININESS 32.0
-# define AA_SAMPLES 4
 # define DISPLAY_GAMMA 2.2
-# define ENABLE_AA 1
 # define ENABLE_GAMMA 1
-# define ENABLE_POST_AA 0
+# define ENABLE_AA 0
+# define ENABLE_POST_AA 1
+# define AA_SAMPLES 10
 # define POST_AA_SIZE 3
 # define EDGE_AA_STRENGTH 0.85
 # define EDGE_AA_THRESHOLD 25.0
+
+/* Normalize/guard config values */
+#if AA_SAMPLES < 1
+# undef AA_SAMPLES
+# define AA_SAMPLES 1
+#endif
+
+/* Compile-time validation for config macros (integer-only) */
+#if (WIDTH < 1) || (HEIGHT < 1)
+# error "WIDTH and HEIGHT must be >= 1"
+#endif
+
+#if (ENABLE_AA != 0) && (ENABLE_AA != 1)
+# error "ENABLE_AA must be 0 or 1"
+#endif
+
+#if (ENABLE_GAMMA != 0) && (ENABLE_GAMMA != 1)
+# error "ENABLE_GAMMA must be 0 or 1"
+#endif
+
+#if (ENABLE_POST_AA != 0) && (ENABLE_POST_AA != 1)
+# error "ENABLE_POST_AA must be 0 or 1"
+#endif
+
+#if (ENABLE_POST_AA) && (POST_AA_SIZE < 1)
+# error "POST_AA_SIZE must be >= 1 when ENABLE_POST_AA is 1"
+#endif
 
 /* --- Core Data Structures --- */
 

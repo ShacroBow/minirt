@@ -17,8 +17,8 @@ t_color	color_add(t_color c1, t_color c2)
 	t_color	result;
 
 	result.x = c1.x + c2.x;
-	result.y = c2.y + c1.y;
-	result.z = c2.z + c1.z;
+	result.y = c1.y + c2.y;
+	result.z = c1.z + c2.z;
 	return (result);
 }
 
