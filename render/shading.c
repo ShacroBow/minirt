@@ -1,59 +1,61 @@
 #include "../minirt.h"
 
-static t_color	calculate_diffuse(const t_hit_record *rec, const t_light *light,
-		t_vec3 light_dir)
+static t_color	calculate_ambient(const t_ambient_light *ambient,
+		const t_color *material_color)
 {
-	double	diffuse_strength;
-
-	diffuse_strength = fmax(0.0, vec_dot(rec->normal, light_dir));
-	return (color_scale(light->color, diffuse_strength * light->ratio));
+	return (color_scale(color_mult(*material_color, ambient->color),
+			ambient->ratio));
 }
 
-static t_color	calculate_specular(const t_hit_record *rec, const t_light *light,
-		t_vec3 light_dir, const t_scene *scene)
+static t_color	calculate_diffuse(const t_light *light,
+		const t_hit_record *rec)
 {
-	t_vec3	view_dir;
-	t_vec3	reflect_dir;
-	double	specular_strength;
-	t_color	specular_color;
+	t_vec3	light_dir;
+	double	diffuse_intensity;
 
-	view_dir = vec_normalize(vec_sub(scene->camera.center, rec->point));
-	reflect_dir = vec_reflect(vec_mult(light_dir, -1), rec->normal);
-	specular_strength = pow(fmax(0.0, vec_dot(view_dir, reflect_dir)),
-			SHININESS);
-	specular_color = color_scale(light->color, specular_strength
-			* light->ratio);
-	return (specular_color);
+	light_dir = vec_normalize(vec_sub(light->center, rec->point));
+	diffuse_intensity = fmax(0.0, vec_dot(rec->normal, light_dir));
+	return (color_scale(color_mult(rec->color, light->color),
+			light->ratio * diffuse_intensity));
+}
+
+static bool	is_point_in_shadow(const t_point *point, const t_light *light,
+	const t_object *objects)
+{
+	t_ray			shadow_ray;
+	t_hit_record	temp_rec;
+	t_vec3			light_dir;
+	double			light_distance;
+
+	light_dir = vec_sub(light->center, *point);
+	light_distance = vec_length(light_dir);
+	light_dir = vec_normalize(light_dir);
+	shadow_ray.origin = vec_add(*point, vec_mult(light_dir, 0.001));
+	shadow_ray.direction = light_dir;
+	if (hit(objects, &shadow_ray, light_distance - 0.001, &temp_rec))
+		return (true);
+	return (false);
 }
 
 t_color	phong_shading(const t_hit_record *rec, const t_scene *scene)
 {
-	t_color	final_color;
-	t_light	*current_light;
-	t_vec3	light_dir;
-	t_ray	shadow_ray;
-	double	light_dist;
+	t_color		final_color;
+	t_color		light_contribution;
+	t_light		*current_light;
 
-	final_color = color_mult(rec->color,
-			color_scale(scene->ambient_light.color,
-				scene->ambient_light.ratio));
+	final_color = calculate_ambient(&scene->ambient_light, &rec->color);
 	current_light = scene->lights;
 	while (current_light)
 	{
-		light_dir = vec_sub(current_light->center, rec->point);
-		light_dist = vec_length(light_dir);
-		light_dir = vec_normalize(light_dir);
-		shadow_ray.origin = vec_add(rec->point, vec_mult(rec->normal, EPSILON));
-		shadow_ray.direction = light_dir;
-		if (!hit(scene->objects, &shadow_ray, light_dist, &((t_hit_record){0})))
+		if (!is_point_in_shadow(&rec->point, current_light, scene->objects))
 		{
-			final_color = color_add(final_color,
-					color_mult(rec->color, calculate_diffuse(rec, current_light,
-						light_dir)));
-			final_color = color_add(final_color,
-					calculate_specular(rec, current_light, light_dir, scene));
+			light_contribution = calculate_diffuse(current_light, rec);
+			final_color = color_add(final_color, light_contribution);
 		}
 		current_light = current_light->next;
 	}
+	final_color.x = fmin(255.0, final_color.x);
+	final_color.y = fmin(255.0, final_color.y);
+	final_color.z = fmin(255.0, final_color.z);
 	return (final_color);
 }

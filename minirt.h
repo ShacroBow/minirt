@@ -25,31 +25,31 @@
 # define EDGE_AA_THRESHOLD 25.0
 
 /* Normalize/guard config values */
-#if AA_SAMPLES < 1
-# undef AA_SAMPLES
-# define AA_SAMPLES 1
-#endif
+# if AA_SAMPLES < 1
+#  undef AA_SAMPLES
+#  define AA_SAMPLES 1
+# endif
 
 /* Compile-time validation for config macros (integer-only) */
-#if (WIDTH < 1) || (HEIGHT < 1)
-# error "WIDTH and HEIGHT must be >= 1"
-#endif
+# if (WIDTH < 1) || (HEIGHT < 1)
+#  error "WIDTH and HEIGHT must be >= 1"
+# endif
 
-#if (ENABLE_AA != 0) && (ENABLE_AA != 1)
-# error "ENABLE_AA must be 0 or 1"
-#endif
+# if (ENABLE_AA != 0) && (ENABLE_AA != 1)
+#  error "ENABLE_AA must be 0 or 1"
+# endif
 
-#if (ENABLE_GAMMA != 0) && (ENABLE_GAMMA != 1)
-# error "ENABLE_GAMMA must be 0 or 1"
-#endif
+# if (ENABLE_GAMMA != 0) && (ENABLE_GAMMA != 1)
+#  error "ENABLE_GAMMA must be 0 or 1"
+# endif
 
-#if (ENABLE_POST_AA != 0) && (ENABLE_POST_AA != 1)
-# error "ENABLE_POST_AA must be 0 or 1"
-#endif
+# if (ENABLE_POST_AA != 0) && (ENABLE_POST_AA != 1)
+#  error "ENABLE_POST_AA must be 0 or 1"
+# endif
 
-#if (ENABLE_POST_AA) && (POST_AA_SIZE < 1)
-# error "POST_AA_SIZE must be >= 1 when ENABLE_POST_AA is 1"
-#endif
+# if (ENABLE_POST_AA) && (POST_AA_SIZE < 1)
+#  error "POST_AA_SIZE must be >= 1 when ENABLE_POST_AA is 1"
+# endif
 
 /* --- Core Data Structures --- */
 
@@ -59,17 +59,17 @@ typedef struct s_vec3
 	double	x;
 	double	y;
 	double	z;
-}t_vec3;
+}	t_vec3;
 
-typedef t_vec3					t_point;
-typedef t_vec3					t_color;
+typedef t_vec3	t_point;
+typedef t_vec3	t_color;
 
 /* Ray */
 typedef struct s_ray
 {
 	t_point	origin;
 	t_vec3	direction;
-}t_ray;
+}	t_ray;
 
 /* Scene Elements */
 typedef struct s_ambient_light
@@ -77,7 +77,7 @@ typedef struct s_ambient_light
 	double	ratio;
 	t_color	color;
 	bool	is_set;
-}t_ambient_light;
+}	t_ambient_light;
 
 typedef struct s_camera
 {
@@ -91,7 +91,7 @@ typedef struct s_camera
 	t_vec3	horizontal;
 	t_vec3	vertical;
 	t_point	lower_left_corner;
-}t_camera;
+}	t_camera;
 
 typedef struct s_light
 {
@@ -99,7 +99,7 @@ typedef struct s_light
 	double			ratio;
 	t_color			color;
 	struct s_light	*next;
-}t_light;
+}	t_light;
 
 /* Geometric Objects */
 typedef enum e_object_type
@@ -107,19 +107,19 @@ typedef enum e_object_type
 	SPHERE,
 	PLANE,
 	CYLINDER
-}t_object_type;
+}	t_object_type;
 
 typedef struct s_sphere
 {
 	t_point	center;
 	double	diameter;
-}t_sphere;
+}	t_sphere;
 
 typedef struct s_plane
 {
 	t_point	point;
 	t_vec3	normal;
-}t_plane;
+}	t_plane;
 
 typedef struct s_cylinder
 {
@@ -127,7 +127,15 @@ typedef struct s_cylinder
 	t_vec3	normal;
 	double	diameter;
 	double	height;
-}t_cylinder;
+}	t_cylinder;
+
+typedef struct s_cap
+{
+	t_point	center;
+	t_vec3	normal;
+	double	r2;
+	int		invert;
+}	t_cap;
 
 typedef struct s_object
 {
@@ -135,7 +143,23 @@ typedef struct s_object
 	void			*shape_data;
 	t_color			color;
 	struct s_object	*next;
-}t_object;
+}	t_object;
+
+/* Quadratic Coefficients */
+typedef struct s_quad_coef
+{
+	double	a;
+	double	b;
+	double	c;
+}	t_quad_coef;
+
+typedef struct s_render_params
+{
+	int		x;
+	int		y;
+	double	inv_w;
+	double	inv_h;
+}	t_render_params;
 
 /* Hit Record */
 typedef struct s_hit_record
@@ -145,7 +169,7 @@ typedef struct s_hit_record
 	t_color	color;
 	double	t;
 	bool	front_face;
-}t_hit_record;
+}	t_hit_record;
 
 /* Main Scene/Program Structure */
 typedef struct s_scene
@@ -154,7 +178,7 @@ typedef struct s_scene
 	t_camera		camera;
 	t_light			*lights;
 	t_object		*objects;
-}t_scene;
+}	t_scene;
 
 typedef struct s_mlx_data
 {
@@ -165,13 +189,13 @@ typedef struct s_mlx_data
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
-}t_mlx_data;
+}	t_mlx_data;
 
 typedef struct s_program
 {
 	t_scene		*scene;
 	t_mlx_data	mlx;
-}t_program;
+}	t_program;
 
 /* --- Function Prototypes --- */
 
@@ -179,73 +203,77 @@ typedef struct s_program
 int			main(int argc, char **argv);
 
 /* --- Parser --- */
-t_scene			*parse_scene(const char *filename);
-void			parse_line(char *line, t_scene *scene);
-void			parse_ambient(t_scene *scene, char **tokens);
-void			parse_camera(t_scene *scene, char **tokens);
-void			parse_light(t_scene *scene, char **tokens);
-void			parse_sphere(t_scene *scene, char **tokens);
-void			parse_plane(t_scene *scene, char **tokens);
-void			parse_cylinder(t_scene *scene, char **tokens);
+t_scene		*parse_scene(const char *filename);
+void		parse_line(char *line, t_scene *scene);
+void		parse_ambient(t_scene *scene, char **tokens);
+void		parse_camera(t_scene *scene, char **tokens);
+void		parse_light(t_scene *scene, char **tokens);
+void		parse_sphere(t_scene *scene, char **tokens);
+void		parse_plane(t_scene *scene, char **tokens);
+void		parse_cylinder(t_scene *scene, char **tokens);
 
 /* Parser Utils */
-bool			parse_vector(char *str, t_vec3 *vec);
-bool			parse_color(char *str, t_color *color);
-double			ft_atof(const char *str);
-char			**ft_split(char const *s, char c);
-int				count_tokens(char **tokens);
-void			free_tokens(char **tokens);
+bool		parse_vector(char *str, t_vec3 *vec);
+bool		parse_color(char *str, t_color *color);
+int			count_tokens(char **tokens);
+void		free_tokens(char **tokens);
 
 /* Parser Validation */
-void			validate_color(t_color color);
-void			validate_normalized_vector(t_vec3 vec);
-void			validate_ratio(double ratio);
-void			validate_fov(double fov);
-void			validate_scene(t_scene *scene);
+void		validate_color(t_color color);
+void		validate_normalized_vector(t_vec3 vec);
+void		validate_ratio(double ratio);
+void		validate_fov(double fov);
+void		validate_scene(t_scene *scene);
 
 /* --- Vectors --- */
-t_vec3			vec_add(t_vec3 v1, t_vec3 v2);
-t_vec3			vec_sub(t_vec3 v1, t_vec3 v2);
-t_vec3			vec_mult(t_vec3 v, double scalar);
-t_vec3			vec_div(t_vec3 v, double scalar);
-double			vec_dot(t_vec3 v1, t_vec3 v2);
-t_vec3			vec_cross(t_vec3 v1, t_vec3 v2);
-double			vec_length_squared(t_vec3 v);
-double			vec_length(t_vec3 v);
-t_vec3			vec_normalize(t_vec3 v);
-t_vec3			vec_reflect(t_vec3 v, t_vec3 n);
+t_vec3		vec_add(t_vec3 v1, t_vec3 v2);
+t_vec3		vec_sub(t_vec3 v1, t_vec3 v2);
+t_vec3		vec_mult(t_vec3 v, double scalar);
+t_vec3		vec_div(t_vec3 v, double scalar);
+double		vec_dot(t_vec3 v1, t_vec3 v2);
+t_vec3		vec_cross(t_vec3 v1, t_vec3 v2);
+double		vec_length_squared(t_vec3 v);
+double		vec_length(t_vec3 v);
+t_vec3		vec_normalize(t_vec3 v);
+t_vec3		vec_reflect(t_vec3 v, t_vec3 n);
 
 /* --- Intersections --- */
-bool			 hit(const t_object *world, const t_ray *ray, double t_max,
-				 t_hit_record *rec);
-bool			 hit_sphere(const t_sphere *sp, const t_ray *ray, double t_max,
-				 t_hit_record *rec);
-bool			 hit_plane(const t_plane *pl, const t_ray *ray, double t_max,
-				 t_hit_record *rec);
-bool			 hit_cylinder(const t_cylinder *cy, const t_ray *ray,
-				 double t_max, t_hit_record *rec);
+bool		hit(const t_object *world, const t_ray *ray, double t_max,
+			t_hit_record *rec);
+bool		hit_sphere(const t_sphere *sp, const t_ray *ray, double t_max,
+			t_hit_record *rec);
+bool		hit_plane(const t_plane *pl, const t_ray *ray, double t_max,
+			t_hit_record *rec);
+bool		hit_cylinder(const t_cylinder *cy, const t_ray *ray,
+			double t_max, t_hit_record *rec);
 
 /* --- Render --- */
-void			setup_camera(t_camera *cam, double aspect_ratio);
-int				color_to_int(t_color color);
-void			my_mlx_pixel_put(t_mlx_data *data, int x, int y, int color);
-void			render(t_program *prog);
+void		setup_camera(t_camera *cam, double aspect_ratio);
+int			color_to_int(t_color color);
+void		my_mlx_pixel_put(t_mlx_data *data, int x, int y, int color);
+void		render(t_program *prog);
+t_color		render_aa_sample(t_program *prog, t_render_params *params);
+t_color		get_pixel_color(t_program *prog, int x, int y,
+	double inv_w, double inv_h);
 
 /* Shading / Rays */
-t_color			trace_ray(const t_ray *ray, const t_scene *scene);
-t_color			phong_shading(const t_hit_record *rec, const t_scene *scene);
-t_ray			create_ray(const t_camera *cam, double u, double v);
+t_color		trace_ray(const t_ray *ray, const t_scene *scene);
+t_color		phong_shading(const t_hit_record *rec, const t_scene *scene);
+t_ray		create_ray(const t_camera *cam, double u, double v);
 
 /* Color utils */
-t_color			color_mult(t_color c1, t_color c2);
-t_color			color_add(t_color c1, t_color c2);
-t_color			color_scale(t_color c, double scalar);
-t_color			color_gamma(t_color c, double gamma);
+t_color		color_mult(t_color c1, t_color c2);
+t_color		color_add(t_color c1, t_color c2);
+t_color		color_scale(t_color c, double scalar);
+t_color		color_gamma(t_color c, double gamma);
 
 /* --- Utils --- */
-void			exit_error(const char *message);
-void			*safe_malloc(size_t size);
-void			free_scene(t_scene *scene);
-bool			has_extension(const char *filename, const char *ext);
+void		exit_error(const char *message);
+void		*safe_malloc(size_t size);
+void		free_scene(t_scene *scene);
+bool		has_extension(const char *filename, const char *ext);
+void		cleanup(t_program *prog);
+int			close_window(t_program *prog);
+int			key_hook(int keycode, t_program *prog);
 
 #endif

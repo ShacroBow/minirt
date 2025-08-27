@@ -6,9 +6,9 @@ t_color	color_mult(t_color c1, t_color c2)
 {
 	t_color	result;
 
-	result.x = (c1.x / 255.0) * c2.x;
-	result.y = (c1.y / 255.0) * c2.y;
-	result.z = (c1.z / 255.0) * c2.z;
+	result.x = (c1.x / 255.0) * (c2.x / 255.0) * 255.0;
+	result.y = (c1.y / 255.0) * (c2.y / 255.0) * 255.0;
+	result.z = (c1.z / 255.0) * (c2.z / 255.0) * 255.0;
 	return (result);
 }
 

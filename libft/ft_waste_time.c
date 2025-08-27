@@ -33,11 +33,3 @@ unsigned long int	ft_waste_time(unsigned int iterations)
 	}
 	return (sum);
 }
-/* 
-#include <stdio.h>
-int main()
-{
-	unsigned long long sum = ft_waste_time(2);
-	printf("sum:%llu\n", sum);
-	return 0;
-} */

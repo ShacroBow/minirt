@@ -15,9 +15,9 @@ int	color_to_int(t_color color)
 	int	g;
 	int	b;
 
-	r = (int)(255.999 * clamp(color.x / 255.0, 0.0, 1.0));
-	g = (int)(255.999 * clamp(color.y / 255.0, 0.0, 1.0));
-	b = (int)(255.999 * clamp(color.z / 255.0, 0.0, 1.0));
+	r = (int)clamp(color.x, 0.0, 255.0);
+	g = (int)clamp(color.y, 0.0, 255.0);
+	b = (int)clamp(color.z, 0.0, 255.0);
 	return ((r << 16) | (g << 8) | b);
 }
 
