@@ -46,7 +46,6 @@ fclean: clean
 	rm -rf $(NAME) $(OBJ_DIR)
 	$(MAKE) -C $(LIBFT_PATH) fclean
 
-re: fclean
-	$(MAKE) all
+re: fclean all
 
 .PHONY: all clean fclean re

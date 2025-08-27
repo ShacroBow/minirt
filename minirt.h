@@ -11,16 +11,16 @@
 # include "libft/libft.h"
 
 /* --- Constants (single source of truth) --- */
-# define WIDTH 55
-# define HEIGHT 55
+# define WIDTH 255
+# define HEIGHT 255
 # define EPSILON 1e-6
 # define SHININESS 32.0
 # define DISPLAY_GAMMA 2.2
 # define ENABLE_GAMMA 1
 # define ENABLE_AA 0
-# define ENABLE_POST_AA 1
-# define AA_SAMPLES 10
-# define POST_AA_SIZE 3
+# define ENABLE_POST_AA 0
+# define AA_SAMPLES 4
+# define POST_AA_SIZE 8
 # define EDGE_AA_STRENGTH 0.85
 # define EDGE_AA_THRESHOLD 25.0
 
