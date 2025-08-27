@@ -5,7 +5,7 @@ t_color	trace_ray(const t_ray *ray, const t_scene *scene)
 	t_hit_record	rec;
 
 	if (hit(scene->objects, ray, INFINITY, &rec))
-		return (phong_shading(&rec, scene));
+		return (phong_shading(&rec, scene, &ray->direction));
 	return ((t_color){0, 0, 0});
 }
 

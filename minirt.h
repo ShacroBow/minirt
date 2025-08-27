@@ -258,7 +258,8 @@ t_color		get_pixel_color(t_program *prog, int x, int y,
 
 /* Shading / Rays */
 t_color		trace_ray(const t_ray *ray, const t_scene *scene);
-t_color		phong_shading(const t_hit_record *rec, const t_scene *scene);
+t_color		phong_shading(const t_hit_record *rec, const t_scene *scene,
+			const t_vec3 *ray_dir);
 t_ray		create_ray(const t_camera *cam, double u, double v);
 
 /* Color utils */
