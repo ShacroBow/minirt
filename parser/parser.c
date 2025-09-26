@@ -1,5 +1,7 @@
 #include "../minirt.h"
 
+# define BUF_SZ 4096
+
 static bool	is_ignorable(const char *s)
 {
 	int	i;
@@ -45,8 +47,18 @@ static char	*read_line(int fd)
 	return (line);
 }
 
-static void	parse_element(char **tokens, t_scene *scene)
+void	parse_line(char *line, t_scene *scene)
 {
+	char	**tokens;
+
+	if (is_ignorable(line))
+		return ;
+	tokens = ft_split(line, ' ');
+	if (!tokens || !tokens[0])
+	{
+		free_tokens(tokens);
+		return ;
+	}
 	if (ft_strncmp(tokens[0], "A", 2) == 0)
 		parse_ambient(scene, tokens);
 	else if (ft_strncmp(tokens[0], "C", 2) == 0)
@@ -61,21 +73,6 @@ static void	parse_element(char **tokens, t_scene *scene)
 		parse_cylinder(scene, tokens);
 	else
 		exit_error("Error: Invalid identifier in scene file.");
-}
-
-void	parse_line(char *line, t_scene *scene)
-{
-	char	**tokens;
-
-	if (is_ignorable(line))
-		return ;
-	tokens = ft_split(line, ' ');
-	if (!tokens || !tokens[0])
-	{
-		free_tokens(tokens);
-		return ;
-	}
-	parse_element(tokens, scene);
 	free_tokens(tokens);
 }
 

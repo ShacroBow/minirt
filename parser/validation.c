@@ -2,17 +2,17 @@
 
 void	validate_color(t_color color)
 {
-	if (color.x < 0 || color.x > 255
-		|| color.y < 0 || color.y > 255
-		|| color.z < 0 || color.z > 255)
+	if (color.x < 0 || color.x > 255 ||
+		color.y < 0 || color.y > 255 ||
+		color.z < 0 || color.z > 255)
 		exit_error("Color values must be in [0,255]");
 }
 
 void	validate_normalized_vector(t_vec3 vec)
 {
-	if (vec.x < -1 || vec.x > 1
-		|| vec.y < -1 || vec.y > 1
-		|| vec.z < -1 || vec.z > 1)
+	if (vec.x < -1 || vec.x > 1 ||
+		vec.y < -1 || vec.y > 1 ||
+		vec.z < -1 || vec.z > 1)
 		exit_error("Invalid normalized vector");
 	if (vec_length_squared(vec) < EPSILON)
 		exit_error("Error: Normal vector cannot be zero.");

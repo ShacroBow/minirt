@@ -23,24 +23,17 @@ static bool	solve_quadratic(double a, double b, double c, double *t)
 	return (false);
 }
 
-typedef struct s_quadratic_params
-{
-	double	a;
-	double	b;
-	double	c;
-}	t_quadratic_params;
-
 static void	sphere_coeffs(const t_sphere *sp, const t_ray *ray,
-	t_quadratic_params *params)
+			double *a, double *b, double *c)
 {
 	double	r;
 	t_vec3	oc;
 
 	oc = vec_sub(ray->origin, sp->center);
-	params->a = vec_length_squared(ray->direction);
-	params->b = 2.0 * vec_dot(oc, ray->direction);
+	*a = vec_length_squared(ray->direction);
+	*b = 2.0 * vec_dot(oc, ray->direction);
 	r = sp->diameter * 0.5;
-	params->c = vec_length_squared(oc) - (r * r);
+	*c = vec_length_squared(oc) - (r * r);
 }
 
 static void	set_sphere_hit(const t_sphere *sp, const t_ray *ray, double t,
@@ -61,11 +54,13 @@ static void	set_sphere_hit(const t_sphere *sp, const t_ray *ray, double t,
 bool	hit_sphere(const t_sphere *sp, const t_ray *ray, double t_max,
 		t_hit_record *rec)
 {
-	t_quadratic_params	params;
-	double				t;
+	double	a;
+	double	b;
+	double	c;
+	double	t;
 
-	sphere_coeffs(sp, ray, &params);
-	if (!solve_quadratic(params.a, params.b, params.c, &t) || t >= t_max)
+	sphere_coeffs(sp, ray, &a, &b, &c);
+	if (!solve_quadratic(a, b, c, &t) || t >= t_max)
 		return (false);
 	set_sphere_hit(sp, ray, t, rec);
 	return (true);

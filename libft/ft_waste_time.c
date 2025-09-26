@@ -6,16 +6,16 @@
 /*   By: kmashkoo <kmashkoo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 18:14:32 by kmashkoo          #+#    #+#             */
-/*   Updated: 2024/12/16 22:51:04 by kmashkoo         ###   ########.fr       */
+/*   Updated: 2025/08/27 16:09:19 by kmashkoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-unsigned long int	ft_waste_time(unsigned int iterations)
+unsigned long int ft_waste_time(unsigned int iterations)
 {
-	unsigned long int	i;
-	unsigned long int	j;
-	unsigned long int	sum;
-	unsigned long int	secondish;
+	unsigned long int i;
+	unsigned long int j;
+	unsigned long int sum;
+	unsigned long int secondish;
 
 	i = 0;
 	sum = 0;

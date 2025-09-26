@@ -7,3 +7,15 @@ void	exit_error(const char *message)
 	write(2, "\n", 1);
 	exit(EXIT_FAILURE);
 }
+void cleanup(t_program *prog)
+{
+	if (prog->mlx.img_ptr)
+		mlx_destroy_image(prog->mlx.mlx_ptr, prog->mlx.img_ptr);
+	if (prog->mlx.win_ptr)
+		mlx_destroy_window(prog->mlx.mlx_ptr, prog->mlx.win_ptr);
+	if (prog->mlx.mlx_ptr)
+		mlx_destroy_display(prog->mlx.mlx_ptr);
+	if (prog->mlx.mlx_ptr)
+		free(prog->mlx.mlx_ptr);
+	free_scene(prog->scene);
+}

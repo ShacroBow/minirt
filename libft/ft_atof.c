@@ -79,3 +79,13 @@ double	ft_atof(const char *str)
 	return (val);
 }
 
+/* 
+#include <stdio.h>
+int main(void)
+{
+	int d; double v;
+	v = ft_atof("  -0012.340x");
+	printf("val=%f len=%d\n", v, ft_atof_len("  -0012.340x", &d));
+	return 0;
+} */
+

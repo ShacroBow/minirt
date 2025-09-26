@@ -1,6 +1,6 @@
 #include "../minirt.h"
 
-static double	clamp(double value, double min, double max)
+static double clamp(double value, double min, double max)
 {
 	if (value < min)
 		return (min);
@@ -9,11 +9,11 @@ static double	clamp(double value, double min, double max)
 	return (value);
 }
 
-int	color_to_int(t_color color)
+int color_to_int(t_color color)
 {
-	int	r;
-	int	g;
-	int	b;
+	int r;
+	int g;
+	int b;
 
 	r = (int)clamp(color.x, 0.0, 255.0);
 	g = (int)clamp(color.y, 0.0, 255.0);
@@ -21,18 +21,18 @@ int	color_to_int(t_color color)
 	return ((r << 16) | (g << 8) | b);
 }
 
-void	my_mlx_pixel_put(t_mlx_data *data, int x, int y, int color)
+void my_mlx_pixel_put(t_mlx_data *data, int x, int y, int color)
 {
-	char	*dst;
+	char *dst;
 
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
 }
 
-t_color	color_gamma(t_color c, double gamma)
+t_color color_gamma(t_color c, double gamma)
 {
-	t_color	out;
-	double	ig;
+	t_color out;
+	double ig;
 
 	if (gamma <= 0.0)
 		return (c);
