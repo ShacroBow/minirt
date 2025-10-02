@@ -1,20 +1,20 @@
 #include "../minirt.h"
 
-t_color	trace_ray(const t_ray *ray, const t_scene *scene)
+t_color trace_ray(const t_ray *ray, const t_scene *scene)
 {
-	t_hit_record	rec;
+	t_hit_record rec;
 
 	if (hit(scene->objects, ray, INFINITY, &rec))
-		return (phong_shading(&rec, scene));
-	return ((t_color){0, 0, 0});
+		return (phong_shading(&rec, scene, &ray->direction));
+	return (bg_color_from_dir(scene, &ray->direction));
 }
 
-static t_color	render_pixel(t_program *prog, int x, int y, double inv_w, double inv_h)
+static t_color render_pixel(t_program *prog, int x, int y, double inv_w, double inv_h)
 {
-	double	u;
-	double	v;
-	t_ray	ray;
-	t_color	sum;
+	double u;
+	double v;
+	t_ray ray;
+	t_color sum;
 
 #if ENABLE_AA
 	sum = (t_color){0, 0, 0};
@@ -55,13 +55,13 @@ static t_color	render_pixel(t_program *prog, int x, int y, double inv_w, double 
 	return (sum);
 }
 
-void	render(t_program *prog)
+void render(t_program *prog)
 {
-	int		x;
-	int		y;
-	double	inv_w;
-	double	inv_h;
-	t_color	c;
+	int x;
+	int y;
+	double inv_w;
+	double inv_h;
+	t_color c;
 
 	setup_camera(&prog->scene->camera, (double)WIDTH / (double)HEIGHT);
 	inv_w = 1.0 / (double)WIDTH;
@@ -79,5 +79,5 @@ void	render(t_program *prog)
 		y++;
 	}
 	mlx_put_image_to_window(prog->mlx.mlx_ptr, prog->mlx.win_ptr,
-		prog->mlx.img_ptr, 0, 0);
+							prog->mlx.img_ptr, 0, 0);
 }

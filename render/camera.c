@@ -31,6 +31,7 @@ static void setup_camera_vectors(t_camera *cam, t_vec3 w, t_vec3 u, t_vec3 v)
 	cam->lower_left_corner = vec_sub(cam->lower_left_corner,
 									 vec_div(cam->vertical, 2.0));
 	cam->lower_left_corner = vec_sub(cam->lower_left_corner, w);
+	cam->up_dir = v; /* cache unit up */
 }
 
 void setup_camera(t_camera *cam, double aspect_ratio)

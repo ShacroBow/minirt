@@ -5,7 +5,7 @@ SRCS_PARSER = parser/parser.c parser/validation.c \
 SRCS_VECTORS = vectors/vec_operations_1.c vectors/vec_operations_2.c
 SRCS_INTERSECTIONS = intersections/hit_sphere.c intersections/hit_plane.c \
 					 intersections/hit_cylinder.c intersections/intersections.c
-SRCS_RENDER = render/render.c render/shading.c render/camera.c render/color.c render/color_ops.c
+SRCS_RENDER = render/render.c render/shading.c render/camera.c render/color.c render/color_ops.c render/background.c
 SRCS_UTILS = utils/error.c utils/memory.c utils/string_utils.c
 SRC = main.c $(SRCS_PARSER) $(SRCS_VECTORS) $(SRCS_INTERSECTIONS) $(SRCS_RENDER) \
 	  $(SRCS_UTILS)
