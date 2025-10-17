@@ -1,0 +1,26 @@
+# Object files
+*.o
+libft/*.o
+
+# Executable
+minirt
+
+# PDF files
+en.subject.pdf
+
+# VSCode settings
+.vscode/
+
+# Generated scenes and logs
+tools/scenes/generated/
+
+# Scene files
+tools/scenes/
+
+# Build directory
+dir/
+
+# Libraries
+libft/libft.a
+
+.gitignore
