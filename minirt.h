@@ -10,25 +10,15 @@
 #include "libft/libft.h"
 
 /* --- Constants (single source of truth) --- */
-#define WIDTH 555
-#define HEIGHT 555
+#define WIDTH 255  // 1024
+#define HEIGHT 255 // 768
 #define EPSILON 1e-6
-#define SHININESS 32.0
-#define AA_SAMPLES 16
-#define DISPLAY_GAMMA 1.2
+// #define SHININESS 32.0
+#define AA_SAMPLES 4
+#define DISPLAY_GAMMA 0.6
 #define ENABLE_GAMMA 1
 #define ENABLE_AA 1
-#define ENABLE_POST_AA 42 // unused
-#define POST_AA_SIZE 42 // unused
-#define EDGE_AA_STRENGTH 42 // unused
-#define EDGE_AA_THRESHOLD 42 // unused
 #define ENABLE_BG 1
-
-/* Normalize/guard config values */
-#if AA_SAMPLES < 1
-#undef AA_SAMPLES
-#define AA_SAMPLES 1
-#endif
 
 /* --- Core Data Structures --- */
 
@@ -117,6 +107,14 @@ typedef struct s_object
 	t_color color;
 	struct s_object *next;
 } t_object;
+
+typedef struct s_render_params
+{
+	int x;
+	int y;
+	double inv_w;
+	double inv_h;
+} t_render_params;
 
 /* Hit Record */
 typedef struct s_hit_record

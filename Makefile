@@ -1,51 +1,63 @@
 NAME = minirt
+SRC =	main.c $(SRCS_PARSER) $(SRCS_VECTORS) $(SRCS_INTERSECTIONS) $(SRCS_RENDER) \
+		$(SRCS_UTILS)
 
-SRCS_PARSER = parser/parser.c parser/validation.c \
-			  parser/parse_elements.c parser/parse_cylinder.c parser/parser_utils.c parser/parser_utils_extra.c
+SRCS_PARSER = parser/parser.c parser/parser_utils.c parser/validation.c \
+			  parser/parse_elements.c parser/parser_utils_extra.c \
+			  parser/parse_cylinder.c
 SRCS_VECTORS = vectors/vec_operations_1.c vectors/vec_operations_2.c
 SRCS_INTERSECTIONS = intersections/hit_sphere.c intersections/hit_plane.c \
-					 intersections/hit_cylinder.c intersections/intersections.c
-SRCS_RENDER = render/render.c render/shading.c render/camera.c render/color.c render/color_ops.c render/background.c
+                     intersections/hit_cylinder.c intersections/intersections.c
+SRCS_RENDER = render/render.c render/shading.c render/camera.c render/color.c \
+			  render/color_ops.c render/background.c
 SRCS_UTILS = utils/error.c utils/memory.c utils/string_utils.c
-SRC = main.c $(SRCS_PARSER) $(SRCS_VECTORS) $(SRCS_INTERSECTIONS) $(SRCS_RENDER) \
-	  $(SRCS_UTILS)
 
 OBJ_DIR = ./dir/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
+OBJ_BONUS = $(SRC_BONUS:%.c=$(OBJ_DIR)%.o)
+DEPS = $(OBJ:.o=.d)
+DEPS_BONUS = $(OBJ_BONUS:.o=.d)
 
 LIBFT_PATH = ./libft/
 LIBFT = libft.a
-
-MLX_PATH = ./minilibx-linux/
-
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -I. -I$(LIBFT_PATH) -I$(MLX_PATH)
-LDFLAGS = -L$(MLX_PATH) -lmlx -L$(LIBFT_PATH) -lft -lX11 -lXext -lm
+CFLAGS = -Wall -Wextra -Werror -g -MMD -MP
+LIBFLAGS = -L. $(LIBFT_PATH)$(LIBFT) -lmlx -lX11 -lXext -lm
 
 
 all: $(NAME)
 
+#bonus: $(NAME_BONUS)
+
 $(NAME): $(OBJ_DIR) $(OBJ) $(LIBFT_PATH)$(LIBFT)
-	$(CC) $(OBJ) $(CFLAGS) -o $(NAME) $(LDFLAGS)
+	$(CC) $(OBJ) $(CFLAGS) -o $(NAME) $(LIBFLAGS)
+
+$(NAME_BONUS): $(OBJ_DIR) $(OBJ_BONUS) $(LIBFT_PATH)$(LIBFT)
+	$(CC) $(OBJ_BONUS) $(CFLAGS) -o $@ $(LIBFLAGS)
 
 $(OBJ_DIR)%.o : %.c
-	@mkdir -p $(dir $@)
+	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR):
-	@mkdir -p $@
+	mkdir -p $@
 
 $(LIBFT_PATH)$(LIBFT):
-	$(MAKE) -C $(LIBFT_PATH) all -j8
+	make -C $(LIBFT_PATH) all -j8
 
 clean:
-	rm -rf $(OBJ)
-	$(MAKE) -C $(LIBFT_PATH) clean
+	rm -rf $(OBJ) $(DEPS)
+	rm -rf $(OBJ_BONUS) $(DEPS_BONUS)
+	make -C $(LIBFT_PATH) clean
 
 fclean: clean
-	rm -rf $(NAME) $(OBJ_DIR)
-	$(MAKE) -C $(LIBFT_PATH) fclean
+	rm -rf $(NAME) $(NAME_BONUS) a.out $(OBJ_DIR) files.supp
+	make -C $(LIBFT_PATH) fclean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+# Include auto-generated dependency files
+-include $(DEPS)
+-include $(DEPS_BONUS)
+
+.PHONY: all clean fclean re #bonus

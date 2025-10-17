@@ -22,6 +22,29 @@ static bool	split3_in_place(char *str, char **a, char **b, char **c)
 	*a = str;
 	return (true);
 }
+bool	ft_valid_3str(char *str)
+{
+	int	commas;
+	int	i;
+
+	if (!str)
+		return (false);
+	commas = 0;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == ',')
+			commas++;
+		else if (!(ft_isspace(str[i]) || ft_isdigit(str[i])
+				|| str[i] == '.' || str[i] == '+' || str[i] == '-'))
+			return (false);
+		i++;
+	}
+	/* require exactly two commas to suggest three components */
+	if (commas != 2)
+		return (false);
+	return (true);
+}
 
 bool	parse_vector(char *str, t_vec3 *vec)
 {
@@ -29,6 +52,9 @@ bool	parse_vector(char *str, t_vec3 *vec)
 	char	*b;
 	char	*c;
 
+	/* validate characters and basic structure before mutating string */
+	if (!ft_valid_3str(str))
+		return (false);
 	if (!split3_in_place(str, &a, &b, &c))
 		return (false);
 	vec->x = ft_atof(a);
@@ -43,6 +69,9 @@ bool	parse_color(char *str, t_color *color)
 	char	*b;
 	char	*c;
 
+	/* validate characters and basic structure before mutating string */
+	if (!ft_valid_3str(str))
+		return (false);
 	if (!split3_in_place(str, &a, &b, &c))
 		return (false);
 	color->x = ft_atof(a);
