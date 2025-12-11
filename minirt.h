@@ -158,7 +158,7 @@ typedef struct s_program
 int main(int argc, char **argv);
 
 /* --- Parser --- */
-t_scene *parse_scene(const char *filename);
+t_scene *parse_scene(const char *filename, t_scene *scene);
 void parse_line(char *line, t_scene *scene);
 void parse_ambient(t_scene *scene, char **tokens);
 void parse_camera(t_scene *scene, char **tokens);

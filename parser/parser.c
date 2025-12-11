@@ -76,22 +76,49 @@ void	parse_line(char *line, t_scene *scene)
 	free_tokens(tokens);
 }
 
-static t_scene	*parse_file(char *filename)
+ssize_t	create_file_lines(int fd)
+{
+	char	file_content[100001];
+	ssize_t	bytes_read;
+	ssize_t	line_count;
+	size_t	line_len;
+
+	line_count = 0;
+	line_len = 0;
+	bytes_read = read(fd, file_content, 100001);
+	if (bytes_read == -1)
+		return (-1);
+	if (bytes_read > 100000)
+		return (-1);
+	file_content[bytes_read] = 0;
+	while (1)
+	{
+		if (!ft_strchr(file_content + line_len, '\n'))
+			break ;
+		line_len = ft_strchr(file_content, '\n') - file_content + 1;
+		file_content[line_len - 1] = 0;
+		line_count++;
+	}
+
+	return (line_count);
+}
+
+static t_scene	*parse_file(char *filename, t_scene *scene)
 {
 	int		fd;
-	char	*line;
-	t_scene	*scene;
+	char	**lines;
+	size_t	i;
 
+	
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		exit_error("Error: Cannot open scene file.");
-	scene = safe_malloc(sizeof(t_scene));
-	ft_bzero(scene, sizeof(t_scene));
+	lines = create_file_lines(fd);
+	if (!lines)
+		(close(fd), exit_error("Error: Reading file content."));
 	while (1)
 	{
-		line = read_line(fd);
-		if (!line)
-			break ;
+
 		if (!is_ignorable(line))
 			parse_line(line, scene);
 		free(line);
@@ -101,7 +128,7 @@ static t_scene	*parse_file(char *filename)
 	return (scene);
 }
 
-t_scene	*parse_scene(const char *filename)
+t_scene	*parse_scene(const char *filename, t_scene *scene)
 {
-	return (parse_file((char *)filename));
+	return (parse_file((char *)filename, scene));
 }
