@@ -12,7 +12,7 @@ SRC = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isspace.c\
 	ft_lstlast.c ft_lstadd_back.c ft_lstdelone.c ft_lstclear.c \
 	ft_lstiter.c ft_lstmap.c ft_waste_time.c ft_quicksort.c \
 	ft_realloc.c ft_strcmp.c ft_atoi_base.c ft_strndup.c \
-	ft_atol.c ft_atof.c
+	ft_atol.c ft_atof.c ft_split_inplace.c
 
 OBJ = $(SRC:.c=.o)
 CC = cc
