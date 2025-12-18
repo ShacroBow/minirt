@@ -20,6 +20,7 @@
 #define ENABLE_AA 1
 #define ENABLE_BG 1
 
+#define FILE_SIZE 1000000
 /* --- Core Data Structures --- */
 
 /* Vector / Point / Color */
@@ -158,7 +159,7 @@ typedef struct s_program
 int main(int argc, char **argv);
 
 /* --- Parser --- */
-t_scene *parse_scene(const char *filename);
+t_scene *parse_scene(const char *filename, t_scene **scene);
 void parse_line(char *line, t_scene *scene);
 void parse_ambient(t_scene *scene, char **tokens);
 void parse_camera(t_scene *scene, char **tokens);

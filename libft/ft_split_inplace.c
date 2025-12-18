@@ -6,13 +6,13 @@
 /*   By: jel-ghna <jel-ghna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 16:05:31 by jel-ghna          #+#    #+#             */
-/*   Updated: 2025/12/18 16:23:22 by jel-ghna         ###   ########.fr       */
+/*   Updated: 2025/12/18 20:25:29 by jel-ghna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	loop_splitter(split_t *d)
+static int	loop_splitter(split_t *d)
 {
 	while (d->str[d->i] == d->c)
 	{
@@ -26,7 +26,7 @@ int	loop_splitter(split_t *d)
 	return (0);
 }
 
-int	loop_word(split_t *d, size_t *count)
+static int	loop_word(split_t *d, size_t *count)
 {
 	while (d->str[d->i] != d->c)
 	{
@@ -40,6 +40,23 @@ int	loop_word(split_t *d, size_t *count)
 			return (1);
 	}
 	return (0);
+}
+
+char	*index_split(char *str, size_t index)
+{
+	size_t	i;
+	char	*res;
+
+	i = 0;
+	res = str;
+	while (res[i] == 0)
+		res++;
+	while (index)
+	{
+		res += ft_strlen(res) + 1;
+		index--;
+	}
+	return (res);
 }
 
 size_t	ft_split_inplace(char *str, char c)
@@ -79,6 +96,10 @@ size_t	ft_split_inplace(char *str, char c)
 // 	// // EXAMPLE OF LOOPING RESULTING STRINGS:
 // 	// for (size_t i = 0; i < count; i++)
 // 	// {
+//	//	while (str[i] == 0)
+//	//		i++;
+//	//	if (i < count)
+//	//		return (count)
 // 	// 	word_len = ft_strlen(str);
 // 	// 	write(1, str, word_len);
 // 	// 	write(1, "\n", 1);

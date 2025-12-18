@@ -6,7 +6,7 @@
 /*   By: jel-ghna <jel-ghna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 11:45:06 by kmashkoo          #+#    #+#             */
-/*   Updated: 2025/12/18 16:22:06 by jel-ghna         ###   ########.fr       */
+/*   Updated: 2025/12/18 20:25:19 by jel-ghna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,12 @@ double	ft_atof(const char *str);
 /* Splits the given "str" with "c" by replacing all
 	occurences of "c" in the "str" with NULL in place.
 
-	After splitting, "str" will point to the start of
-	the first split word.
-
 	RETURN: count of resulting strings.*/
 size_t	ft_split_inplace(char *str, char c);
+/* RETURN: the address of the ith string, from a string
+	split by ft_split_inplace(char *str, char c).
+
+   NOTES: Do not pass out of bound index.*/
+char	*index_split(char *str, size_t index);
 
 #endif

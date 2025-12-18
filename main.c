@@ -38,14 +38,12 @@ static void check_filename(const char *filename)
 int main(int argc, char **argv)
 {
 	t_program prog;
-	t_scene *scene;
 
 	ft_bzero(&prog, sizeof(t_program));
 	if (argc != 2)
 		exit_error("Usage: ./miniRT <scene_file.rt>");
 	check_filename(argv[1]);
-	scene = parse_scene(argv[1]);
-	prog.scene = scene;
+	parse_scene(argv[1], &prog.scene);
 	prog.mlx.mlx_ptr = mlx_init();
 	if (!prog.mlx.mlx_ptr)
 	{

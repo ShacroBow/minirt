@@ -53,55 +53,92 @@ void	parse_line(char *line, t_scene *scene)
 
 	if (is_ignorable(line))
 		return ;
-	tokens = ft_split(line, ' ');
-	if (!tokens || !tokens[0])
-	{
-		free_tokens(tokens);
-		return ;
-	}
-	if (ft_strncmp(tokens[0], "A", 2) == 0)
-		parse_ambient(scene, tokens);
-	else if (ft_strncmp(tokens[0], "C", 2) == 0)
-		parse_camera(scene, tokens);
-	else if (ft_strncmp(tokens[0], "L", 2) == 0)
-		parse_light(scene, tokens);
-	else if (ft_strncmp(tokens[0], "sp", 3) == 0)
-		parse_sphere(scene, tokens);
-	else if (ft_strncmp(tokens[0], "pl", 3) == 0)
-		parse_plane(scene, tokens);
-	else if (ft_strncmp(tokens[0], "cy", 3) == 0)
-		parse_cylinder(scene, tokens);
+	// tokens = ft_split(line, ' ');
+	// if (!tokens || !tokens[0])
+	// {
+	// 	free_tokens(tokens);
+	// 	return ;
+	// }
+	if (ft_strncmp(line, "A ", 2) == 0)
+		parse_ambient(scene, line);
+	else if (ft_strncmp(line, "C ", 2) == 0)
+		parse_camera(scene, line);
+	else if (ft_strncmp(line, "L ", 2) == 0)
+		parse_light(scene, line);
+	else if (ft_strncmp(line, "sp ", 3) == 0)
+		parse_sphere(scene, line);
+	else if (ft_strncmp(line, "pl ", 3) == 0)
+		parse_plane(scene, line);
+	else if (ft_strncmp(line, "cy ", 3) == 0)
+		parse_cylinder(scene, line);
 	else
 		exit_error("Error: Invalid identifier in scene file.");
-	free_tokens(tokens);
+	// free_tokens(tokens);
 }
 
-static t_scene	*parse_file(char *filename)
+int	read_file(int fd, char *content)
+{
+	ssize_t	bytes_read;
+
+	bytes_read = read(fd, content, FILE_SIZE + 1);
+	if (bytes_read == -1)
+		return (write(2, "Error: reading file.\n", 20), 1);
+	if (bytes_read == FILE_SIZE + 1)
+		return (write(2, "Error: file too big. Max: 1000000 bytes\n", 40), 1);
+	if (bytes_read == 0)
+		return (write(2, "Error: empty file.\n", 19), 1);
+	content[bytes_read] = 0;
+	return (0);
+}
+
+char	*next_line(char *content)
+{
+	char	*line;
+
+	while (*content != 0)
+}
+
+void	skip_nulls(char **content)
+{
+	while (**content == 0)
+		(*content += 1);
+}
+
+static t_scene	*parse_file(char *filename, t_scene *scene)
 {
 	int		fd;
 	char	*line;
-	t_scene	*scene;
+	size_t	line_count;
+	size_t	i;
+	char	file_content[FILE_SIZE + 1];
 
+	i = 0;
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		exit_error("Error: Cannot open scene file.");
-	scene = safe_malloc(sizeof(t_scene));
-	ft_bzero(scene, sizeof(t_scene));
-	while (1)
+	if (read_file(fd, file_content))
+		return (free_scene(scene), NULL);
+	line_count = ft_split_inplace(file_content, '\n');
+	line = file_content;
+	while (i < line_count)
 	{
-		line = read_line(fd);
-		if (!line)
-			break ;
+		while (*line == 0)
+			line += 1;
 		if (!is_ignorable(line))
 			parse_line(line, scene);
-		free(line);
+		line += ft_strlen(line); // SINCE parse_line() also uses ft_split_inplace(), resulting ft_strlen() here will NOT be correct intended value << CHANGE THIS
+		i++;
 	}
 	close(fd);
 	validate_scene(scene);
 	return (scene);
 }
 
-t_scene	*parse_scene(const char *filename)
+t_scene	*parse_scene(const char *filename, t_scene **scene)
 {
-	return (parse_file((char *)filename));
+	*scene = malloc(sizeof(t_scene));
+	if (!*scene)
+		exit_error("Error: Allocation failure.");
+	ft_bzero(*scene, sizeof(t_scene));
+	return (parse_file((char *)filename, *scene));
 }
