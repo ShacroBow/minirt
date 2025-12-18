@@ -78,17 +78,17 @@ void	parse_line(char *line, t_scene *scene)
 
 ssize_t	create_file_lines(int fd)
 {
-	char	file_content[100001];
+	char	file_content[1000001];
 	ssize_t	bytes_read;
 	ssize_t	line_count;
 	size_t	line_len;
 
 	line_count = 0;
 	line_len = 0;
-	bytes_read = read(fd, file_content, 100001);
+	bytes_read = read(fd, file_content, 1000001);
 	if (bytes_read == -1)
 		return (-1);
-	if (bytes_read > 100000)
+	if (bytes_read > 1000000)
 		return (-1);
 	file_content[bytes_read] = 0;
 	while (1)
