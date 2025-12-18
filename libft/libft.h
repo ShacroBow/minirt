@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jel-ghna <jel-ghna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kha <kha@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 11:45:06 by kmashkoo          #+#    #+#             */
-/*   Updated: 2025/12/18 16:03:31 by jel-ghna         ###   ########.fr       */
+/*   Updated: 2025/08/09 22:47:15 by kha              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,6 @@ typedef struct s_list
 	void			*content;
 	struct s_list	*next;
 }	t_list;
-
-typedef struct split_s
-{
-	char	*str;
-	char	c;
-	size_t	i;
-	int		in_word;
-	size_t	strlen;
-}	split_t;
 
 size_t	ft_strlen(const char *str);
 int		ft_isprint(int c);
@@ -94,14 +85,5 @@ long	ft_atol(const char *nptr, int *len);
 /* string to double. Skips space, handles multiple signs, 
 leading zeros, optional fraction. Returns 0.0 on all other input. */
 double	ft_atof(const char *str);
-
-/* Splits the given "str" with "c" by replacing all
-	occurences of "c" in the "str" with NULL in place.
-
-	After splitting, "str" will point to the start of
-	the first split word.
-
-	RETURN: count of resulting strings.*/
-size_t	ft_split_inplace(char *str, char c);
 
 #endif
