@@ -14,51 +14,10 @@ static bool	is_ignorable(const char *s)
 	return (s[i] == '\0' || s[i] == '#');
 }
 
-static char	*read_line(int fd)
-{
-	char		*line;
-	char		buf[2];
-	ssize_t		r;
-	size_t		len;
-
-	line = NULL;
-	len = 0;
-	buf[1] = '\0';
-	r = 1;
-	while (r > 0)
-	{
-		r = read(fd, buf, 1);
-		if (r <= 0)
-			break ;
-		if (buf[0] == '\n')
-			break ;
-		line = (char *)ft_realloc(line, len, len + 1, sizeof(char));
-		if (!line)
-			return (NULL);
-		line[len] = buf[0];
-		len++;
-	}
-	if (!line && r == 0)
-		return (NULL);
-	line = (char *)ft_realloc(line, len, len + 1, sizeof(char));
-	if (!line)
-		return (NULL);
-	line[len] = '\0';
-	return (line);
-}
-
 void	parse_line(char *line, t_scene *scene)
 {
-	char	**tokens;
-
 	if (is_ignorable(line))
 		return ;
-	// tokens = ft_split(line, ' ');
-	// if (!tokens || !tokens[0])
-	// {
-	// 	free_tokens(tokens);
-	// 	return ;
-	// }
 	if (ft_strncmp(line, "A ", 2) == 0)
 		parse_ambient(scene, line);
 	else if (ft_strncmp(line, "C ", 2) == 0)
@@ -72,36 +31,25 @@ void	parse_line(char *line, t_scene *scene)
 	else if (ft_strncmp(line, "cy ", 3) == 0)
 		parse_cylinder(scene, line);
 	else
-		exit_error("Error: Invalid identifier in scene file.");
-	// free_tokens(tokens);
+	{
+		(free_scene(scene),
+		exit_error("Error: Invalid identifier in scene file."));
+	}
 }
 
-int	read_file(int fd, char *content)
+void	read_file(int fd, char *content, t_scene *scene)
 {
 	ssize_t	bytes_read;
 
 	bytes_read = read(fd, content, FILE_SIZE + 1);
 	if (bytes_read == -1)
-		return (write(2, "Error: reading file.\n", 20), 1);
+		(free_scene(scene), exit_error("Error: reading file.\n"));
 	if (bytes_read == FILE_SIZE + 1)
-		return (write(2, "Error: file too big. Max: 1000000 bytes\n", 40), 1);
+		(free_scene(scene),
+		exit_error("Error: file too big. Max: 1000000 bytes\n"));
 	if (bytes_read == 0)
-		return (write(2, "Error: empty file.\n", 19), 1);
+		(free_scene(scene), exit_error("Error: empty file.\n"));
 	content[bytes_read] = 0;
-	return (0);
-}
-
-char	*next_line(char *content)
-{
-	char	*line;
-
-	while (*content != 0)
-}
-
-void	skip_nulls(char **content)
-{
-	while (**content == 0)
-		(*content += 1);
 }
 
 static t_scene	*parse_file(char *filename, t_scene *scene)
@@ -109,25 +57,35 @@ static t_scene	*parse_file(char *filename, t_scene *scene)
 	int		fd;
 	char	*line;
 	size_t	line_count;
-	size_t	i;
+	size_t	line_len;
 	char	file_content[FILE_SIZE + 1];
 
-	i = 0;
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		exit_error("Error: Cannot open scene file.");
-	if (read_file(fd, file_content))
-		return (free_scene(scene), NULL);
+		(free_scene(scene), exit_error("Error: Cannot open scene file."));
+	// read_file(fd, file_content, scene);
+	// printf("BEFORE:\n");
+	// write(1, file_content, 531);
+	// printf("\n");
 	line_count = ft_split_inplace(file_content, '\n');
+	// printf("AFTER:\n");
+	// for (size_t i = 0; i < 531; i++)
+	// {
+	// 	if (file_content[i] == 0)
+	// 		write(1, "_", 1);
+	// 	else
+	// 		write(1, &file_content[i], 1);
+	// }
+	// printf("LINE COUNT IS: %zi\n", line_count);
 	line = file_content;
-	while (i < line_count)
+	while (line_count--)
 	{
 		while (*line == 0)
 			line += 1;
+		line_len = ft_strlen(line);
 		if (!is_ignorable(line))
 			parse_line(line, scene);
-		line += ft_strlen(line); // SINCE parse_line() also uses ft_split_inplace(), resulting ft_strlen() here will NOT be correct intended value << CHANGE THIS
-		i++;
+		line += line_len;
 	}
 	close(fd);
 	validate_scene(scene);

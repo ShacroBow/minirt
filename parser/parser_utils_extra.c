@@ -22,6 +22,7 @@ static bool	split3_in_place(char *str, char **a, char **b, char **c)
 	*a = str;
 	return (true);
 }
+
 bool	ft_valid_3str(char *str)
 {
 	int	commas;

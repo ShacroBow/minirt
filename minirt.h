@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include "mlx.h"
 #include "libft/libft.h"
+#include <stdio.h>
 
 /* --- Constants (single source of truth) --- */
 #define WIDTH 255  // 1024
@@ -161,12 +162,12 @@ int main(int argc, char **argv);
 /* --- Parser --- */
 t_scene *parse_scene(const char *filename, t_scene **scene);
 void parse_line(char *line, t_scene *scene);
-void parse_ambient(t_scene *scene, char **tokens);
-void parse_camera(t_scene *scene, char **tokens);
-void parse_light(t_scene *scene, char **tokens);
-void parse_sphere(t_scene *scene, char **tokens);
-void parse_plane(t_scene *scene, char **tokens);
-void parse_cylinder(t_scene *scene, char **tokens);
+void parse_ambient(t_scene *scene, char *line);
+void parse_camera(t_scene *scene, char *line);
+void parse_light(t_scene *scene, char *line);
+void parse_sphere(t_scene *scene, char *line);
+void parse_plane(t_scene *scene, char *line);
+void parse_cylinder(t_scene *scene, char *line);
 
 /* Parser Utils */
 bool parse_vector(char *str, t_vec3 *vec);
@@ -177,10 +178,10 @@ int count_tokens(char **tokens);
 void free_tokens(char **tokens);
 
 /* Parser Validation */
-void validate_color(t_color color);
-void validate_normalized_vector(t_vec3 vec);
-void validate_ratio(double ratio);
-void validate_fov(double fov);
+void validate_color(t_color color, t_scene *scene);
+void validate_normalized_vector(t_vec3 vec, t_scene *scene);
+void validate_ratio(double ratio, t_scene *scene);
+void validate_fov(double fov, t_scene *scene);
 void validate_scene(t_scene *scene);
 
 /* --- Vectors --- */

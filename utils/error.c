@@ -1,5 +1,6 @@
 #include "../minirt.h"
 
+__attribute__((analyzer_noreturn, noreturn))
 void	exit_error(const char *message)
 {
 	if (message)
@@ -7,6 +8,7 @@ void	exit_error(const char *message)
 	write(2, "\n", 1);
 	exit(EXIT_FAILURE);
 }
+
 void cleanup(t_program *prog)
 {
 	if (prog->mlx.img_ptr)
