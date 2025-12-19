@@ -28,13 +28,6 @@ void	parse_camera(t_scene *scene, char *line)
 	if (!parse_vector(index_split(line, 1), &scene->camera.center))
 		(free_scene(scene),
 		exit_error("Error: Invalid vector format for camera center."));
-	// write(1, ">>>", 3);
-	// printf("%s\n", index_split(line, 0));
-	// printf("%s\n", index_split(line, 1));
-	// printf("%s\n", index_split(line, 2));
-	// printf("%s\n", index_split(line, 3));
-	// // write(1, line, 19);
-	// write(1, "<<<", 3);
 	if (!parse_vector(index_split(line, 2), &scene->camera.normal))
 		(free_scene(scene),
 		exit_error("Error: Invalid vector format for camera normal."));

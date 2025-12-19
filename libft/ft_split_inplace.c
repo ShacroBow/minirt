@@ -6,7 +6,7 @@
 /*   By: jel-ghna <jel-ghna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 16:05:31 by jel-ghna          #+#    #+#             */
-/*   Updated: 2025/12/18 22:52:54 by jel-ghna         ###   ########.fr       */
+/*   Updated: 2025/12/19 16:51:21 by jel-ghna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,6 @@ char	*index_split(char *str, size_t index)
 {
 	size_t	i;
 	char	*res;
-
-	write(1, "starting at: [", 14);
-	write(1, str, 30);
-	write(1, "]\n", 2);
 	i = 0;
 	res = str;
 	while (res[i] == 0)
@@ -60,9 +56,6 @@ char	*index_split(char *str, size_t index)
 		res += ft_strlen(res) + 1;
 		index--;
 	}
-	write(1, "gave us: [", 10);
-	write(1, res, ft_strlen(res));
-	write(1, "]\n", 2);
 	return (res);
 }
 

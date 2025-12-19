@@ -63,20 +63,8 @@ static t_scene	*parse_file(char *filename, t_scene *scene)
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		(free_scene(scene), exit_error("Error: Cannot open scene file."));
-	// read_file(fd, file_content, scene);
-	// printf("BEFORE:\n");
-	// write(1, file_content, 531);
-	// printf("\n");
+	read_file(fd, file_content, scene);
 	line_count = ft_split_inplace(file_content, '\n');
-	// printf("AFTER:\n");
-	// for (size_t i = 0; i < 531; i++)
-	// {
-	// 	if (file_content[i] == 0)
-	// 		write(1, "_", 1);
-	// 	else
-	// 		write(1, &file_content[i], 1);
-	// }
-	// printf("LINE COUNT IS: %zi\n", line_count);
 	line = file_content;
 	while (line_count--)
 	{
