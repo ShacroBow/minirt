@@ -21,6 +21,12 @@
 #define ENABLE_AA 1
 #define ENABLE_BG 1
 
+/* Key codes */
+#define UP_ARROW_KEY 65362
+#define DOWN_ARROW_KEY 65364
+#define RIGHT_ARROW_KEY 65363
+#define LEFT_ARROW_KEY 65361
+
 #define FILE_SIZE 1000000
 /* --- Core Data Structures --- */
 
