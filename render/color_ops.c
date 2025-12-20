@@ -5,10 +5,12 @@
 t_color	color_mult(t_color c1, t_color c2)
 {
 	t_color	result;
+	double	inv_255;
 
-	result.x = (c1.x / 255.0) * c2.x;
-	result.y = (c1.y / 255.0) * c2.y;
-	result.z = (c1.z / 255.0) * c2.z;
+	inv_255 = 0.00392156862;
+	result.x = c1.x * c2.x * inv_255;
+	result.y = c1.y * c2.y * inv_255;
+	result.z = c1.z * c2.z * inv_255;
 	return (result);
 }
 

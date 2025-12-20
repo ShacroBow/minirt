@@ -21,7 +21,7 @@ DEPS_BONUS = $(OBJ_BONUS:.o=.d)
 LIBFT_PATH = ./libft/
 LIBFT = libft.a
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -MMD -MP
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -O3 -flto -march=native -g
 LIBFLAGS = -L. $(LIBFT_PATH)$(LIBFT) -lmlx -lX11 -lXext -lm
 
 

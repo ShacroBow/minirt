@@ -1,14 +1,5 @@
 #include "../minirt.h"
 
-void	*safe_malloc(size_t size)
-{
-	void	*ptr;
-
-	ptr = malloc(size);
-	if (!ptr)
-		exit_error("Error: Memory allocation failed.");
-	return (ptr);
-}
 
 static void	free_lights(t_light *lights)
 {

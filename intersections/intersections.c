@@ -50,3 +50,18 @@ bool	hit(const t_object *world, const t_ray *ray, double t_max,
 	}
 	return (hit_any);
 }
+
+bool	hit_any(const t_object *world, const t_ray *ray, double t_max)
+{
+	const t_object	*cur;
+	t_hit_record	temp;
+
+	cur = world;
+	while (cur)
+	{
+		if (try_hit_object(cur, ray, t_max, &temp))
+			return (true);
+		cur = cur->next;
+	}
+	return (false);
+}

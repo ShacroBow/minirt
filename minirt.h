@@ -6,28 +6,49 @@
 #include <math.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <X11/keysym.h>
 #include "mlx.h"
 #include "libft/libft.h"
 #include <stdio.h>
 
 /* --- Constants (single source of truth) --- */
-#define WIDTH 255  // 1024
-#define HEIGHT 255 // 768
+#define WIDTH 555  // 1024
+#define HEIGHT 555 // 768
 #define EPSILON 1e-6
-// #define SHININESS 32.0
-#define AA_SAMPLES 4
+#define SHININESS 32.0
+#define AA_SAMPLES 32
 #define DISPLAY_GAMMA 0.6
 #define ENABLE_GAMMA 1
 #define ENABLE_AA 1
 #define ENABLE_BG 1
+#define WIN_TITLE "miniRT"
+#define MOVE_SPEED_BASE 0.5
+#define ROT_SPEED 0.1
+#define SPEED_INCREMENT 0.5
+#define FILE_SIZE 4096
 
-/* Key codes */
-#define UP_ARROW_KEY 65362
-#define DOWN_ARROW_KEY 65364
-#define RIGHT_ARROW_KEY 65363
-#define LEFT_ARROW_KEY 65361
 
-#define FILE_SIZE 1000000
+
+//FUNCTION
+# define KEY_ESC		XK_Escape //65307
+# define KEY_P			XK_p //70
+
+//NAVIGATE
+# define KEY_PG_UP		XK_Page_Up //65365
+# define KEY_PG_DOWN	XK_Page_Down //65366
+# define KEY_W			XK_w //77
+# define KEY_S			XK_s //73
+# define KEY_A			XK_a //61
+# define KEY_D			XK_d //64
+# define KEY_UP			XK_Up //65362
+# define KEY_DOWN		XK_Down //65364
+# define KEY_LEFT		XK_Left //65361
+# define KEY_RIGHT		XK_Right //65363
+
+//ADDITIONAL STUFF
+# define KEY_PLUS		XK_equal //61
+# define KEY_MINUS		XK_minus //45
+# define KEY_SPACE		XK_space //32
 /* --- Core Data Structures --- */
 
 /* Vector / Point / Color */
@@ -116,14 +137,6 @@ typedef struct s_object
 	struct s_object *next;
 } t_object;
 
-typedef struct s_render_params
-{
-	int x;
-	int y;
-	double inv_w;
-	double inv_h;
-} t_render_params;
-
 /* Hit Record */
 typedef struct s_hit_record
 {
@@ -158,6 +171,10 @@ typedef struct s_program
 {
 	t_scene *scene;
 	t_mlx_data mlx;
+	int aa_enabled;
+	double move_speed;
+	t_camera default_camera;
+	char *scene_file;
 } t_program;
 
 /* --- Function Prototypes --- */
@@ -200,11 +217,11 @@ t_vec3 vec_cross(t_vec3 v1, t_vec3 v2);
 double vec_length_squared(t_vec3 v);
 double vec_length(t_vec3 v);
 t_vec3 vec_normalize(t_vec3 v);
-t_vec3 vec_reflect(t_vec3 v, t_vec3 n);
 
 /* --- Intersections --- */
 bool hit(const t_object *world, const t_ray *ray, double t_max,
 		 t_hit_record *rec);
+bool hit_any(const t_object *world, const t_ray *ray, double t_max);
 bool hit_sphere(const t_sphere *sp, const t_ray *ray, double t_max,
 				t_hit_record *rec);
 bool hit_plane(const t_plane *pl, const t_ray *ray, double t_max,
@@ -215,7 +232,6 @@ bool hit_cylinder(const t_cylinder *cy, const t_ray *ray,
 /* --- Render --- */
 void setup_camera(t_camera *cam, double aspect_ratio);
 int color_to_int(t_color color);
-void my_mlx_pixel_put(t_mlx_data *data, int x, int y, int color);
 void render(t_program *prog);
 
 /* Shading / Rays */
@@ -233,7 +249,8 @@ t_color color_gamma(t_color c, double gamma);
 
 /* --- Utils --- */
 void exit_error(const char *message);
-void *safe_malloc(size_t size);
+void exit_error_with_cleanup(t_program *prog, const char *message);
+void cleanup(t_program *prog);
 void free_scene(t_scene *scene);
 bool has_extension(const char *filename, const char *ext);
 

@@ -1,12 +1,17 @@
 #include "../minirt.h"
 
-__attribute__((analyzer_noreturn, noreturn))
 void	exit_error(const char *message)
 {
 	if (message)
 		write(2, message, ft_strlen(message));
 	write(2, "\n", 1);
 	exit(EXIT_FAILURE);
+}
+
+void	exit_error_with_cleanup(t_program *prog, const char *message)
+{
+	cleanup(prog);
+	exit_error(message);
 }
 
 void cleanup(t_program *prog)

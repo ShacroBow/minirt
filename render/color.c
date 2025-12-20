@@ -21,13 +21,6 @@ int color_to_int(t_color color)
 	return ((r << 16) | (g << 8) | b);
 }
 
-void my_mlx_pixel_put(t_mlx_data *data, int x, int y, int color)
-{
-	char *dst;
-
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int *)dst = color;
-}
 
 t_color color_gamma(t_color c, double gamma)
 {

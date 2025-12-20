@@ -33,10 +33,12 @@ t_vec3	vec_mult(t_vec3 v, double scalar)
 t_vec3	vec_div(t_vec3 v, double scalar)
 {
 	t_vec3	result;
+	double	inv;
 
-	result.x = v.x / scalar;
-	result.y = v.y / scalar;
-	result.z = v.z / scalar;
+	inv = 1.0 / scalar;
+	result.x = v.x * inv;
+	result.y = v.y * inv;
+	result.z = v.z * inv;
 	return (result);
 }
 

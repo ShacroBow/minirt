@@ -3,21 +3,24 @@
 static bool	solve_quadratic(double a, double b, double c, double *t)
 {
 	double	discriminant;
-	double	root;
+	double	sqrt_disc;
+	double	t0;
+	double	t1;
 
-	discriminant = b * b - 4 * a * c;
-	if (discriminant < 0)
+	discriminant = b * b - 4.0 * a * c;
+	if (discriminant < 0.0)
 		return (false);
-	root = (-b - sqrt(discriminant)) / (2.0 * a);
-	if (root > EPSILON)
+	sqrt_disc = sqrt(discriminant);
+	t0 = (-b - sqrt_disc) / (2.0 * a);
+	t1 = (-b + sqrt_disc) / (2.0 * a);
+	if (t0 > EPSILON && (t0 < t1 || t1 <= EPSILON))
 	{
-		*t = root;
+		*t = t0;
 		return (true);
 	}
-	root = (-b + sqrt(discriminant)) / (2.0 * a);
-	if (root > EPSILON)
+	if (t1 > EPSILON)
 	{
-		*t = root;
+		*t = t1;
 		return (true);
 	}
 	return (false);
