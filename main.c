@@ -134,7 +134,7 @@ int main(int argc, char **argv)
 	prog.scene_file = argv[1];
 	prog.move_speed = MOVE_SPEED_BASE;
 	prog.aa_enabled = ENABLE_AA;
-	parse_scene(argv[1], &prog.scene);
+	parse_scene(prog.scene_file, &prog.scene);
 	prog.default_camera = prog.scene->camera;
 	init_mlx(&prog);
 	render(&prog);

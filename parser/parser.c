@@ -43,12 +43,12 @@ void	read_file(int fd, char *content, t_scene *scene)
 
 	bytes_read = read(fd, content, FILE_SIZE + 1);
 	if (bytes_read == -1)
-		(free_scene(scene), exit_error("Error: reading file.\n"));
+		(close(fd), free_scene(scene), exit_error("Error: reading file.\n"));
 	if (bytes_read == FILE_SIZE + 1)
-		(free_scene(scene),
+		(close(fd), free_scene(scene),
 		exit_error("Error: file too big. Max: 1000000 bytes\n"));
 	if (bytes_read == 0)
-		(free_scene(scene), exit_error("Error: empty file.\n"));
+		(close(fd), free_scene(scene), exit_error("Error: empty file.\n"));
 	content[bytes_read] = 0;
 }
 
