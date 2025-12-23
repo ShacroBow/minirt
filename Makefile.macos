@@ -1,0 +1,70 @@
+NAME = minirt
+SRC =	main.c $(SRCS_PARSER) $(SRCS_VECTORS) $(SRCS_INTERSECTIONS) $(SRCS_RENDER) \
+		$(SRCS_UTILS)
+
+SRCS_PARSER = parser/parser.c parser/parser_utils.c parser/validation.c \
+			  parser/parse_elements.c parser/parser_utils_extra.c \
+			  parser/parse_cylinder.c
+SRCS_VECTORS = vectors/vec_operations_1.c vectors/vec_operations_2.c
+SRCS_INTERSECTIONS = intersections/hit_sphere.c intersections/hit_plane.c \
+                     intersections/hit_cylinder.c intersections/intersections.c
+SRCS_RENDER = render/render.c render/shading.c render/camera.c render/color.c \
+			  render/color_ops.c render/background.c
+SRCS_UTILS = utils/error.c utils/memory.c utils/string_utils.c
+
+OBJ_DIR = ./dir/
+OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
+OBJ_BONUS = $(SRC_BONUS:%.c=$(OBJ_DIR)%.o)
+DEPS = $(OBJ:.o=.d)
+DEPS_BONUS = $(OBJ_BONUS:.o=.d)
+
+LIBFT_PATH = ./libft/
+LIBFT = libft.a
+CC = cc
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -O3 -flto -march=native -g -I./mlx_macos
+LIBFLAGS = -L. $(LIBFT_PATH)$(LIBFT) -lmlx -lm
+
+MLX_MAC_PATH = ./mlx_macos/
+MLX_MAC = libmlx.dylib
+
+all: $(MLX_MAC) $(NAME)
+
+#bonus: $(NAME_BONUS)
+
+$(NAME): $(OBJ_DIR) $(OBJ) $(LIBFT_PATH)$(LIBFT)
+	$(CC) $(OBJ) $(CFLAGS) -o $(NAME) $(LIBFLAGS)
+
+$(NAME_BONUS): $(OBJ_DIR) $(OBJ_BONUS) $(LIBFT_PATH)$(LIBFT)
+	$(CC) $(OBJ_BONUS) $(CFLAGS) -o $@ $(LIBFLAGS)
+
+$(OBJ_DIR)%.o : %.c
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR):
+	mkdir -p $@
+
+$(LIBFT_PATH)$(LIBFT):
+	make -C $(LIBFT_PATH) all -j8
+
+$(MLX_MAC):
+	make -C $(MLX_MAC_PATH)
+	mv $(MLX_MAC_PATH)$(MLX_MAC) .
+
+clean:
+	rm -rf $(OBJ) $(DEPS)
+	rm -rf $(OBJ_BONUS) $(DEPS_BONUS)
+	make -C $(LIBFT_PATH) clean
+	make -C $(MLX_MAC_PATH) clean
+
+fclean: clean
+	rm -rf $(NAME) $(NAME_BONUS) a.out $(OBJ_DIR) files.supp $(MLX_MAC)
+	make -C $(LIBFT_PATH) fclean
+
+re: fclean all
+
+# Include auto-generated dependency files
+-include $(DEPS)
+-include $(DEPS_BONUS)
+
+.PHONY: all clean fclean re #bonus
