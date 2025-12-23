@@ -30,6 +30,8 @@ void	parse_line(char *line, t_scene *scene)
 		parse_plane(scene, line);
 	else if (ft_strncmp(line, "cy ", 3) == 0)
 		parse_cylinder(scene, line);
+	else if (ft_strncmp(line, "co", 3) == 0)
+		parse_cone(scene, line);
 	else
 	{
 		(free_scene(scene),

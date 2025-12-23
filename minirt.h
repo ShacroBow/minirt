@@ -87,7 +87,8 @@ typedef enum e_object_type
 {
 	SPHERE,
 	PLANE,
-	CYLINDER
+	CYLINDER,
+	CONE
 } t_object_type;
 
 typedef struct s_sphere
@@ -109,6 +110,14 @@ typedef struct s_cylinder
 	double diameter;
 	double height;
 } t_cylinder;
+
+typedef struct s_cone
+{
+	t_point	center;
+	t_vec3	normal;
+	double	diameter;
+	double	height;
+}	t_cone;
 
 typedef struct s_object
 {
@@ -172,6 +181,7 @@ void parse_light(t_scene *scene, char *line);
 void parse_sphere(t_scene *scene, char *line);
 void parse_plane(t_scene *scene, char *line);
 void parse_cylinder(t_scene *scene, char *line);
+void parse_cone(t_scene *scene, char *line);
 
 /* Parser Utils */
 bool parse_vector(char *str, t_vec3 *vec);
