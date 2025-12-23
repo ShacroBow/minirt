@@ -90,7 +90,7 @@ int key_hook(int keycode, t_program *prog)
 		prog->move_speed += SPEED_INCREMENT;
 	else if (keycode == KEY_MINUS && prog->move_speed > SPEED_INCREMENT)
 		prog->move_speed -= SPEED_INCREMENT;
-	else if (keycode == XK_x)
+	else if (keycode == KEY_X)
 		*cam = prog->default_camera;
 	else if (keycode == KEY_P)
 	{
@@ -99,7 +99,7 @@ int key_hook(int keycode, t_program *prog)
 		prog->aa_enabled = 0;
 		return (0);
 	}
-	else if (keycode == XK_o)
+	else if (keycode == KEY_O)
 		prog->aa_enabled = !prog->aa_enabled;
 	render(prog);
 	return (0);

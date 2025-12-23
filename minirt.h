@@ -6,9 +6,9 @@
 #include <math.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <X11/keysym.h>
-#include "mlx.h"
+#include <mlx.h>
 #include "libft/libft.h"
+#include "keys.h"
 #include <stdio.h>
 
 /* --- Constants (single source of truth) --- */
@@ -27,28 +27,6 @@
 #define SPEED_INCREMENT 0.5
 #define FILE_SIZE 4096
 
-
-
-//FUNCTION
-# define KEY_ESC		XK_Escape //65307
-# define KEY_P			XK_p //70
-
-//NAVIGATE
-# define KEY_PG_UP		XK_Page_Up //65365
-# define KEY_PG_DOWN	XK_Page_Down //65366
-# define KEY_W			XK_w //77
-# define KEY_S			XK_s //73
-# define KEY_A			XK_a //61
-# define KEY_D			XK_d //64
-# define KEY_UP			XK_Up //65362
-# define KEY_DOWN		XK_Down //65364
-# define KEY_LEFT		XK_Left //65361
-# define KEY_RIGHT		XK_Right //65363
-
-//ADDITIONAL STUFF
-# define KEY_PLUS		XK_equal //61
-# define KEY_MINUS		XK_minus //45
-# define KEY_SPACE		XK_space //32
 /* --- Core Data Structures --- */
 
 /* Vector / Point / Color */
