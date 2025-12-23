@@ -1,6 +1,9 @@
 #ifndef MINIRT_H
 #define MINIRT_H
 
+# define _GNU_SOURCE // needed for M_PI macro (only for vscode c/c++ extension)
+# define DEBUG 1
+
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
@@ -19,11 +22,11 @@
 #define AA_SAMPLES 32
 #define DISPLAY_GAMMA 0.6
 #define ENABLE_GAMMA 1
-#define ENABLE_AA 1
+#define ENABLE_AA 0
 #define ENABLE_BG 1
 #define WIN_TITLE "miniRT"
 #define MOVE_SPEED_BASE 0.5
-#define ROT_SPEED 0.1
+#define ROT_SPEED 0.5
 #define SPEED_INCREMENT 0.5
 #define FILE_SIZE 4096
 

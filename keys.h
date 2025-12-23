@@ -53,6 +53,18 @@
 #  define KEY_O			XK_o
 #  define KEY_X			XK_x
 
+// SELECT CAMERA AND OBJECTS
+#  define KEY_0			XK_0
+#  define KEY_1			XK_1
+#  define KEY_2			XK_2
+#  define KEY_3			XK_3
+#  define KEY_4			XK_4
+#  define KEY_5			XK_5
+#  define KEY_6			XK_6
+#  define KEY_7			XK_7
+#  define KEY_8			XK_8
+#  define KEY_9			XK_9
+
 # endif /* __APPLE__ */
 
 #endif /* KEYS_H */

@@ -16,4 +16,4 @@ sp 0,0,0 5 255,0,0
 pl 0,-5,0 0,1,0 0,255,0
 
 # Blue cylinder: base at (3,0,0), axis (0,1,0), diameter 2, height 4, color blue
-cy 10,0,0 0,1,0 2 4 0,0,255
+cy 0,0,10 0,1,0 2 4 0,0,255
