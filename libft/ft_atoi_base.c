@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi_base.c                                  :+:      :+:    :+:   */
+/*   ft_atoi_base.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kmashkoo <kmashkoo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 16:17:20 by kmashkoo          #+#    #+#             */
-/*   Updated: 2025/08/09 19:45:00 by kha              ###   ########.fr       */
+/*   Updated: 2025/12/24 19:45:21 by kmashkoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ int	ft_atoi_base(const char *str, int base)
 	return (res * j);
 }
 
-
 /* #include <stdio.h>
 int	main(int argc, char **argv)
 {
@@ -79,6 +78,7 @@ int	main(int argc, char **argv)
 	value = ft_atoi_base(argv[1], base);
 	printf("Input: %s | Base: %d | Result: %d\n", argv[1], base, value);
 	printf("Checks: 42(dec)= %d | 2A(hex)= %d | 101010(bin)= %d\n",
-		ft_atoi_base("42", 10), ft_atoi_base("2A", 16), ft_atoi_base("101010", 2));
+		ft_atoi_base("42", 10), ft_atoi_base("2A", 16), \
+												ft_atoi_base("101010", 2));
 	return (0);
 } */

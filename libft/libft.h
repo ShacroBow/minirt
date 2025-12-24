@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jel-ghna <jel-ghna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kmashkoo <kmashkoo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 11:45:06 by kmashkoo          #+#    #+#             */
-/*   Updated: 2025/12/18 20:25:19 by jel-ghna         ###   ########.fr       */
+/*   Updated: 2025/12/24 19:44:39 by kmashkoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define LIBFT_H
 # include <stdlib.h>
 # include <stdio.h>
+# include <unistd.h>
 
 typedef struct s_list
 {
@@ -28,7 +29,7 @@ typedef struct split_s
 	size_t	i;
 	int		in_word;
 	size_t	strlen;
-}	split_t;
+}	t_split;
 
 size_t	ft_strlen(const char *str);
 int		ft_isprint(int c);
@@ -74,9 +75,10 @@ void	ft_lstdelone(t_list *lst, void (*del)(void*));
 void	ft_lstclear(t_list **lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
-/*ft_waste_time. returns amount of operations done.
-1 iteration is loosely close to 1 second of computation. on a random cpu*/
-long	ft_waste_time(unsigned int iterations);
+/*ft_waste_time. returns amount of operations done. 1 iteration is loosely 
+close to 1 second of computation. on a random cpu. This is ment for stressing 
+a thread.*/
+size_t	ft_waste_time(unsigned int iterations);
 /* ft_quicksort. return sorted array or null on fail.*/
 int		*ft_quicksort(int *arr, int len);
 /*passing ptr as null will give a malloc of new_size*/
@@ -94,16 +96,10 @@ long	ft_atol(const char *nptr, int *len);
 /* string to double. Skips space, handles multiple signs, 
 leading zeros, optional fraction. Returns 0.0 on all other input. */
 double	ft_atof(const char *str);
-
 /* Splits the given "str" with "c" by replacing all
 	occurences of "c" in the "str" with NULL in place.
-
 	RETURN: count of resulting strings.*/
 size_t	ft_split_inplace(char *str, char c);
-/* RETURN: the address of the ith string, from a string
-	split by ft_split_inplace(char *str, char c).
-
-   NOTES: Do not pass out of bound index.*/
 char	*index_split(char *str, size_t index);
 
 #endif

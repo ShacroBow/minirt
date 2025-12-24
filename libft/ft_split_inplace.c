@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_inplace.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jel-ghna <jel-ghna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kmashkoo <kmashkoo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/18 16:05:31 by jel-ghna          #+#    #+#             */
-/*   Updated: 2025/12/19 16:51:21 by jel-ghna         ###   ########.fr       */
+/*   Created: 2025/12/24 19:37:01 by kmashkoo          #+#    #+#             */
+/*   Updated: 2025/12/24 19:43:36 by kmashkoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	loop_splitter(split_t *d)
+static int	loop_splitter(t_split *d)
 {
 	while (d->str[d->i] == d->c)
 	{
@@ -26,7 +26,7 @@ static int	loop_splitter(split_t *d)
 	return (0);
 }
 
-static int	loop_word(split_t *d, size_t *count)
+static int	loop_word(t_split *d, size_t *count)
 {
 	while (d->str[d->i] != d->c)
 	{
@@ -42,11 +42,15 @@ static int	loop_word(split_t *d, size_t *count)
 	return (0);
 }
 
-#include <unistd.h>
+/* RETURN: the address of the ith string, from a string
+	split by ft_split_inplace(char *str, char c).
+
+   NOTES: Do not pass out of bound index.*/
 char	*index_split(char *str, size_t index)
 {
 	size_t	i;
 	char	*res;
+
 	i = 0;
 	res = str;
 	while (res[i] == 0)
@@ -61,7 +65,7 @@ char	*index_split(char *str, size_t index)
 
 size_t	ft_split_inplace(char *str, char c)
 {
-	split_t	d;
+	t_split	d;
 	size_t	count;
 
 	count = 0;
