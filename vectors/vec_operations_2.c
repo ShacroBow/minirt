@@ -1,6 +1,6 @@
 #include "../minirt.h"
 
-t_vec3	vec_cross(t_vec3 v1, t_vec3 v2)
+t_vec3	vec_cross(t_vec3 v1, t_vec3 v2) // 
 {
 	t_vec3	result;
 
@@ -10,21 +10,21 @@ t_vec3	vec_cross(t_vec3 v1, t_vec3 v2)
 	return (result);
 }
 
-double	vec_length_squared(t_vec3 v)
+double	vec_lensqrt(t_vec3 v)
 {
-	return (v.x * v.x + v.y * v.y + v.z * v.z);
+	return ((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
 }
 
-double	vec_length(t_vec3 v)
+double	vec_len(t_vec3 v)
 {
-	return (sqrt(vec_length_squared(v)));
+	return (sqrt(vec_lensqrt(v)));
 }
 
 t_vec3	vec_normalize(t_vec3 v)
 {
 	double	len;
 
-	len = vec_length(v);
+	len = vec_len(v);
 	if (len == 0)
 		return (v);
 	return (vec_div(v, len));

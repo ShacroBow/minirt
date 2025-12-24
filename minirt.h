@@ -17,7 +17,7 @@
 /* --- Constants (single source of truth) --- */
 #define WIDTH 555  // 1024
 #define HEIGHT 555 // 768
-#define EPSILON 1e-6
+#define EPSILON 1e-6 // 0.000001
 #define SHININESS 32.0
 #define AA_SAMPLES 32
 #define DISPLAY_GAMMA 0.6
@@ -110,6 +110,14 @@ typedef struct s_cylinder
 	double height;
 } t_cylinder;
 
+typedef struct s_cap
+{
+	t_point	center;
+	t_vec3	normal;
+	double	r2;
+	int		invert;
+} t_cap;
+
 typedef struct s_object
 {
 	t_object_type type;
@@ -195,8 +203,8 @@ t_vec3 vec_mult(t_vec3 v, double scalar);
 t_vec3 vec_div(t_vec3 v, double scalar);
 double vec_dot(t_vec3 v1, t_vec3 v2);
 t_vec3 vec_cross(t_vec3 v1, t_vec3 v2);
-double vec_length_squared(t_vec3 v);
-double vec_length(t_vec3 v);
+double vec_lensqrt(t_vec3 v);
+double vec_len(t_vec3 v);
 t_vec3 vec_normalize(t_vec3 v);
 
 /* --- Intersections --- */

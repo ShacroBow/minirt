@@ -14,7 +14,7 @@ void	validate_normalized_vector(t_vec3 vec, t_scene *scene)
 		vec.y < -1 || vec.y > 1 ||
 		vec.z < -1 || vec.z > 1)
 		(free(scene), exit_error("Invalid normalized vector"));
-	if (vec_length_squared(vec) < EPSILON)
+	if (vec_lensqrt(vec) < EPSILON)
 		(free(scene), exit_error("Error: Normal vector cannot be zero."));
 }
 

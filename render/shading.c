@@ -10,12 +10,15 @@ static t_color calculate_ambient(const t_ambient_light *ambient,
 static t_color calculate_diffuse(const t_light *light,
 								 const t_hit_record *rec, const t_vec3 *light_dir)
 {
-	double diffuse_intensity;
+	double diffuse_intensity = fmax(0.0, vec_dot(rec->normal, *light_dir));
+	double tint = 0.8; //0.0 = no additive, 1.0 = full additive
 
-	diffuse_intensity = fmax(0.0, vec_dot(rec->normal, *light_dir));
-	return (color_scale(color_mult(rec->color, light->color),
-					light->ratio * diffuse_intensity));
-}static t_color	calculate_specular(const t_light *light,
+	t_color mat_mult = color_mult(rec->color, color_add(light->color, (t_vec3) {1,1,1}));
+	t_color mixed = color_add(mat_mult, color_scale(light->color, tint));
+	return color_scale(mixed, light->ratio * diffuse_intensity);
+}
+
+static t_color	calculate_specular(const t_light *light,
 		const t_hit_record *rec, const t_vec3 *view_dir, const t_vec3 *light_dir)
 {
 	t_vec3	reflect_dir;
@@ -45,7 +48,7 @@ static bool is_point_in_shadow(const t_point *point, const t_light *light,
 	double inv_light_distance;
 
 	light_dir = vec_sub(light->center, *point);
-	light_distance = vec_length(light_dir);
+	light_distance = vec_len(light_dir);
 	inv_light_distance = 1.0 / light_distance;
 	light_dir = vec_mult(light_dir, inv_light_distance);
 	shadow_ray.origin = vec_add(*point, vec_mult(light_dir, 0.001));
@@ -73,7 +76,7 @@ t_color phong_shading(const t_hit_record *rec, const t_scene *scene,
 		if (!is_point_in_shadow(&rec->point, current_light, scene->objects))
 		{
 			light_dir = vec_sub(current_light->center, rec->point);
-			light_distance = vec_length(light_dir);
+			light_distance = vec_len(light_dir);
 			inv_light_distance = 1.0 / light_distance;
 			light_dir = vec_mult(light_dir, inv_light_distance);
 			final_color = color_add(final_color, 

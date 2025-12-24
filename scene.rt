@@ -1,13 +1,13 @@
 # scene.rt — test file for MiniRT
 
 # Ambient lighting: 20% white
-A 0.2 255,255,255
+A 0.3 255,255,255
 
 # Camera: position (0,0,20), direction toward (0,0,-1), FOV 70°
 C 0,0,20 0,0,-1 70
 
-# Light source: position (10,10,10), brightness 80%, white
-L 10,10,10 0.8 255,255,255
+# Light source: position (10,10,10), brightness 40%, white
+L 10,10,10 0.6 250,220,220
 
 # Red sphere: center at origin, radius 5, color red
 sp 0,0,0 5 255,0,0
@@ -16,4 +16,4 @@ sp 0,0,0 5 255,0,0
 pl 0,-5,0 0,1,0 0,255,0
 
 # Blue cylinder: base at (3,0,0), axis (0,1,0), diameter 2, height 4, color blue
-cy 0,0,10 0,1,0 2 4 0,0,255
+cy 10,0,0 0,1,0 2 4 0,0,255
