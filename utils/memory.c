@@ -1,5 +1,4 @@
-#include "../minirt.h"
-
+#include "../include/minirt.h"
 
 static void	free_lights(t_light *lights)
 {

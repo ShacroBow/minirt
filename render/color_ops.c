@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 /* Color arithmetic helpers split from color.c to satisfy 42 Norm */
 

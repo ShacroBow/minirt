@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 // to make this file norm compliant. it was heavily.
 // if some stuff looks weird it cuz of that.

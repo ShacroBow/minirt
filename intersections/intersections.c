@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 static bool	try_hit_object(const t_object *obj, const t_ray *ray,
 			double t_max, t_hit_record *out)

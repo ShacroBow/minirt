@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 t_vec3	vec_cross(t_vec3 v1, t_vec3 v2) // 
 {
@@ -29,4 +29,3 @@ t_vec3	vec_normalize(t_vec3 v)
 		return (v);
 	return (vec_div(v, len));
 }
-

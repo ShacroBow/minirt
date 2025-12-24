@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 void	exit_error(const char *message)
 {
@@ -8,21 +8,21 @@ void	exit_error(const char *message)
 	exit(EXIT_FAILURE);
 }
 
-void	exit_error_with_cleanup(t_program *prog, const char *message)
+void	exit_cleanup(t_program *prog, const char *message)
 {
 	cleanup(prog);
 	exit_error(message);
 }
+
 void	erorr(t_scene *scene, void *ptr, const char *message)
 {
-	//printf("ptr:%p\nscene:%p\nstring:%s\n", ptr, scene, message);
 	if (ptr)
 		free(ptr);
 	free_scene(scene);
 	exit_error(message);
 }
 
-void cleanup(t_program *prog)
+void	cleanup(t_program *prog)
 {
 	if (prog->mlx.img_ptr)
 		mlx_destroy_image(prog->mlx.mlx_ptr, prog->mlx.img_ptr);

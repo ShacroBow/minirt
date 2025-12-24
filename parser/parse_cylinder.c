@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 static t_cylinder	*parse_cylinder_struct(t_scene *scene, char *line)
 {

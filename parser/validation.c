@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 void	validate_color(t_color color, t_scene *scene)
 {
@@ -21,20 +21,20 @@ void	validate_normalized_vector(t_vec3 vec, t_scene *scene)
 void	validate_ratio(double ratio, t_scene *scene)
 {
 	if (ratio < 0.0 || ratio > 1.0)
-		(error(scene, NULL, "Invalid ratio (must be between 0.0 and 1.0)"));
+		(erorr(scene, NULL, "Invalid ratio (must be between 0.0 and 1.0)"));
 }
 
 void	validate_fov(double fov, t_scene *scene)
 {
 	if (fov < 0 || fov > 180)
-		(error(scene, NULL, "Error: FOV must be between 0 and 180."));
+		(erorr(scene, NULL, "Error: FOV must be between 0 and 180."));
 }
 
 void	validate_scene(t_scene *scene)
 {
 	if (!scene->ambient_light.is_set)
-		(error(scene, NULL, \
+		(erorr(scene, NULL, \
 			"Error: Ambient light is not defined in the scene."));
 	if (!scene->camera.is_set)
-		(error(scene, NULL, "Error: Camera is not defined in the scene."));
+		(erorr(scene, NULL, "Error: Camera is not defined in the scene."));
 }

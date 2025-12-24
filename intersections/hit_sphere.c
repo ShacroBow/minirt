@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 static bool	solve_quadratic(double a, double b, double c, double *t)
 {

@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 static bool	cap_hit(const t_cap *cap, const t_ray *ray, double *t,
 			t_hit_record *rec)

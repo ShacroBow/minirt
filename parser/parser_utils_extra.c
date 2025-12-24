@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 static bool	split3_in_place(char *str, char **a, char **b, char **c)
 {

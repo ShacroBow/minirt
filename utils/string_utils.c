@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 bool	has_extension(const char *filename, const char *ext)
 {
