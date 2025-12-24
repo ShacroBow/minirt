@@ -241,6 +241,7 @@ void exit_error(const char *message);
 void exit_error_with_cleanup(t_program *prog, const char *message);
 void cleanup(t_program *prog);
 void free_scene(t_scene *scene);
+void	erorr(t_scene *scene, void *ptr, const char *message);
 bool has_extension(const char *filename, const char *ext);
 
 #endif

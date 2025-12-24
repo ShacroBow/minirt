@@ -13,6 +13,14 @@ void	exit_error_with_cleanup(t_program *prog, const char *message)
 	cleanup(prog);
 	exit_error(message);
 }
+void	erorr(t_scene *scene, void *ptr, const char *message)
+{
+	//printf("ptr:%p\nscene:%p\nstring:%s\n", ptr, scene, message);
+	if (ptr)
+		free(ptr);
+	free_scene(scene);
+	exit_error(message);
+}
 
 void cleanup(t_program *prog)
 {

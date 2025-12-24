@@ -41,7 +41,6 @@ bool	ft_valid_3str(char *str)
 			return (false);
 		i++;
 	}
-	/* require exactly two commas to suggest three components */
 	if (commas != 2)
 		return (false);
 	return (true);
@@ -54,7 +53,6 @@ bool	parse_vector(char *str, t_vec3 *vec)
 	char	*c;
 	char	*tmp_str;
 
-	/* validate characters and basic structure before mutating string */
 	if (!ft_valid_3str(str))
 		return (false);
 	tmp_str = ft_strdup(str);
@@ -76,7 +74,6 @@ bool	parse_color(char *str, t_color *color)
 	char	*c;
 	char	*tmp_str;
 
-	/* validate characters and basic structure before mutating string */
 	if (!ft_valid_3str(str))
 		return (false);
 	tmp_str = ft_strdup(str);
