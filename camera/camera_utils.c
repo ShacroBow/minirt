@@ -37,13 +37,13 @@ void	move_object(t_object *object, t_vec3 direction, double speed)
 	move = vec_mult(direction, speed);
 	if (object->type == SPHERE)
 		((t_sphere *)object->shape_data)->center = \
-		vec_add(((t_sphere *)object->shape_data)->center, move);
+			vec_add(((t_sphere *)object->shape_data)->center, move);
 	else if (object->type == CYLINDER)
 		((t_cylinder *)object->shape_data)->center = \
-		vec_add(((t_sphere *)object->shape_data)->center, move);
+			vec_add(((t_cylinder *)object->shape_data)->center, move);
 	else if (object->type == PLANE)
 		((t_plane *)object->shape_data)->point = \
-		vec_add(((t_sphere *)object->shape_data)->center, move);
+			vec_add(((t_plane *)object->shape_data)->point, move);
 }
 
 void	move_element_object(t_program *prog, int keycode, t_object *object)

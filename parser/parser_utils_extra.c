@@ -59,7 +59,10 @@ bool	parse_vector(char *str, t_vec3 *vec)
 	if (!tmp_str)
 		return (write(1, "Error: allocation failed\n", 25), false);
 	if (!split3_in_place(tmp_str, &a, &b, &c))
+	{
+		free(tmp_str);
 		return (false);
+	}
 	vec->x = ft_atof(a);
 	vec->y = ft_atof(b);
 	vec->z = ft_atof(c);
@@ -80,7 +83,10 @@ bool	parse_color(char *str, t_color *color)
 	if (!tmp_str)
 		return (write(1, "Error: allocation failed\n", 25), false);
 	if (!split3_in_place(tmp_str, &a, &b, &c))
+	{
+		free(tmp_str);
 		return (false);
+	}
 	color->x = ft_atof(a);
 	color->y = ft_atof(b);
 	color->z = ft_atof(c);

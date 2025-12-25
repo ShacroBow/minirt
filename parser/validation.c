@@ -5,7 +5,7 @@ void	validate_color(t_color color, t_scene *scene)
 	if (color.x < 0 || color.x > 255 || \
 		color.y < 0 || color.y > 255 || \
 		color.z < 0 || color.z > 255)
-		(free(scene), exit_error("Color values must be in [0,255]"));
+		erorr(scene, NULL, "Color values must be in [0,255]");
 }
 
 void	validate_normalized_vector(t_vec3 vec, t_scene *scene)
@@ -13,9 +13,9 @@ void	validate_normalized_vector(t_vec3 vec, t_scene *scene)
 	if (vec.x < -1 || vec.x > 1 || \
 		vec.y < -1 || vec.y > 1 || \
 		vec.z < -1 || vec.z > 1)
-		(free(scene), exit_error("Invalid normalized vector"));
+		erorr(scene, NULL, "Invalid normalized vector");
 	if (vec_lensqrt(vec) < EPSILON)
-		(free(scene), exit_error("Error: Normal vector cannot be zero."));
+		erorr(scene, NULL, "Error: Normal vector cannot be zero.");
 }
 
 void	validate_ratio(double ratio, t_scene *scene)

@@ -17,9 +17,9 @@ t_ray	create_ray(const t_camera *cam, double u, double v)
 	vertical_part = vec_mult(cam->vertical, v);
 	r.direction = vec_sub(vec_add(cam->lower_left_corner, \
 				vec_add(horizontal_part, vertical_part)), r.origin);
-	r.direction = vec_normalize(r.direction);
 	return (r);
 }
+// normalize not necessary. r.direction = vec_normalize(r.direction);
 
 t_color	get_aa_sample(t_render_ctx *ctx, int x, int y)
 {

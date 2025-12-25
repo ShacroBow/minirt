@@ -188,6 +188,8 @@ void		parse_cylinder(t_scene *scene, char *line);
 /* Parser Utils */
 bool		parse_vector(char *str, t_vec3 *vec);
 bool		parse_color(char *str, t_color *color);
+void		add_light(t_scene *scene, t_light *new_light);
+void		add_object(t_scene *scene, t_object *new_obj);
 double		ft_atof(const char *str);
 char		**ft_split(char const *s, char c);
 int			count_tokens(char **tokens);

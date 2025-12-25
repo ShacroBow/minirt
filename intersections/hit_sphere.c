@@ -7,6 +7,8 @@ static bool	solve_quadratic(double a, double b, double c, double *t)
 	double	t0;
 	double	t1;
 
+	if (fabs(a) < EPSILON)
+		return (false);
 	discriminant = b * b - 4.0 * a * c;
 	if (discriminant < 0.0)
 		return (false);

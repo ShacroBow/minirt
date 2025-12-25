@@ -55,6 +55,8 @@ static bool	solve_cy_quadratic(double a, double b, double c, double *t)
 	double	t0;
 	double	t1;
 
+	if (fabs(a) < EPSILON)
+		return (false);
 	discriminant = b * b - 4 * a * c;
 	if (discriminant < 0)
 		return (false);
@@ -83,10 +85,9 @@ static bool	side_hit(const t_cylinder *cy, const t_ray *ray, double t_max,
 	center_dot = vec_dot(center, cy->normal);
 	hit_t = t_max;
 	if (!solve_cy_quadratic(vec_lensqrt(ray->direction) - axis_dir * \
-	axis_dir, 2 * (vec_dot(ray->direction, center) - axis_dir * center_dot),
-			vec_lensqrt(center) - center_dot * center_dot \
-				- (cy->diameter * cy->diameter) / 4.0,
-			&hit_t) || hit_t >= t_max)
+	axis_dir, 2 * (vec_dot(ray->direction, center) - axis_dir * center_dot), \
+	vec_lensqrt(center) - center_dot * center_dot - (cy->diameter * \
+	cy->diameter) / 4.0, &hit_t) || hit_t >= t_max)
 		return (false);
 	y = center_dot + hit_t * axis_dir;
 	if (fabs(y) > cy->height / 2)
