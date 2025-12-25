@@ -19,7 +19,7 @@
 #define HEIGHT 555 // 768
 #define EPSILON 1e-6
 #define SHININESS 32.0
-#define AA_SAMPLES 32
+#define AA_SAMPLES 8
 #define DISPLAY_GAMMA 0.6
 #define ENABLE_GAMMA 1
 #define ENABLE_AA 0
