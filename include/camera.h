@@ -3,7 +3,6 @@
 
 # include "minirt.h"
 
-/* Forward declarations to avoid circular include with `minirt.h` */
 typedef struct s_camera		t_camera;
 typedef struct s_vec3		t_vec3;
 typedef struct s_program	t_program;

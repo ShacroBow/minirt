@@ -1,7 +1,5 @@
 #include "../include/minirt.h"
 
-#define BUF_SZ	4096
-
 static bool	is_ignorable(const char *s)
 {
 	int	i;

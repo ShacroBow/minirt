@@ -32,7 +32,6 @@ void	parse_camera(t_scene *scene, char *line)
 	scene->camera.is_set = true;
 }
 
-//nlight == new_light btw.
 void	parse_light(t_scene *scene, char *line)
 {
 	t_light	*nlight;

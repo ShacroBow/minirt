@@ -1,7 +1,5 @@
 #include "../include/minirt.h"
 
-/* Color arithmetic helpers split from color.c to satisfy 42 Norm */
-
 t_color	color_mult(t_color c1, t_color c2)
 {
 	t_color	result;
