@@ -25,7 +25,8 @@ int	key_hook(int keycode, t_program *prog)
 	}
 	else
 		camera_handle_key(keycode, prog, &object, &is_cam);
-	if (keycode == KEY_UP || keycode == KEY_DOWN)
+	if (keycode == KEY_UP || keycode == KEY_DOWN || (keycode >= KEY_0 && \
+		keycode <= KEY_9))
 		return (0);
 	render(prog);
 	return (0);
