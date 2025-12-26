@@ -32,6 +32,7 @@
 
 //FUNCTION
 #  define KEY_ESC		XK_Escape //65307
+#  define KEY_O			XK_o //0x006f
 #  define KEY_P			XK_p //70
 
 //NAVIGATE
@@ -50,20 +51,19 @@
 #  define KEY_PLUS		XK_equal //61
 #  define KEY_MINUS		XK_minus //45
 #  define KEY_SPACE		XK_space //32
-#  define KEY_O			XK_o
-#  define KEY_X			XK_x
+#  define KEY_X			XK_x //0x0078
 
 // SELECT CAMERA AND OBJECTS
-#  define KEY_0			XK_0
-#  define KEY_1			XK_1
-#  define KEY_2			XK_2
-#  define KEY_3			XK_3
-#  define KEY_4			XK_4
-#  define KEY_5			XK_5
-#  define KEY_6			XK_6
-#  define KEY_7			XK_7
-#  define KEY_8			XK_8
-#  define KEY_9			XK_9
+#  define KEY_0			XK_0 //0x0030
+#  define KEY_1			XK_1 //0x0031
+#  define KEY_2			XK_2 //0x0032
+#  define KEY_3			XK_3 //0x0033
+#  define KEY_4			XK_4 //0x0034
+#  define KEY_5			XK_5 //0x0035
+#  define KEY_6			XK_6 //0x0036
+#  define KEY_7			XK_7 //0x0037
+#  define KEY_8			XK_8 //0x0038
+#  define KEY_9			XK_9 //0x0039
 
 # endif /* __APPLE__ */
 

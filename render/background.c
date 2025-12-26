@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 t_color	bg_color_from_dir(const t_scene *scene, const t_vec3 *dir)
 {

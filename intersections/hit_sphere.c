@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 static bool	solve_quadratic(double a, double b, double c, double *t)
 {
@@ -7,6 +7,8 @@ static bool	solve_quadratic(double a, double b, double c, double *t)
 	double	t0;
 	double	t1;
 
+	if (fabs(a) < EPSILON)
+		return (false);
 	discriminant = b * b - 4.0 * a * c;
 	if (discriminant < 0.0)
 		return (false);
@@ -26,17 +28,18 @@ static bool	solve_quadratic(double a, double b, double c, double *t)
 	return (false);
 }
 
-static void	sphere_coeffs(const t_sphere *sp, const t_ray *ray,
-			double *a, double *b, double *c)
+static t_vec3	sphere_coeffs(const t_sphere *sp, const t_ray *ray)
 {
 	double	r;
 	t_vec3	oc;
+	t_vec3	coeffs;
 
 	oc = vec_sub(ray->origin, sp->center);
-	*a = vec_length_squared(ray->direction);
-	*b = 2.0 * vec_dot(oc, ray->direction);
+	coeffs.x = vec_lensqrt(ray->direction);
+	coeffs.y = 2.0 * vec_dot(oc, ray->direction);
 	r = sp->diameter * 0.5;
-	*c = vec_length_squared(oc) - (r * r);
+	coeffs.z = vec_lensqrt(oc) - (r * r);
+	return (coeffs);
 }
 
 static void	set_sphere_hit(const t_sphere *sp, const t_ray *ray, double t,
@@ -57,13 +60,11 @@ static void	set_sphere_hit(const t_sphere *sp, const t_ray *ray, double t,
 bool	hit_sphere(const t_sphere *sp, const t_ray *ray, double t_max,
 		t_hit_record *rec)
 {
-	double	a;
-	double	b;
-	double	c;
+	t_vec3	coeffs;
 	double	t;
 
-	sphere_coeffs(sp, ray, &a, &b, &c);
-	if (!solve_quadratic(a, b, c, &t) || t >= t_max)
+	coeffs = sphere_coeffs(sp, ray);
+	if (!solve_quadratic(coeffs.x, coeffs.y, coeffs.z, &t) || t >= t_max)
 		return (false);
 	set_sphere_hit(sp, ray, t, rec);
 	return (true);

@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 static bool	split3_in_place(char *str, char **a, char **b, char **c)
 {
@@ -41,7 +41,6 @@ bool	ft_valid_3str(char *str)
 			return (false);
 		i++;
 	}
-	/* require exactly two commas to suggest three components */
 	if (commas != 2)
 		return (false);
 	return (true);
@@ -54,14 +53,16 @@ bool	parse_vector(char *str, t_vec3 *vec)
 	char	*c;
 	char	*tmp_str;
 
-	/* validate characters and basic structure before mutating string */
 	if (!ft_valid_3str(str))
 		return (false);
 	tmp_str = ft_strdup(str);
 	if (!tmp_str)
 		return (write(1, "Error: allocation failed\n", 25), false);
 	if (!split3_in_place(tmp_str, &a, &b, &c))
+	{
+		free(tmp_str);
 		return (false);
+	}
 	vec->x = ft_atof(a);
 	vec->y = ft_atof(b);
 	vec->z = ft_atof(c);
@@ -76,14 +77,16 @@ bool	parse_color(char *str, t_color *color)
 	char	*c;
 	char	*tmp_str;
 
-	/* validate characters and basic structure before mutating string */
 	if (!ft_valid_3str(str))
 		return (false);
 	tmp_str = ft_strdup(str);
 	if (!tmp_str)
 		return (write(1, "Error: allocation failed\n", 25), false);
 	if (!split3_in_place(tmp_str, &a, &b, &c))
+	{
+		free(tmp_str);
 		return (false);
+	}
 	color->x = ft_atof(a);
 	color->y = ft_atof(b);
 	color->z = ft_atof(c);

@@ -1,0 +1,97 @@
+# This file contains various invalid lines to test the parser.
+# Note: The parser will likely exit on the first error it encounters.
+
+# Invalid Identifier
+# ERROR: Invalid identifier in scene file (identifier not recognized)
+# X 0 0 0 
+
+# Ambient Light Errors
+# ERROR: Incorrect number of arguments for ambient light (missing args)
+# A
+# ERROR: Incorrect number of arguments for ambient light (extra args)
+# A 0.2 255,255,255 0.2
+# ERROR: Invalid ratio (must be between 0.0 and 1.0)
+# A 1.5 255,255,255
+# ERROR: Invalid ratio (must be between 0.0 and 1.0)
+# A -0.1 255,255,255
+# ERROR: Color values must be in [0,255] (component > 255)
+# A 0.2 256,255,255
+# ERROR: Color values must be in [0,255] (component < 0)
+# A 0.2 255,255,-1
+# CORRECT:
+A 0.2 255,255,255
+
+
+# Camera Errors
+# ERROR: Incorrect number of arguments for camera (missing args)
+# C
+# ERROR: Incorrect number of arguments for camera (extra args)
+# C 0,0,0 0,0,1 70 1
+# ERROR: Normal vector cannot be zero (zero-length normal)
+# C 0,0,0 0,0,0 70
+# ERROR: Invalid normalized vector (components outside [-1,1])
+# C 0,0,0 0,2,0 70
+# ERROR: FOV must be between 0 and 180 (too large)
+# C 0,0,0 0,0,1 181
+# CORRECT:
+C 0,0,0 0,0,-1 70
+# C 0,4,1 0,0,-1 70
+
+
+# Light Errors
+# ERROR: Incorrect number of arguments for light (missing args)
+# L
+# ERROR: Incorrect number of arguments for light (extra args)
+# L 0,0,0 0.5 255,255,255 1
+# ERROR: Invalid ratio (must be between 0.0 and 1.0)
+# L 0,0,0 1.1 255,255,255
+# ERROR: Color values must be in [0,255] (component > 255)
+# L 0,0,0 0.5 300,255,255
+# CORRECT:
+L 0,0,0 0.5 255,255,255
+L 0,7,0 0.2 255,255,255
+
+
+# Sphere Errors
+# ERROR: Incorrect number of arguments for sphere (missing args)
+# sp
+# ERROR: Incorrect number of arguments for sphere (extra args)
+# sp 0,0,0 10 255,0,0 1
+# ERROR: Sphere diameter must be positive (diameter <= 0)
+# sp 0,0,0 -10 255,0,0
+# ERROR: Color values must be in [0,255] (component > 255)
+# sp 0,0,0 10 255,0,300
+# CORRECT:
+sp -1,0,-10 10 255,0,255
+sp 30,0,-1000 999 255,0,255
+
+
+
+# Plane Errors
+# ERROR: Incorrect number of arguments for plane (missing args)
+# pl
+# ERROR: Incorrect number of arguments for plane (extra args)
+# pl 0,0,0 0,1,0 255,0,0 1
+# ERROR: Invalid normalized vector (components outside [-1,1])
+# pl 0,0,0 0,2,0 255,0,0
+# ERROR: Color values must be in [0,255] (component > 255)
+# pl 0,0,0 0,1,0 255,0,300
+# CORRECT:
+pl 0,-4,0 0,1,0 255,0,255
+
+
+# Cylinder Errors
+# ERROR: Incorrect number of arguments for cylinder (missing args)
+# cy
+# ERROR: Incorrect number of arguments for cylinder (extra args)
+# cy 0,0,0 0,1,0 10 20 255,0,0 1
+# ERROR: Invalid normalized vector (components outside [-1,1])
+# cy 0,0,0 0,2,0 10 20 255,0,0
+# ERROR: Cylinder diameter and height must be positive (diameter <= 0)
+# cy 0,0,0 0,1,0 -10 20 255,0,0
+# ERROR: Cylinder diameter and height must be positive (height <= 0)
+# cy 0,0,0 0,1,0 10 -20 255,0,0
+# ERROR: Color values must be in [0,255] (component > 255)
+# cy 0,0,0 0,1,0 10 20 255,0,300
+# CORRECT:
+cy -3,0,-10 0,1,0 10 20 255,0,255

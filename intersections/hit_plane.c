@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 static bool	plane_t(const t_plane *pl, const t_ray *ray, double *t)
 {

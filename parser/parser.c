@@ -1,6 +1,4 @@
-#include "../minirt.h"
-
-# define BUF_SZ 4096
+#include "../include/minirt.h"
 
 static bool	is_ignorable(const char *s)
 {
@@ -30,11 +28,11 @@ void	parse_line(char *line, t_scene *scene)
 		parse_plane(scene, line);
 	else if (ft_strncmp(line, "cy ", 3) == 0)
 		parse_cylinder(scene, line);
-	else if (ft_strncmp(line, "co", 3) == 0)
+	else if (ft_strncmp(line, "co ", 3) == 0)
 		parse_cone(scene, line);
 	else
 	{
-		(free_scene(scene),
+		(free_scene(scene), \
 		exit_error("Error: Invalid identifier in scene file."));
 	}
 }
@@ -47,7 +45,7 @@ void	read_file(int fd, char *content, t_scene *scene)
 	if (bytes_read == -1)
 		(close(fd), free_scene(scene), exit_error("Error: reading file.\n"));
 	if (bytes_read == FILE_SIZE + 1)
-		(close(fd), free_scene(scene),
+		(close(fd), free_scene(scene), \
 		exit_error("Error: file too big. Max: 1000000 bytes\n"));
 	if (bytes_read == 0)
 		(close(fd), free_scene(scene), exit_error("Error: empty file.\n"));

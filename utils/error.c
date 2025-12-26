@@ -1,20 +1,30 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 void	exit_error(const char *message)
 {
 	if (message)
+	{
 		write(2, message, ft_strlen(message));
-	write(2, "\n", 1);
+		write(2, "\n", 1);
+	}
 	exit(EXIT_FAILURE);
 }
 
-void	exit_error_with_cleanup(t_program *prog, const char *message)
+void	exit_cleanup(t_program *prog, const char *message)
 {
 	cleanup(prog);
 	exit_error(message);
 }
 
-void cleanup(t_program *prog)
+void	erorr(t_scene *scene, void *ptr, const char *message)
+{
+	if (ptr)
+		free(ptr);
+	free_scene(scene);
+	exit_error(message);
+}
+
+void	cleanup(t_program *prog)
 {
 	if (prog->mlx.img_ptr)
 		mlx_destroy_image(prog->mlx.mlx_ptr, prog->mlx.img_ptr);

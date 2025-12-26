@@ -1,4 +1,4 @@
-#include "../minirt.h"
+#include "../include/minirt.h"
 
 t_vec3	vec_add(t_vec3 v1, t_vec3 v2)
 {
@@ -35,6 +35,8 @@ t_vec3	vec_div(t_vec3 v, double scalar)
 	t_vec3	result;
 	double	inv;
 
+	if (fabs(scalar) < EPSILON)
+		return (v);
 	inv = 1.0 / scalar;
 	result.x = v.x * inv;
 	result.y = v.y * inv;
