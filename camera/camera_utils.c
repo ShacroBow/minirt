@@ -47,8 +47,12 @@ void	move_object(t_object *object, t_vec3 direction, double speed)
 		((t_plane *)object->shape_data)->point = \
 			vec_add(((t_plane *)object->shape_data)->point, move);
 	else if (object->type == CONE)
+	{
 		((t_cone *)object->shape_data)->center = \
 			vec_add(((t_cone *)object->shape_data)->center, move);
+		((t_cone *)object->shape_data)->apex = \
+			vec_add(((t_cone *)object->shape_data)->apex, move);		
+	}
 }
 
 void	move_element_object(t_program *prog, int keycode, t_object *object)

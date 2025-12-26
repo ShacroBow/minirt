@@ -18,11 +18,13 @@ static t_cone	*parse_cone_struct(t_scene *scene, char *line)
 	co->center_dir = vec_normalize(co->center_dir);
 	co->diameter = ft_atof(index_split(line, 3));
 	co->height = ft_atof(index_split(line, 4));
-	co->apex = vec_add(co->center,
-			vec_mult(co->center_dir, co->height));
+	{
+		co->apex = vec_add(co->center, vec_mult(co->center_dir, co->height / 2));
+		co->center = vec_sub(co->center, \
+			vec_mult(co->center_dir, co->height / 2));
+	}
 	if (co->diameter <= 0 || co->height <= 0)
-		erorr(scene, co, "Error: cone diameter and height "
-			"must be positive.");
+		erorr(scene, co, "Error: cone diameter and height not positive.");
 	return (co);
 }
 

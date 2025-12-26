@@ -27,6 +27,22 @@ static bool	solve_quadratic(double a, double b, double c, double *t)
 	}
 	return (false);
 }
+
+// CONE EQUATION: ( (P−A) ⋅ V )^2 = ∣ P − A ∣ 2 (cosθ)^2
+//	P: any point on the surface of the cone
+//	A: apex (top point) of the cone
+//	V: direction of the vector from center to apex
+//	0: half angle of the cone
+//	h: height of the cone
+
+// RAY EQUATION: R(t) = O + tD
+//	R(t): position of any point on the rays vector
+//	O: origin of the vector
+//	t: how far the point is from origin
+//	D: direction of the ray
+
+// 
+
 static t_vec3	cone_coeffs(const t_cone *cy, const t_ray *ray)
 {
 	t_vec3	oc;
@@ -49,39 +65,98 @@ static t_vec3	cone_coeffs(const t_cone *cy, const t_ray *ray)
 	return (coeffs);
 }
 
-static void	set_cone_hit(const t_cone *cy, const t_ray *ray, double t,
+static void set_cone_hit(const t_cone *cy, const t_ray *ray, double t, t_hit_record *rec)
+{
+    t_vec3	hit_point;
+    t_vec3	q;
+    t_vec3	normal_vec;
+    double	k;
+
+    rec->t = t;
+    hit_point = vec_add(ray->origin, vec_mult(ray->direction, t));
+    rec->point = hit_point;
+    q = vec_sub(hit_point, cy->apex);
+    k = (cy->diameter * 0.5 / cy->height);
+    k = k * k;
+    normal_vec = vec_sub(q, vec_mult(cy->center_dir,
+		(1.0 + k) * vec_dot(q, cy->center_dir)));
+    rec->normal = vec_normalize(normal_vec);
+    if (vec_dot(ray->direction, rec->normal) > 0)
+	{
+        rec->normal = vec_mult(rec->normal, -1);
+        rec->front_face = false;
+    }
+	else
+        rec->front_face = true;
+}
+
+static bool	cap_hit(const t_cap *cap, const t_ray *ray, double *t,
 			t_hit_record *rec)
 {
-	t_vec3	hit_point;
-	t_vec3	dir;
+	double	denom;
+	double	t_cap;
+	t_point	p;
+	t_vec3	diff;
 
-	rec->t = t;
-	hit_point = vec_add(ray->origin, vec_mult(ray->direction, t));
-	rec->point = hit_point;
-	dir = cy->center_dir;
-	rec->normal = vec_sub(vec_normalize(vec_sub(hit_point, cy->apex)),
-			vec_mult(dir,
-				vec_dot(vec_sub(hit_point, cy->apex), dir)
-				* (1.0 + (cy->diameter * 0.5 / cy->height)
-					* (cy->diameter * 0.5 / cy->height))));
-	if (vec_dot(ray->direction, rec->normal) > 0)
-	{
-		rec->normal = vec_mult(rec->normal, -1);
-		rec->front_face = false;
-	}
+	denom = vec_dot(ray->direction, cap->normal);
+	if (fabs(denom) <= EPSILON)
+		return (false);
+	t_cap = vec_dot(vec_sub(cap->center, ray->origin), cap->normal) / denom;
+	if (t_cap <= EPSILON || t_cap >= *t)
+		return (false);
+	p = vec_add(ray->origin, vec_mult(ray->direction, t_cap));
+	diff = vec_sub(p, cap->center);
+	if (vec_lensqrt(diff) >= cap->r2)
+		return (false);
+	*t = t_cap;
+	if (cap->invert)
+		rec->normal = vec_mult(cap->normal, -1);
 	else
-		rec->front_face = true;
+		rec->normal = cap->normal;
+	return (true);
+}
+
+static bool	check_caps(const t_cone *co, const t_ray *ray, double *t,
+			t_hit_record *rec)
+{
+	t_cap	bottom;
+	bool	hit;
+
+	bottom.center = co->center;
+	bottom.normal = co->center_dir;
+	bottom.r2 = (co->diameter * co->diameter) / 4.0;
+	bottom.invert = 0;
+	hit = false;
+	if (cap_hit(&bottom, ray, t, rec))
+		hit = true;
+	return (hit);
 }
 
 bool	hit_cone(const t_cone *cy, const t_ray *ray, double t_max,
 		t_hit_record *rec)
 {
-	t_vec3	coeffs;
+	t_vec3	hit_point;
+	double	dist;
 	double	t;
 
-	coeffs = cone_coeffs(cy, ray);
-	if (!solve_quadratic(coeffs.x, coeffs.y, coeffs.z, &t) || t >= t_max)
-		return (false);
-	set_cone_hit(cy, ray, t, rec);
-	return (true);
+	if (solve_quadratic(cone_coeffs(cy, ray).x, cone_coeffs(cy, ray).y,
+		cone_coeffs(cy, ray).z, &t) && t < t_max)
+	{
+		hit_point = vec_add(ray->origin, vec_mult(ray->direction, t));
+		dist = vec_dot(vec_sub(hit_point, cy->apex), cy->center_dir);
+		if (dist >= -cy->height && dist <= 0)
+		{
+			set_cone_hit(cy, ray, t, rec);
+			return (true);
+		}
+	}
+	t = t_max;
+	if (check_caps(cy, ray, &t, rec))
+	{
+		rec->t = t;
+		rec->point = vec_add(ray->origin, vec_mult(ray->direction, t));
+		rec->front_face = (vec_dot(ray->direction, rec->normal) < 0);
+		return (true);
+	}
+	return (false);
 }
