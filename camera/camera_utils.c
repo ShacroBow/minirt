@@ -91,7 +91,7 @@ void	camera_handle_key(int keycode, t_program *prog,
 	t_camera	*cam;
 
 	cam = &prog->scene->camera;
-	if (keycode >= KEY_0 && keycode <= KEY_9)
+	if (keycode == KEY_0 || keycode == KEY_3)
 		select_element(is_cam, object, keycode, prog);
 	else if (keycode == KEY_W || keycode == KEY_S || keycode == KEY_D || \
 		keycode == KEY_A || keycode == KEY_PG_UP || keycode == KEY_PG_DOWN)
