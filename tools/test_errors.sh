@@ -60,7 +60,7 @@ run_test() {
 # --- 1. File Errors ---
 
 # Non-existent file
-run_test "non_existent_file.rt" "Non-existent file" "Error: Cannot open scene file"
+run_test "non_existent_file.rt" "Non-existent file" "Error: Cannot open file"
 
 # Empty file
 touch empty.rt
@@ -91,116 +91,116 @@ run_test "test.rt" "Invalid identifier" "Error: Invalid identifier"
 
 # --- Ambient Light Errors ---
 echo "A 0.2" > test.rt
-run_test "test.rt" "Ambient: Missing args" "Error: Incorrect number of arguments"
+run_test "test.rt" "Ambient: Missing args" "Error: Ambient light args count."
 
 echo "A 0.2 255,255,255 0.2" > test.rt
-run_test "test.rt" "Ambient: Extra args" "Error: Incorrect number of arguments"
+run_test "test.rt" "Ambient: Extra args" "Error: Ambient light args count."
 
 echo "A 1.5 255,255,255" > test.rt
-run_test "test.rt" "Ambient: Invalid ratio > 1" "Invalid ratio"
+run_test "test.rt" "Ambient: Invalid ratio > 1" "Error: Ambient light ratio invalid."
 
 echo "A -0.1 255,255,255" > test.rt
-run_test "test.rt" "Ambient: Invalid ratio < 0" "Invalid ratio"
+run_test "test.rt" "Ambient: Invalid ratio < 0" "Error: Ambient light ratio invalid."
 
 echo "A 0.2 256,255,255" > test.rt
-run_test "test.rt" "Ambient: Invalid color > 255" "Color values must be in"
+run_test "test.rt" "Ambient: Invalid color > 255" "Error: Ambient light color invalid."
 
 echo "A 0.2 255,255,-1" > test.rt
-run_test "test.rt" "Ambient: Invalid color < 0" "Color values must be in"
+run_test "test.rt" "Ambient: Invalid color < 0" "Error: Ambient light color invalid."
 
 echo "A 0.2 255,255,255" > test.rt
 echo "A 0.2 255,255,255" >> test.rt
-run_test "test.rt" "Ambient: Duplicate" "Error: Ambient light can only be declared once"
+run_test "test.rt" "Ambient: Duplicate" "Error: Duplicate Ambient."
 
 # --- Camera Errors ---
 echo "C 0,0,0" > test.rt
-run_test "test.rt" "Camera: Missing args" "Error: Incorrect number of arguments"
+run_test "test.rt" "Camera: Missing args" "Error: Camera args count."
 
 echo "C 0,0,0 0,0,1 70 1" > test.rt
-run_test "test.rt" "Camera: Extra args" "Error: Incorrect number of arguments"
+run_test "test.rt" "Camera: Extra args" "Error: Camera args count."
 
 echo "C 0,0,0 0,0,0 70" > test.rt
-run_test "test.rt" "Camera: Zero normal" "Error: Normal vector cannot be zero"
+run_test "test.rt" "Camera: Zero normal" "Error: Camera normal invalid."
 
 echo "C 0,0,0 0,2,0 70" > test.rt
-run_test "test.rt" "Camera: Invalid normal > 1" "Invalid normalized vector"
+run_test "test.rt" "Camera: Invalid normal > 1" "Error: Camera normal invalid."
 
 echo "C 0,0,0 0,0,1 181" > test.rt
-run_test "test.rt" "Camera: FOV > 180" "Error: FOV must be between 0 and 180"
+run_test "test.rt" "Camera: FOV > 180" "Error: Camera FOV invalid."
 
 echo "C 0,0,0 0,0,1 -1" > test.rt
-run_test "test.rt" "Camera: FOV < 0" "Error: FOV must be between 0 and 180"
+run_test "test.rt" "Camera: FOV < 0" "Error: Camera FOV invalid."
 
 echo "C 0,0,0 0,0,1 70" > test.rt
 echo "C 0,0,0 0,0,1 70" >> test.rt
-run_test "test.rt" "Camera: Duplicate" "Error: Camera can only be declared once"
+run_test "test.rt" "Camera: Duplicate" "Error: Duplicate Camera."
 
 # --- Light Errors ---
 echo "L 0,0,0" > test.rt
-run_test "test.rt" "Light: Missing args" "Error: Incorrect number of arguments"
+run_test "test.rt" "Light: Missing args" "Error: Light args count."
 
 echo "L 0,0,0 0.5 255,255,255 1" > test.rt
-run_test "test.rt" "Light: Extra args" "Error: Incorrect number of arguments"
+run_test "test.rt" "Light: Extra args" "Error: Light args count."
 
 echo "L 0,0,0 1.1 255,255,255" > test.rt
-run_test "test.rt" "Light: Invalid ratio" "Invalid ratio"
+run_test "test.rt" "Light: Invalid ratio" "Error: Light ratio invalid."
 
 echo "L 0,0,0 0.5 300,255,255" > test.rt
-run_test "test.rt" "Light: Invalid color" "Color values must be in"
+run_test "test.rt" "Light: Invalid color" "Error: Light color invalid."
 
 # --- Sphere Errors ---
 echo "sp 0,0,0" > test.rt
-run_test "test.rt" "Sphere: Missing args" "Error: Incorrect number of arguments"
+run_test "test.rt" "Sphere: Missing args" "Error: Sphere args count."
 
 echo "sp 0,0,0 10 255,0,0 1" > test.rt
-run_test "test.rt" "Sphere: Extra args" "Error: Incorrect number of arguments"
+run_test "test.rt" "Sphere: Extra args" "Error: Sphere args count."
 
 echo "sp 0,0,0 -10 255,0,0" > test.rt
-run_test "test.rt" "Sphere: Negative diameter" "Error: Sphere diameter must be positive"
+run_test "test.rt" "Sphere: Negative diameter" "Error: Sphere diameter invalid."
 
 echo "sp 0,0,0 10 255,0,300" > test.rt
-run_test "test.rt" "Sphere: Invalid color" "Color values must be in"
+run_test "test.rt" "Sphere: Invalid color" "Error: Sphere color invalid."
 
 # --- Plane Errors ---
 echo "pl 0,0,0" > test.rt
-run_test "test.rt" "Plane: Missing args" "Error: Incorrect number of arguments"
+run_test "test.rt" "Plane: Missing args" "Error: Plane args count."
 
 echo "pl 0,0,0 0,1,0 255,0,0 1" > test.rt
-run_test "test.rt" "Plane: Extra args" "Error: Incorrect number of arguments"
+run_test "test.rt" "Plane: Extra args" "Error: Plane args count."
 
 echo "pl 0,0,0 0,2,0 255,0,0" > test.rt
-run_test "test.rt" "Plane: Invalid normal" "Invalid normalized vector"
+run_test "test.rt" "Plane: Invalid normal" "Error: Plane normal invalid."
 
 echo "pl 0,0,0 0,1,0 255,0,300" > test.rt
-run_test "test.rt" "Plane: Invalid color" "Color values must be in"
+run_test "test.rt" "Plane: Invalid color" "Error: Plane color invalid."
 
 # --- Cylinder Errors ---
 echo "cy 0,0,0" > test.rt
-run_test "test.rt" "Cylinder: Missing args" "Error: Incorrect number of arguments"
+run_test "test.rt" "Cylinder: Missing args" "Error: Cylinder args count."
 
 echo "cy 0,0,0 0,1,0 10 20 255,0,0 1" > test.rt
-run_test "test.rt" "Cylinder: Extra args" "Error: Incorrect number of arguments"
+run_test "test.rt" "Cylinder: Extra args" "Error: Cylinder args count."
 
 echo "cy 0,0,0 0,2,0 10 20 255,0,0" > test.rt
-run_test "test.rt" "Cylinder: Invalid normal" "Invalid normalized vector"
+run_test "test.rt" "Cylinder: Invalid normal" "Error: Cylinder normal invalid."
 
 echo "cy 0,0,0 0,1,0 -10 20 255,0,0" > test.rt
-run_test "test.rt" "Cylinder: Negative diameter" "Error: Cylinder diameter and height must be positive"
+run_test "test.rt" "Cylinder: Negative diameter" "Error: Cylinder diameter invalid."
 
 echo "cy 0,0,0 0,1,0 10 -20 255,0,0" > test.rt
-run_test "test.rt" "Cylinder: Negative height" "Error: Cylinder diameter and height must be positive"
+run_test "test.rt" "Cylinder: Negative height" "Error: Cylinder height invalid."
 
 echo "cy 0,0,0 0,1,0 10 20 255,0,300" > test.rt
-run_test "test.rt" "Cylinder: Invalid color" "Color values must be in"
+run_test "test.rt" "Cylinder: Invalid color" "Error: Cylinder color invalid."
 
 # --- Scene Validation Errors ---
 # Missing Ambient
 echo "C 0,0,0 0,0,1 70" > test.rt
-run_test "test.rt" "Missing Ambient" "Error: Ambient light is not defined"
+run_test "test.rt" "Missing Ambient" "Error: Missing A or C."
 
 # Missing Camera
 echo "A 0.2 255,255,255" > test.rt
-run_test "test.rt" "Missing Camera" "Error: Camera is not defined"
+run_test "test.rt" "Missing Camera" "Error: Missing A or C."
 
 # Cleanup
 rm -f test.rt

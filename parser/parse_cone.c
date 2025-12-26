@@ -4,27 +4,18 @@ static t_cone	*parse_cone_struct(t_scene *scene, char *line)
 {
 	t_cone	*co;
 
-	if (ft_split_inplace(line, ' ') != 6)
-		(erorr(scene, NULL, \
-			"Error: Incorrect number of arguments for cone."));
+	ft_split_inplace(line, ' ');
 	co = malloc(sizeof(t_cone));
 	if (!co)
 		erorr(scene, NULL, "Error: allocation failed.\n");
-	if (!parse_vector(index_split(line, 1), &co->center))
-		erorr(scene, co, "Error: Invalid vector format for cone center.");
-	if (!parse_vector(index_split(line, 2), &co->center_dir))
-		erorr(scene, co, "Error: Invalid vector format for cone center_dir.");
-	validate_normalized_vector(co->center_dir, scene);
+	parse_vector(index_split(line, 1), &co->center);
+	parse_vector(index_split(line, 2), &co->center_dir);
 	co->center_dir = vec_normalize(co->center_dir);
 	co->diameter = ft_atof(index_split(line, 3));
 	co->height = ft_atof(index_split(line, 4));
-	{
-		co->apex = vec_add(co->center, vec_mult(co->center_dir, co->height / 2));
-		co->center = vec_sub(co->center, \
-			vec_mult(co->center_dir, co->height / 2));
-	}
-	if (co->diameter <= 0 || co->height <= 0)
-		erorr(scene, co, "Error: cone diameter and height not positive.");
+	co->apex = vec_add(co->center, vec_mult(co->center_dir, co->height / 2));
+	co->center = vec_sub(co->center, \
+		vec_mult(co->center_dir, co->height / 2));
 	return (co);
 }
 
@@ -40,7 +31,5 @@ void	parse_cone(t_scene *scene, char *line)
 	new_obj->type = CONE;
 	new_obj->shape_data = co;
 	add_object(scene, new_obj);
-	if (!parse_color(index_split(line, 5), &new_obj->color))
-		erorr(scene, NULL, "Error: Invalid color format for cone.");
-	validate_color(new_obj->color, scene);
+	parse_vector(index_split(line, 5), &new_obj->color);
 }
