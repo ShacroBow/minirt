@@ -1,12 +1,34 @@
 #include "../include/minirt.h"
 
-t_color	trace_ray(const t_ray *ray, const t_scene *scene)
+static t_color	trace_ray_recursive(const t_ray *ray, const t_scene *scene, \
+	int depth)
 {
 	t_hit_record	rec;
+	t_color			local;
+	t_color			reflect;
+	t_ray			r_ray;
 
 	if (hit(scene->objects, ray, INFINITY, &rec))
-		return (phong_shading(&rec, scene, &ray->direction));
+	{
+		local = phong_shading(&rec, scene, &ray->direction);
+		if (depth > 0 && rec.reflect > 0.0)
+		{
+			r_ray.direction = vec_reflect(vec_normalize(ray->direction), \
+				rec.normal);
+			r_ray.origin = vec_add(rec.point, vec_mult(rec.normal, 0.001));
+			reflect = trace_ray_recursive(&r_ray, scene, depth - 1);
+			return (color_add(local, color_scale(reflect, rec.reflect)));
+		}
+		return (local);
+	}
 	return (bg_color_from_dir(scene, &ray->direction));
+}
+
+t_color	trace_ray(const t_ray *ray, const t_scene *scene)
+{
+	if (ENABLE_REFLECTIONS)
+		return (trace_ray_recursive(ray, scene, MAX_REFLECTION_DEPTH));
+	return (trace_ray_recursive(ray, scene, 0));
 }
 
 void	render(t_program *prog)

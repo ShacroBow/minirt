@@ -29,3 +29,8 @@ t_vec3	vec_normalize(t_vec3 v)
 		return (v);
 	return (vec_div(v, len));
 }
+
+t_vec3	vec_reflect(t_vec3 v, t_vec3 n)
+{
+	return (vec_sub(v, vec_mult(n, 2 * vec_dot(v, n))));
+}

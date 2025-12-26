@@ -16,8 +16,8 @@
 # include <stdio.h>
 
 /* --- Constants (single source of truth) --- */
-# define WIDTH 255  // 1024
-# define HEIGHT 255 // 768
+# define WIDTH 555  // 1024
+# define HEIGHT 555 // 768
 # define EPSILON 1e-6 // 0.000001
 # define SHININESS 32.0
 # define AA_SAMPLES 16
@@ -25,6 +25,8 @@
 # define ENABLE_GAMMA 1
 # define ENABLE_AA 0
 # define ENABLE_BG 1
+# define ENABLE_REFLECTIONS 1
+# define MAX_REFLECTION_DEPTH 2
 # define WIN_TITLE "miniRT"
 # define MOVE_SPEED_BASE 0.5
 # define ROT_SPEED 0.2
@@ -32,7 +34,7 @@
 # define FILE_SIZE 4096
 
 # define GRID 3 //for render_utils
-# define INV_GRID 0.3333333333 //for render_utils
+# define INV_GRID 0.33333333333333 //for render_utils
 
 /* --- Core Data Structures --- */
 
@@ -127,6 +129,7 @@ typedef struct s_object
 	t_object_type	type;
 	void			*shape_data;
 	t_color			color;
+	double			reflectivity;
 	struct s_object	*next;
 }	t_object;
 
@@ -136,6 +139,8 @@ typedef struct s_hit_record
 	t_point	point;
 	t_vec3	normal;
 	t_color	color;
+	double	reflect;
+	double	reflect_depth;
 	double	t;
 	bool	front_face;
 }	t_hit_record;
@@ -222,6 +227,7 @@ t_vec3		vec_cross(t_vec3 v1, t_vec3 v2);
 double		vec_lensqrt(t_vec3 v);
 double		vec_len(t_vec3 v);
 t_vec3		vec_normalize(t_vec3 v);
+t_vec3		vec_reflect(t_vec3 v, t_vec3 n);
 
 /* --- Intersections --- */
 bool		hit(const t_object *world, const t_ray *ray, double t_max, \

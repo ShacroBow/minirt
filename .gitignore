@@ -26,3 +26,5 @@ libft/libft.a
 .DS_store
 
 .gitignore
+
+.github

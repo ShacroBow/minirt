@@ -9,12 +9,14 @@ static bool	try_hit_object(const t_object *obj, const t_ray *ray,
 	{
 		*out = tmp;
 		out->color = obj->color;
+		out->reflect = obj->reflectivity;
 		return (true);
 	}
 	if (obj->type == PLANE && hit_plane(obj->shape_data, ray, t_max, &tmp))
 	{
 		*out = tmp;
 		out->color = obj->color;
+		out->reflect = obj->reflectivity;
 		return (true);
 	}
 	if (obj->type == CYLINDER
@@ -22,6 +24,7 @@ static bool	try_hit_object(const t_object *obj, const t_ray *ray,
 	{
 		*out = tmp;
 		out->color = obj->color;
+		out->reflect = obj->reflectivity;
 		return (true);
 	}
 	return (false);

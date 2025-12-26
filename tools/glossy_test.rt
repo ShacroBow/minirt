@@ -1,8 +1,42 @@
-# Glossy test scene - optimized for specular highlights
+# Complex Glossy Scene: The Temple of Reflection
+# Ambient
 A 0.1 255,255,255
-C 0,0,15 0,0,-1 70
-L 5,5,10 0.9 255,255,255
-sp 0,0,0 3 255,100,100
-sp -6,0,0 2 100,255,100
-sp 6,0,0 2 100,100,255
-pl 0,-5,0 0,1,0 200,200,200
+
+# Camera (Positioned to see the structure)
+C 0,8,15 0,-0.1,-1 60
+
+# Light (High and to the right)
+L 200,300,-300 0.5 255,255,255
+L 200,300,300 0.5 255,255,255
+L 0,100,2 0.1 255,255,255
+
+
+pl 0,0,0 0,1,0 80,80,220
+
+# --- The Structure ---
+
+# Front Left Pillar (Gold-ish Cylinder)
+cy -8,6,10 0,1,0 2 12 200,150,50
+
+# Front Right Pillar (Gold-ish Cylinder)
+cy 8,6,10 0,1,0 2 12 200,150,50
+
+# Back Left Pillar (Gold-ish Cylinder)
+cy -8,6,-5 0,1,0 2 12 200,150,50
+
+# Back Right Pillar (Gold-ish Cylinder)
+cy 8,6,-5 0,1,0 2 12 200,150,50 
+
+# Front Crossbar (Silver Cylinder)
+cy 0,12,10 1,0,0 1.5 22 180,180,180
+
+# Back Crossbar (Silver Cylinder)
+cy 0,12,-5 1,0,0 1.5 22 180,180,180
+
+# --- The Altar ---
+
+# Altar Base (Dark Stone Cylinder)
+cy 0,1,2 0,1,0 6 2 60,60,60 0.5
+
+# The Orb (Glowing Cyan Sphere - High Reflectivity)
+sp 0,4,2 4 0,255,255 0.7
