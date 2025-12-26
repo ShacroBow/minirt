@@ -1,17 +1,5 @@
 #include "../include/minirt.h"
 
-static bool	is_ignorable(const char *s)
-{
-	int	i;
-
-	if (!s)
-		return (true);
-	i = 0;
-	while (s[i] && ft_isspace((unsigned char)s[i]))
-		i++;
-	return (s[i] == '\0' || s[i] == '#');
-}
-
 void	parse_line(char *line, t_scene *scene)
 {
 	if (is_ignorable(line))
@@ -32,40 +20,15 @@ void	parse_line(char *line, t_scene *scene)
 		parse_cone(scene, line);
 	else
 	{
-		(free_scene(scene), \
-		exit_error("Error: Invalid identifier in scene file."));
+		free_scene(scene);
+		exit_error("Error: Invalid identifier in scene file.");
 	}
 }
 
-void	read_file(int fd, char *content, t_scene *scene)
+static void	parse_loop(char *line, size_t line_count, t_scene *scene)
 {
-	ssize_t	bytes_read;
-
-	bytes_read = read(fd, content, FILE_SIZE + 1);
-	if (bytes_read == -1)
-		(close(fd), free_scene(scene), exit_error("Error: reading file.\n"));
-	if (bytes_read == FILE_SIZE + 1)
-		(close(fd), free_scene(scene), \
-		exit_error("Error: file too big. Max: 1000000 bytes\n"));
-	if (bytes_read == 0)
-		(close(fd), free_scene(scene), exit_error("Error: empty file.\n"));
-	content[bytes_read] = 0;
-}
-
-static t_scene	*parse_file(char *filename, t_scene *scene)
-{
-	int		fd;
-	char	*line;
-	size_t	line_count;
 	size_t	line_len;
-	char	file_content[FILE_SIZE + 1];
 
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-		(free_scene(scene), exit_error("Error: Cannot open scene file."));
-	read_file(fd, file_content, scene);
-	line_count = ft_split_inplace(file_content, '\n');
-	line = file_content;
 	while (line_count--)
 	{
 		while (*line == 0)
@@ -75,8 +38,24 @@ static t_scene	*parse_file(char *filename, t_scene *scene)
 			parse_line(line, scene);
 		line += line_len;
 	}
+}
+
+static t_scene	*parse_file(char *filename, t_scene *scene)
+{
+	int		fd;
+	size_t	line_count;
+	char	file_content[FILE_SIZE + 1];
+
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+	{
+		free_scene(scene);
+		exit_error("Error: Cannot open scene file.");
+	}
+	read_file(fd, file_content, scene);
+	line_count = ft_split_inplace(file_content, '\n');
+	parse_loop(file_content, line_count, scene);
 	close(fd);
-	validate_scene(scene);
 	return (scene);
 }
 
@@ -86,5 +65,6 @@ t_scene	*parse_scene(const char *filename, t_scene **scene)
 	if (!*scene)
 		exit_error("Error: Allocation failure.");
 	ft_bzero(*scene, sizeof(t_scene));
+	lint_scene((char *)filename, *scene);
 	return (parse_file((char *)filename, *scene));
 }

@@ -2,33 +2,19 @@
 
 void	parse_ambient(t_scene *scene, char *line)
 {
-	if (scene->ambient_light.is_set)
-		erorr(scene, NULL, "Error: Ambient light can only be declared once.");
-	if (ft_split_inplace(line, ' ') != 3)
-		erorr(scene, NULL, \
-			"Error: Incorrect number of arguments for ambient light.");
+	ft_split_inplace(line, ' ');
 	scene->ambient_light.ratio = ft_atof(index_split(line, 1));
-	validate_ratio(scene->ambient_light.ratio, scene);
-	if (!parse_color(index_split(line, 2), &scene->ambient_light.color))
-		erorr(scene, NULL, "Error: Invalid color format for ambient light.");
-	validate_color(scene->ambient_light.color, scene);
+	parse_vector(index_split(line, 2), &scene->ambient_light.color);
 	scene->ambient_light.is_set = true;
 }
 
 void	parse_camera(t_scene *scene, char *line)
 {
-	if (scene->camera.is_set)
-		erorr(scene, NULL, "Error: Camera can only be declared once.");
-	if (ft_split_inplace(line, ' ') != 4)
-		erorr(scene, NULL, "Error: Incorrect number of arguments for camera.");
-	if (!parse_vector(index_split(line, 1), &scene->camera.center))
-		erorr(scene, NULL, "Error: Invalid vector format for camera center.");
-	if (!parse_vector(index_split(line, 2), &scene->camera.normal))
-		erorr(scene, NULL, "Error: Invalid vector format for camera normal.");
-	validate_normalized_vector(scene->camera.normal, scene);
+	ft_split_inplace(line, ' ');
+	parse_vector(index_split(line, 1), &scene->camera.center);
+	parse_vector(index_split(line, 2), &scene->camera.normal);
 	scene->camera.normal = vec_normalize(scene->camera.normal);
 	scene->camera.fov = ft_atof(index_split(line, 3));
-	validate_fov(scene->camera.fov, scene);
 	scene->camera.is_set = true;
 }
 
@@ -36,19 +22,14 @@ void	parse_light(t_scene *scene, char *line)
 {
 	t_light	*nlight;
 
-	if (ft_split_inplace(line, ' ') != 4)
-		erorr(scene, NULL, "Error: Incorrect number of arguments for light.");
+	ft_split_inplace(line, ' ');
 	nlight = malloc(sizeof(t_light));
 	if (!nlight)
 		erorr(scene, NULL, "Error: allocation failed.\n");
 	add_light(scene, nlight);
-	if (!parse_vector(index_split(line, 1), &nlight->center))
-		erorr(scene, NULL, "Error: Invalid vector format for light center.");
+	parse_vector(index_split(line, 1), &nlight->center);
 	nlight->ratio = ft_atof(index_split(line, 2));
-	validate_ratio(nlight->ratio, scene);
-	if (!parse_color(index_split(line, 3), &nlight->color))
-		erorr(scene, NULL, "Error: Invalid color format for light.");
-	validate_color(nlight->color, scene);
+	parse_vector(index_split(line, 3), &nlight->color);
 }
 
 void	parse_sphere(t_scene *scene, char *line)
@@ -56,8 +37,7 @@ void	parse_sphere(t_scene *scene, char *line)
 	t_object	*new_obj;
 	t_sphere	*sp;
 
-	if (ft_split_inplace(line, ' ') != 4)
-		erorr(scene, NULL, "Error: Incorrect number of arguments for sphere.");
+	ft_split_inplace(line, ' ');
 	sp = malloc(sizeof(t_sphere));
 	if (!sp)
 		erorr(scene, NULL, "Error: allocation failed.\n");
@@ -67,14 +47,9 @@ void	parse_sphere(t_scene *scene, char *line)
 	new_obj->type = SPHERE;
 	new_obj->shape_data = sp;
 	add_object(scene, new_obj);
-	if (!parse_vector(index_split(line, 1), &sp->center))
-		erorr(scene, NULL, "Error: Invalid vector format for sphere center.");
+	parse_vector(index_split(line, 1), &sp->center);
 	sp->diameter = ft_atof(index_split(line, 2));
-	if (sp->diameter <= 0)
-		erorr(scene, NULL, "Error: Sphere diameter must be positive.");
-	if (!parse_color(index_split(line, 3), &new_obj->color))
-		erorr(scene, NULL, "Error: Invalid color format for sphere.");
-	validate_color(new_obj->color, scene);
+	parse_vector(index_split(line, 3), &new_obj->color);
 }
 
 void	parse_plane(t_scene *scene, char *line)
@@ -82,8 +57,7 @@ void	parse_plane(t_scene *scene, char *line)
 	t_object	*new_obj;
 	t_plane		*pl;
 
-	if (ft_split_inplace(line, ' ') != 4)
-		erorr(scene, NULL, "Error: Incorrect number of arguments for plane.");
+	ft_split_inplace(line, ' ');
 	pl = malloc(sizeof(t_plane));
 	if (!pl)
 		erorr(scene, NULL, "Error: allocation failed.\n");
@@ -93,13 +67,7 @@ void	parse_plane(t_scene *scene, char *line)
 	new_obj->type = PLANE;
 	new_obj->shape_data = pl;
 	add_object(scene, new_obj);
-	if (!parse_vector(index_split(line, 1), &pl->point))
-		erorr(scene, NULL, "Error: Invalid vector format for plane point.");
-	if (!parse_vector(index_split(line, 2), &pl->normal))
-		erorr(scene, NULL, "Error: Invalid vector format for plane normal.");
-	validate_normalized_vector(pl->normal, scene);
-	pl->normal = vec_normalize(pl->normal);
-	if (!parse_color(index_split(line, 3), &new_obj->color))
-		erorr(scene, NULL, "Error: Invalid color format for plane.");
-	validate_color(new_obj->color, scene);
+	parse_vector(index_split(line, 1), &pl->point);
+	parse_vector(index_split(line, 2), &pl->normal);
+	parse_vector(index_split(line, 3), &new_obj->color);
 }
