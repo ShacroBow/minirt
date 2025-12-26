@@ -16,8 +16,8 @@
 # include <stdio.h>
 
 /* --- Constants (single source of truth) --- */
-# define WIDTH 555  // 1024
-# define HEIGHT 555 // 768
+# define WIDTH 255  // 1024
+# define HEIGHT 255 // 768
 # define EPSILON 1e-6 // 0.000001
 # define SHININESS 32.0
 # define AA_SAMPLES 16
@@ -177,6 +177,26 @@ int			main(int argc, char **argv);
 
 /* --- Parser --- */
 t_scene		*parse_scene(const char *filename, t_scene **scene);
+void		read_file(int fd, char *content, t_scene *scene);
+void		lint_scene(char *filename, t_scene *scene);
+bool		is_ignorable(const char *s);
+
+/* Linter Utils */
+bool		is_valid_float(char *str);
+bool		check_range(double val, double min, double max);
+bool		check_color_fmt(char *str);
+bool		check_vector_fmt(char *str);
+bool		check_normalized(char *str);
+
+/* Linter Elements */
+void		lint_ambient(char *line, t_scene *scene);
+void		lint_camera(char *line, t_scene *scene);
+void		lint_light(char *line, t_scene *scene);
+void		lint_sphere(char *line, t_scene *scene);
+void		lint_plane(char *line, t_scene *scene);
+void		lint_cylinder(char *line, t_scene *scene);
+
+/* --- Vectors --- */
 void		parse_line(char *line, t_scene *scene);
 void		parse_ambient(t_scene *scene, char *line);
 void		parse_camera(t_scene *scene, char *line);
@@ -187,20 +207,10 @@ void		parse_cylinder(t_scene *scene, char *line);
 
 /* Parser Utils */
 bool		parse_vector(char *str, t_vec3 *vec);
-bool		parse_color(char *str, t_color *color);
 void		add_light(t_scene *scene, t_light *new_light);
 void		add_object(t_scene *scene, t_object *new_obj);
 double		ft_atof(const char *str);
 char		**ft_split(char const *s, char c);
-int			count_tokens(char **tokens);
-void		free_tokens(char **tokens);
-
-/* Parser Validation */
-void		validate_color(t_color color, t_scene *scene);
-void		validate_normalized_vector(t_vec3 vec, t_scene *scene);
-void		validate_ratio(double ratio, t_scene *scene);
-void		validate_fov(double fov, t_scene *scene);
-void		validate_scene(t_scene *scene);
 
 /* --- Vectors --- */
 t_vec3		vec_add(t_vec3 v1, t_vec3 v2);
