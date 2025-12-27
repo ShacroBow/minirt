@@ -27,6 +27,13 @@ static bool	try_hit_object(const t_object *obj, const t_ray *ray,
 		out->reflect = obj->reflectivity;
 		return (true);
 	}
+	if (obj->type == CONE
+		&& hit_cone(obj->shape_data, ray, t_max, &tmp))
+	{
+		*out = tmp;
+		out->color = obj->color;
+		return (true);
+	}
 	return (false);
 }
 

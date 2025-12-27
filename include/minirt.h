@@ -93,7 +93,8 @@ typedef enum e_object_type
 {
 	SPHERE,
 	PLANE,
-	CYLINDER
+	CYLINDER,
+	CONE
 }	t_object_type;
 
 typedef struct s_sphere
@@ -115,6 +116,15 @@ typedef struct s_cylinder
 	double	diameter;
 	double	height;
 }	t_cylinder;
+
+typedef struct s_cone
+{
+	t_point	center;
+	t_vec3	center_dir;
+	t_vec3	apex;
+	double	diameter;
+	double	height;
+}	t_cone;
 
 typedef struct s_cap
 {
@@ -209,6 +219,7 @@ void		parse_light(t_scene *scene, char *line);
 void		parse_sphere(t_scene *scene, char *line);
 void		parse_plane(t_scene *scene, char *line);
 void		parse_cylinder(t_scene *scene, char *line);
+void		parse_cone(t_scene *scene, char *line);
 
 /* Parser Utils */
 bool		parse_vector(char *str, t_vec3 *vec);
@@ -239,6 +250,8 @@ bool		hit_plane(const t_plane *pl, const t_ray *ray, double t_max, \
 				t_hit_record *rec);
 bool		hit_cylinder(const t_cylinder *cy, const t_ray *ray,
 				double t_max, t_hit_record *rec);
+bool		hit_cone(const t_cone *cy, const t_ray *ray, double t_max,
+		t_hit_record *rec);
 
 /* --- Render --- */
 int			color_to_int(t_color color);

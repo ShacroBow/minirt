@@ -27,6 +27,8 @@ void	select_element(int *is_cam, t_object **object, int keycode, \
 			printf("selected CYLINDER\n");
 		else if (*object && (*object)->type == PLANE)
 			printf("selected PLANE\n");
+		else if (*object && (*object)->type == CONE)
+			printf("selected CONE\n");
 	}
 }
 
@@ -44,6 +46,13 @@ void	move_object(t_object *object, t_vec3 direction, double speed)
 	else if (object->type == PLANE)
 		((t_plane *)object->shape_data)->point = \
 			vec_add(((t_plane *)object->shape_data)->point, move);
+	else if (object->type == CONE)
+	{
+		((t_cone *)object->shape_data)->center = \
+			vec_add(((t_cone *)object->shape_data)->center, move);
+		((t_cone *)object->shape_data)->apex = \
+			vec_add(((t_cone *)object->shape_data)->apex, move);		
+	}
 }
 
 void	move_element_object(t_program *prog, int keycode, t_object *object)
@@ -86,7 +95,7 @@ void	camera_handle_key(int keycode, t_program *prog,
 	t_camera	*cam;
 
 	cam = &prog->scene->camera;
-	if (keycode >= KEY_0 && keycode <= KEY_9)
+	if (keycode == KEY_0 || keycode == KEY_3)
 		select_element(is_cam, object, keycode, prog);
 	else if (keycode == KEY_W || keycode == KEY_S || keycode == KEY_D || \
 		keycode == KEY_A || keycode == KEY_PG_UP || keycode == KEY_PG_DOWN)

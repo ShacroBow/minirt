@@ -9,11 +9,9 @@ int	close_window(t_program *prog)
 
 int	key_hook(int keycode, t_program *prog)
 {
-	t_camera			*cam;
 	static t_object		*object = NULL;
 	static int			is_cam = 1;
 
-	cam = &prog->scene->camera;
 	if (keycode == KEY_ESC)
 		close_window(prog);
 	else if (keycode == KEY_P)
@@ -25,8 +23,7 @@ int	key_hook(int keycode, t_program *prog)
 	}
 	else
 		camera_handle_key(keycode, prog, &object, &is_cam);
-	if (keycode == KEY_UP || keycode == KEY_DOWN || (keycode >= KEY_0 && \
-		keycode <= KEY_9))
+	if ((keycode == KEY_0 || keycode == KEY_3))
 		return (0);
 	render(prog);
 	return (0);

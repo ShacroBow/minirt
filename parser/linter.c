@@ -24,6 +24,24 @@ void	lint_cylinder(char *line, t_scene *scene)
 		erorr(scene, NULL, "Error: Cylinder reflectivity invalid.");
 }
 
+void	lint_cone(char *line, t_scene *scene)
+{
+	if (ft_split_inplace(line, ' ') != 6)
+		erorr(scene, NULL, "Error: Cone args count.");
+	if (!check_vector_fmt(index_split(line, 1)))
+		erorr(scene, NULL, "Error: Cone center invalid.");
+	if (!check_normalized(index_split(line, 2)))
+		erorr(scene, NULL, "Error: Cone normal invalid.");
+	if (!is_valid_float(index_split(line, 3)) || \
+		ft_atof(index_split(line, 3)) <= 0)
+		erorr(scene, NULL, "Error: Cone diameter invalid.");
+	if (!is_valid_float(index_split(line, 4)) || \
+		ft_atof(index_split(line, 4)) <= 0)
+		erorr(scene, NULL, "Error: Cone height invalid.");
+	if (!check_color_fmt(index_split(line, 5)))
+		erorr(scene, NULL, "Error: Cone color invalid.");
+}
+
 static void	lint_unique(char *line, t_scene *scene)
 {
 	if (ft_strncmp(line, "A ", 2) == 0)
@@ -56,6 +74,8 @@ void	lint_line(char *line, t_scene *scene)
 		lint_plane(line, scene);
 	else if (ft_strncmp(line, "cy ", 3) == 0)
 		lint_cylinder(line, scene);
+	else if (ft_strncmp(line, "co ", 3) == 0)
+		lint_cone(line, scene);
 	else
 		erorr(scene, NULL, "Error: Invalid identifier.");
 }

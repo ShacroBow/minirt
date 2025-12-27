@@ -24,6 +24,16 @@
 #  define KEY_SPACE		49
 #  define KEY_O			31
 #  define KEY_X			7
+#  define KEY_0			29
+#  define KEY_1			18
+#  define KEY_2			19
+#  define KEY_3			20
+#  define KEY_4			21
+#  define KEY_5			23
+#  define KEY_6			22
+#  define KEY_7			26
+#  define KEY_8			28
+#  define KEY_9			25
 
 # else
 
