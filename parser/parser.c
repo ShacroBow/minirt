@@ -61,10 +61,24 @@ static t_scene	*parse_file(char *filename, t_scene *scene)
 
 t_scene	*parse_scene(const char *filename, t_scene **scene)
 {
+	long	t;
+
 	*scene = malloc(sizeof(t_scene));
 	if (!*scene)
 		exit_error("Error: Allocation failure.");
 	ft_bzero(*scene, sizeof(t_scene));
+	if (DEBUG)
+		t = get_time_us();
 	lint_scene((char *)filename, *scene);
-	return (parse_file((char *)filename, *scene));
+	if (DEBUG)
+	{
+		printf("[DEBUG] Linter: %ldus\n", (get_time_us() - t));
+		t = get_time_us();
+	}
+	*scene = parse_file((char *)filename, *scene);
+	if (DEBUG)
+	{
+		printf("[DEBUG] Parser: %ldus\n", (get_time_us() - t));
+	}
+	return (*scene);
 }

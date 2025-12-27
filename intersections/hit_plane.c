@@ -35,6 +35,7 @@ bool	hit_plane(const t_plane *pl, const t_ray *ray, double t_max,
 
 	if (!plane_t(pl, ray, &t) || t >= t_max)
 		return (false);
-	set_plane_hit(pl, ray, t, rec);
+	if (rec)
+		set_plane_hit(pl, ray, t, rec);
 	return (true);
 }

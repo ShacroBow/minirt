@@ -15,10 +15,11 @@ void		move_element_camera(t_program *prog, int keycode);
 void		camera_handle_key(int keycode, t_program *prog, t_object **object, \
 							int *is_cam);
 void		select_element(int *is_cam, t_object **object, int keycode, \
-	t_program *prog);
+							t_program *prog);
 void		move_object(t_object *object, t_vec3 direction, double speed);
 void		move_element_object(t_program *prog, int keycode, t_object *object);
 void		move_element(int is_cam, t_object *object, t_program *prog, \
-	int keycode);
-
+						int keycode);
+void		camera_keystuffing(int keycode, t_program *prog, \
+								t_object **object, int *is_cam);
 #endif

@@ -2,6 +2,10 @@
 
 int	close_window(t_program *prog)
 {
+	long	end_time;
+
+	end_time = get_time_ms();
+	printf("\nProgram lifetime: %ldms\n", end_time - prog->program_start_time);
 	cleanup(prog);
 	exit(0);
 	return (0);
@@ -59,10 +63,11 @@ int	main(int argc, char **argv)
 	prog.scene_file = argv[1];
 	prog.move_speed = MOVE_SPEED_BASE;
 	prog.aa_enabled = ENABLE_AA;
+	prog.pixel_step = ENABLE_PIXEL_STEP;
 	parse_scene(prog.scene_file, &prog.scene);
 	prog.default_camera = prog.scene->camera;
 	init_mlx(&prog);
-	render(&prog);
+	prog.program_start_time = get_time_ms();
 	mlx_hook(prog.mlx.win_ptr, 17, 0, close_window, &prog);
 	mlx_key_hook(prog.mlx.win_ptr, key_hook, &prog);
 	mlx_loop(prog.mlx.mlx_ptr);

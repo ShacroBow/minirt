@@ -27,7 +27,7 @@ t_color	phong_shading(const t_hit_record *rec, const t_scene *scene,
 	t_vec3	view_dir;
 	t_vec3	light_dir;
 
-	view_dir = vec_normalize(vec_mult(*ray_dir, -1.0));
+	view_dir = vec_mult(*ray_dir, -1.0);
 	c = calculate_ambient(&scene->ambient_light, &rec->color);
 	nowlight = scene->lights;
 	while (nowlight)

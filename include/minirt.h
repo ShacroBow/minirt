@@ -14,24 +14,29 @@
 # include "keys.h"
 # include "camera.h"
 # include <stdio.h>
+# include <sys/time.h>
 
 /* --- Constants (single source of truth) --- */
 # define WIDTH 555  // 1024
 # define HEIGHT 555 // 768
 # define EPSILON 1e-6 // 0.000001
 # define SHININESS 32.0
-# define AA_SAMPLES 16
+# define AA_SAMPLES 8
 # define DISPLAY_GAMMA 0.6
 # define ENABLE_GAMMA 1
 # define ENABLE_AA 0
 # define ENABLE_BG 1
-# define ENABLE_REFLECTIONS 1
-# define MAX_REFLECTION_DEPTH 2
+# define ENABLE_REFLECTIONS 0
+# define ENABLE_PIXEL_STEP 1 //downscaling
+# define MAX_REFLECTION_DEPTH 1
 # define WIN_TITLE "miniRT"
 # define MOVE_SPEED_BASE 0.5
 # define ROT_SPEED 0.2
 # define SPEED_INCREMENT 0.5
 # define FILE_SIZE 4096
+# define PIXEL_STEP_INC 1
+# define PIXEL_STEP_MAX 100
+# define PIXEL_STEP_MIN 1
 
 # define GRID 3 //for render_utils
 # define INV_GRID 0.33333333333333 //for render_utils
@@ -181,8 +186,14 @@ typedef struct s_program
 	t_mlx_data	mlx;
 	int			aa_enabled;
 	double		move_speed;
+	int			pixel_step;
 	t_camera	default_camera;
 	char		*scene_file;
+	long		program_start_time;
+	long		render_start_time;
+	long		ray_count;
+	long		shading_time;
+	long		intersect_time;
 }	t_program;
 
 /* --- Function Prototypes --- */
@@ -210,6 +221,7 @@ void		lint_light(char *line, t_scene *scene);
 void		lint_sphere(char *line, t_scene *scene);
 void		lint_plane(char *line, t_scene *scene);
 void		lint_cylinder(char *line, t_scene *scene);
+void		lint_cone(char *line, t_scene *scene);
 
 /* --- Vectors --- */
 void		parse_line(char *line, t_scene *scene);
@@ -250,14 +262,18 @@ bool		hit_plane(const t_plane *pl, const t_ray *ray, double t_max, \
 				t_hit_record *rec);
 bool		hit_cylinder(const t_cylinder *cy, const t_ray *ray,
 				double t_max, t_hit_record *rec);
-bool		hit_cone(const t_cone *cy, const t_ray *ray, double t_max,
-		t_hit_record *rec);
+bool		hit_cone(const t_cone *cy, const t_ray *ray, double t_max, \
+				t_hit_record *rec);
+t_vec3		cone_coeffs(const t_cone *cy, const t_ray *ray);
+bool		quadratic(double a, double b, double c, double *t);
 
 /* --- Render --- */
 int			color_to_int(t_color color);
 void		render(t_program *prog);
+t_color		trace_ray(const t_ray *ray, t_program *prog);
 
 /* Render utils */
+
 /* Render context: cache per-frame values to avoid repeated computation */
 typedef struct s_render_ctx
 {
@@ -267,12 +283,19 @@ typedef struct s_render_ctx
 	double		inv_aa_samples;
 }	t_render_ctx;
 
+long		get_time_ms(void);
+long		get_time_us(void);
 double		fast_rand(unsigned long *seed);
 t_color		get_aa_sample(t_render_ctx *ctx, int x, int y);
 t_color		render_pixel(t_render_ctx *ctx, int x, int y);
+void		init_render_utils(t_program *prog, t_render_ctx *ctx);
+void		update_render_stats(t_program *prog, long *t_start, \
+								bool is_shading);
+t_color		handle_reflection(const t_ray *ray, t_hit_record *rec, \
+				t_program *prog, int depth);
+t_color		trace_ray_recursive(const t_ray *ray, t_program *prog, int depth);
 
 /* Shading / Rays */
-t_color		trace_ray(const t_ray *ray, const t_scene *scene);
 t_color		phong_shading(const t_hit_record *rec, const t_scene *scene, \
 						const t_vec3 *ray_dir);
 t_ray		create_ray(const t_camera *cam, double u, double v);

@@ -23,7 +23,9 @@ void	parse_cone(t_scene *scene, char *line)
 {
 	t_object	*new_obj;
 	t_cone		*co;
+	int			count;
 
+	count = ft_split_inplace(line, ' ');
 	co = parse_cone_struct(scene, line);
 	new_obj = malloc(sizeof(t_object));
 	if (!new_obj)
@@ -32,4 +34,8 @@ void	parse_cone(t_scene *scene, char *line)
 	new_obj->shape_data = co;
 	add_object(scene, new_obj);
 	parse_vector(index_split(line, 5), &new_obj->color);
+	if (count == 7)
+		new_obj->reflectivity = ft_atof(index_split(line, 6));
+	else
+		new_obj->reflectivity = 0.0;
 }

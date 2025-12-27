@@ -1,47 +1,59 @@
 #include "../include/minirt.h"
 
-static bool	try_hit_object(const t_object *obj, const t_ray *ray,
-			double t_max, t_hit_record *out)
+bool	quadratic(double a, double b, double c, double *t)
 {
-	t_hit_record	tmp;
+	double	discriminant;
+	double	sqrt_disc;
+	double	t0;
+	double	t1;
 
-	if (obj->type == SPHERE && hit_sphere(obj->shape_data, ray, t_max, &tmp))
+	if (fabs(a) < EPSILON)
+		return (false);
+	discriminant = b * b - 4.0 * a * c;
+	if (discriminant < 0.0)
+		return (false);
+	sqrt_disc = sqrt(discriminant);
+	t0 = (-b - sqrt_disc) / (2.0 * a);
+	t1 = (-b + sqrt_disc) / (2.0 * a);
+	if (t0 > EPSILON && (t0 < t1 || t1 <= EPSILON))
 	{
-		*out = tmp;
-		out->color = obj->color;
-		out->reflect = obj->reflectivity;
+		*t = t0;
 		return (true);
 	}
-	if (obj->type == PLANE && hit_plane(obj->shape_data, ray, t_max, &tmp))
+	if (t1 > EPSILON)
 	{
-		*out = tmp;
-		out->color = obj->color;
-		out->reflect = obj->reflectivity;
-		return (true);
-	}
-	if (obj->type == CYLINDER
-		&& hit_cylinder(obj->shape_data, ray, t_max, &tmp))
-	{
-		*out = tmp;
-		out->color = obj->color;
-		out->reflect = obj->reflectivity;
-		return (true);
-	}
-	if (obj->type == CONE
-		&& hit_cone(obj->shape_data, ray, t_max, &tmp))
-	{
-		*out = tmp;
-		out->color = obj->color;
+		*t = t1;
 		return (true);
 	}
 	return (false);
+}
+
+static bool	try_hit_object(const t_object *obj, const t_ray *ray,
+			double t_max, t_hit_record *out)
+{
+	bool	hit;
+
+	hit = false;
+	if (obj->type == SPHERE)
+		hit = hit_sphere(obj->shape_data, ray, t_max, out);
+	else if (obj->type == PLANE)
+		hit = hit_plane(obj->shape_data, ray, t_max, out);
+	else if (obj->type == CYLINDER)
+		hit = hit_cylinder(obj->shape_data, ray, t_max, out);
+	else if (obj->type == CONE)
+		hit = hit_cone(obj->shape_data, ray, t_max, out);
+	if (hit && out)
+	{
+		out->color = obj->color;
+		out->reflect = obj->reflectivity;
+	}
+	return (hit);
 }
 
 bool	hit(const t_object *world, const t_ray *ray, double t_max,
 		t_hit_record *rec)
 {
 	const t_object	*cur;
-	t_hit_record	best;
 	bool			hit_any;
 	double			closest;
 
@@ -50,11 +62,10 @@ bool	hit(const t_object *world, const t_ray *ray, double t_max,
 	cur = world;
 	while (cur)
 	{
-		if (try_hit_object(cur, ray, closest, &best))
+		if (try_hit_object(cur, ray, closest, rec))
 		{
 			hit_any = true;
-			closest = best.t;
-			*rec = best;
+			closest = rec->t;
 		}
 		cur = cur->next;
 	}
@@ -64,12 +75,11 @@ bool	hit(const t_object *world, const t_ray *ray, double t_max,
 bool	hit_any(const t_object *world, const t_ray *ray, double t_max)
 {
 	const t_object	*cur;
-	t_hit_record	temp;
 
 	cur = world;
 	while (cur)
 	{
-		if (try_hit_object(cur, ray, t_max, &temp))
+		if (try_hit_object(cur, ray, t_max, NULL))
 			return (true);
 		cur = cur->next;
 	}

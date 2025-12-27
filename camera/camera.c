@@ -71,3 +71,32 @@ void	move_element_camera(t_program *prog, int keycode)
 		move_camera(&prog->scene->camera, (t_vec3){0, -1, 0}, \
 		prog->move_speed * 2.0);
 }
+
+void	camera_handle_key(int keycode, t_program *prog, \
+		t_object **object, int *is_cam)
+{
+	t_camera	*cam;
+
+	cam = &prog->scene->camera;
+	if (keycode == KEY_0 || keycode == KEY_3)
+		select_element(is_cam, object, keycode, prog);
+	else if (keycode == KEY_W || keycode == KEY_S || keycode == KEY_D || \
+		keycode == KEY_A || keycode == KEY_PG_UP || keycode == KEY_PG_DOWN)
+		move_element(*is_cam, *object, prog, keycode);
+	else if (keycode == KEY_LEFT)
+		rotate_camera(cam, 0, ROT_SPEED);
+	else if (keycode == KEY_RIGHT)
+		rotate_camera(cam, 0, -ROT_SPEED);
+	else if (keycode == KEY_UP)
+		rotate_camera(cam, ROT_SPEED, 0);
+	else if (keycode == KEY_DOWN)
+		rotate_camera(cam, -ROT_SPEED, 0);
+	else if (keycode == KEY_PLUS)
+		prog->move_speed += SPEED_INCREMENT;
+	else if (keycode == KEY_MINUS && prog->move_speed > SPEED_INCREMENT)
+		prog->move_speed -= SPEED_INCREMENT;
+	else if (keycode == KEY_X)
+		prog->scene->camera = prog->default_camera;
+	else if (keycode == KEY_1 || keycode == KEY_2 || keycode == KEY_O)
+		camera_keystuffing(keycode, prog, object, is_cam);
+}

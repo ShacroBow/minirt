@@ -17,6 +17,7 @@ t_ray	create_ray(const t_camera *cam, double u, double v)
 	vertical_part = vec_mult(cam->vertical, v);
 	r.direction = vec_sub(vec_add(cam->lower_left_corner, \
 				vec_add(horizontal_part, vertical_part)), r.origin);
+	r.direction = vec_normalize(r.direction);
 	return (r);
 }
 // normalize not necessary. r.direction = vec_normalize(r.direction);
@@ -37,7 +38,7 @@ t_color	get_aa_sample(t_render_ctx *ctx, int x, int y)
 						((x + ((i % GRID) + fast_rand(&seed)) * INV_GRID) * \
 						ctx->inv_w), ((y + (((i / GRID) % GRID) + \
 						fast_rand(&seed)) * INV_GRID) * ctx->inv_h));
-		sum = color_add(sum, trace_ray(&ray, ctx->prog->scene));
+		sum = color_add(sum, trace_ray(&ray, ctx->prog));
 		i++;
 	}
 	return (color_scale(sum, ctx->inv_aa_samples));
@@ -57,9 +58,24 @@ t_color	render_pixel(t_render_ctx *ctx, int x, int y)
 		u = ((double)x + 0.5) * ctx->inv_w;
 		v = ((double)y + 0.5) * ctx->inv_h;
 		ray = create_ray(&ctx->prog->scene->camera, u, v);
-		sum = trace_ray(&ray, ctx->prog->scene);
+		sum = trace_ray(&ray, ctx->prog);
 	}
 	if (ENABLE_GAMMA)
 		sum = color_gamma(sum, DISPLAY_GAMMA);
 	return (sum);
+}
+
+void	init_render_utils(t_program *prog, t_render_ctx *ctx)
+{
+	setup_camera(&prog->scene->camera, (double)WIDTH / (double)HEIGHT);
+	ctx->prog = prog;
+	ctx->inv_w = 1.0 / (double)WIDTH;
+	ctx->inv_h = 1.0 / (double)HEIGHT;
+	ctx->inv_aa_samples = 1.0 / (double)AA_SAMPLES;
+	if (DEBUG)
+	{
+		prog->ray_count = 0;
+		prog->shading_time = 0;
+		prog->intersect_time = 0;
+	}
 }
