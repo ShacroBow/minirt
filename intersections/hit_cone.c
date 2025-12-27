@@ -67,27 +67,27 @@ static t_vec3	cone_coeffs(const t_cone *cy, const t_ray *ray)
 
 static void set_cone_hit(const t_cone *cy, const t_ray *ray, double t, t_hit_record *rec)
 {
-    t_vec3	hit_point;
-    t_vec3	q;
-    t_vec3	normal_vec;
-    double	k;
+	t_vec3	hit_point;
+	t_vec3	q;
+	t_vec3	normal_vec;
+	double	k;
 
-    rec->t = t;
-    hit_point = vec_add(ray->origin, vec_mult(ray->direction, t));
-    rec->point = hit_point;
-    q = vec_sub(hit_point, cy->apex);
-    k = (cy->diameter * 0.5 / cy->height);
-    k = k * k;
-    normal_vec = vec_sub(q, vec_mult(cy->center_dir,
+	rec->t = t;
+	hit_point = vec_add(ray->origin, vec_mult(ray->direction, t));
+	rec->point = hit_point;
+	q = vec_sub(hit_point, cy->apex);
+	k = (cy->diameter * 0.5 / cy->height);
+	k = k * k;
+	normal_vec = vec_sub(q, vec_mult(cy->center_dir,
 		(1.0 + k) * vec_dot(q, cy->center_dir)));
-    rec->normal = vec_normalize(normal_vec);
-    if (vec_dot(ray->direction, rec->normal) > 0)
+	rec->normal = vec_normalize(normal_vec);
+	if (vec_dot(ray->direction, rec->normal) > 0)
 	{
-        rec->normal = vec_mult(rec->normal, -1);
-        rec->front_face = false;
-    }
+		rec->normal = vec_mult(rec->normal, -1);
+		rec->front_face = false;
+	}
 	else
-        rec->front_face = true;
+		rec->front_face = true;
 }
 
 static bool	cap_hit(const t_cap *cap, const t_ray *ray, double *t,

@@ -18,6 +18,8 @@ void	parse_line(char *line, t_scene *scene)
 		parse_cylinder(scene, line);
 	else if (ft_strncmp(line, "co ", 3) == 0)
 		parse_cone(scene, line);
+	else if (ft_strncmp(line, "tx_pl ", 6) == 0)
+		parse_texture_plane(scene, line);
 	else
 	{
 		free_scene(scene);

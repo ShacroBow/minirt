@@ -54,6 +54,23 @@ static void	lint_unique(char *line, t_scene *scene)
 	}
 }
 
+void	lint_texture_plane(line, scene)
+{
+	size_t	split_count;
+
+	split_count = ft_split_inplace(line, ' ');
+	if (split_count != 4 && split_count != 5)
+		erorr(scene, NULL, "Error: Texture plane args count.");
+	if (!check_vector_fmt(index_split(line, 1)))
+		erorr(scene, NULL, "Error: Texture plane point invalid.");
+	if (!check_normalized(index_split(line, 2)))
+		erorr(scene, NULL, "Error: Texture plane normal invalid.");
+	if (!has_extension(index_split(line, 3), ".ppm"))
+		error(scene, NULL, "Error: Texture plane file extension.");
+	if (split_count == 4 && !has_extension(index_split(line, 4), ".bump.ppm"))
+		error(scene, NULL, "Error: Texture plane bump map file extension.");
+}
+
 void	lint_line(char *line, t_scene *scene)
 {
 	if (is_ignorable(line))
@@ -70,6 +87,8 @@ void	lint_line(char *line, t_scene *scene)
 		lint_cylinder(line, scene);
 	else if (ft_strncmp(line, "co ", 3) == 0)
 		lint_cone(line, scene);
+	else if (ft_strncmp(line, "tx_pl ", 6) == 0)
+		lint_texture_plane(line, scene);
 	else
 		erorr(scene, NULL, "Error: Invalid identifier.");
 }

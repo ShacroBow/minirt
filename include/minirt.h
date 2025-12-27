@@ -92,7 +92,8 @@ typedef enum e_object_type
 	SPHERE,
 	PLANE,
 	CYLINDER,
-	CONE
+	CONE,
+	TEXTURE_PLANE
 }	t_object_type;
 
 typedef struct s_sphere
@@ -123,6 +124,13 @@ typedef struct s_cone
 	double	diameter;
 	double	height;
 }	t_cone;
+
+typedef struct s_texture_plane
+{
+	size_t			width;
+	size_t			height;
+	unsigned char	*pixels;
+}	t_texture_plane;
 
 typedef struct s_cap
 {

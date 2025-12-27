@@ -18,5 +18,8 @@ pl 0,-5,0 0,1,0 0,255,0
 # # Blue cylinder: base at (3,0,0), axis (0,1,0), diameter 2, height 4, color blue
 cy 10,0,0 0,1,0 2 4 0,0,255
 
-# Cyan cone: base at (0,10,0), axis (0,1,0), diameter 2, height 4, color cyan
-co 5,5,0 0,1,0 2 2 0,0,255
+# Cyan cone: base at (0,0,10), axis (0,1,0), diameter 4, height 4, color cyan
+co 0,0,10 0,1,0 4 4 0,255,255
+
+# ARGS: identifier name -- position --- direction --- file_name --- [optional - bump_map_file_name]
+tx_pl 0,0,0 0,0,1 texture.ppm texture.bump.ppm
