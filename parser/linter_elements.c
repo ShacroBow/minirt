@@ -42,7 +42,7 @@ void	lint_sphere(char *line, t_scene *scene)
 	int	count;
 
 	count = ft_split_inplace(line, ' ');
-	if (count != 4 && count != 5)
+	if (count != 4 && count != 5 && count != 6)
 		erorr(scene, NULL, "Error: Sphere args count.");
 	if (!check_vector_fmt(index_split(line, 1)))
 		erorr(scene, NULL, "Error: Sphere center invalid.");
@@ -51,9 +51,11 @@ void	lint_sphere(char *line, t_scene *scene)
 		erorr(scene, NULL, "Error: Sphere diameter invalid.");
 	if (!check_color_fmt(index_split(line, 3)))
 		erorr(scene, NULL, "Error: Sphere color invalid.");
-	if (count == 5 && (!is_valid_float(index_split(line, 4)) || \
+	if (count >= 5 && (!is_valid_float(index_split(line, 4)) || \
 		!check_range(ft_atof(index_split(line, 4)), 0.0, 1.0)))
 		erorr(scene, NULL, "Error: Sphere reflectivity invalid.");
+	if (count == 6 && !check_color_fmt(index_split(line, 5)))
+		erorr(scene, NULL, "Error: Sphere checker color invalid.");
 }
 
 void	lint_plane(char *line, t_scene *scene)
@@ -61,7 +63,7 @@ void	lint_plane(char *line, t_scene *scene)
 	int	count;
 
 	count = ft_split_inplace(line, ' ');
-	if (count != 4 && count != 5)
+	if (count != 4 && count != 5 && count != 6)
 		erorr(scene, NULL, "Error: Plane args count.");
 	if (!check_vector_fmt(index_split(line, 1)))
 		erorr(scene, NULL, "Error: Plane point invalid.");
@@ -69,7 +71,9 @@ void	lint_plane(char *line, t_scene *scene)
 		erorr(scene, NULL, "Error: Plane normal invalid.");
 	if (!check_color_fmt(index_split(line, 3)))
 		erorr(scene, NULL, "Error: Plane color invalid.");
-	if (count == 5 && (!is_valid_float(index_split(line, 4)) || \
+	if (count >= 5 && (!is_valid_float(index_split(line, 4)) || \
 		!check_range(ft_atof(index_split(line, 4)), 0.0, 1.0)))
 		erorr(scene, NULL, "Error: Plane reflectivity invalid.");
+	if (count == 6 && !check_color_fmt(index_split(line, 5)))
+		erorr(scene, NULL, "Error: Plane checker color invalid.");
 }

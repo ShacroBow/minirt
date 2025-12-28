@@ -152,7 +152,7 @@ run_test "test.rt" "Light: Invalid color" "Error: Light color invalid."
 echo "sp 0,0,0" > test.rt
 run_test "test.rt" "Sphere: Missing args" "Error: Sphere args count."
 
-echo "sp 0,0,0 10 255,0,0 1" > test.rt
+echo "sp 0,0,0 10 255,0,0 0.5 255,255,255 1" > test.rt
 run_test "test.rt" "Sphere: Extra args" "Error: Sphere args count."
 
 echo "sp 0,0,0 -10 255,0,0" > test.rt
@@ -165,7 +165,7 @@ run_test "test.rt" "Sphere: Invalid color" "Error: Sphere color invalid."
 echo "pl 0,0,0" > test.rt
 run_test "test.rt" "Plane: Missing args" "Error: Plane args count."
 
-echo "pl 0,0,0 0,1,0 255,0,0 1" > test.rt
+echo "pl 0,0,0 0,1,0 255,0,0 0.5 255,255,255 1" > test.rt
 run_test "test.rt" "Plane: Extra args" "Error: Plane args count."
 
 echo "pl 0,0,0 0,2,0 255,0,0" > test.rt
@@ -178,7 +178,7 @@ run_test "test.rt" "Plane: Invalid color" "Error: Plane color invalid."
 echo "cy 0,0,0" > test.rt
 run_test "test.rt" "Cylinder: Missing args" "Error: Cylinder args count."
 
-echo "cy 0,0,0 0,1,0 10 20 255,0,0 1" > test.rt
+echo "cy 0,0,0 0,1,0 10 20 255,0,0 0.5 255,255,255 1" > test.rt
 run_test "test.rt" "Cylinder: Extra args" "Error: Cylinder args count."
 
 echo "cy 0,0,0 0,2,0 10 20 255,0,0" > test.rt

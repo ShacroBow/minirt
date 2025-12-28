@@ -30,8 +30,15 @@ void	parse_cylinder(t_scene *scene, char *line)
 	new_obj->shape_data = cy;
 	add_object(scene, new_obj);
 	parse_vector(index_split(line, 5), &new_obj->color);
-	if (count == 7)
+	if (count >= 7)
 		new_obj->reflectivity = ft_atof(index_split(line, 6));
 	else
 		new_obj->reflectivity = 0.0;
+	if (count == 8)
+	{
+		new_obj->has_checkerboard = true;
+		parse_vector(index_split(line, 7), &new_obj->checker_color);
+	}
+	else
+		new_obj->has_checkerboard = false;
 }

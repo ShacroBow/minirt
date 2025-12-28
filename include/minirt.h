@@ -145,6 +145,8 @@ typedef struct s_object
 	void			*shape_data;
 	t_color			color;
 	double			reflectivity;
+	bool			has_checkerboard;
+	t_color			checker_color;
 	struct s_object	*next;
 }	t_object;
 
@@ -155,9 +157,13 @@ typedef struct s_hit_record
 	t_vec3	normal;
 	t_color	color;
 	double	reflect;
-	double	reflect_depth;
-	double	t;
-	bool	front_face;
+	bool	has_checkerboard;
+	t_color			checker_color;
+	int				type;
+	struct s_object	*obj;
+	double			reflect_depth;
+	double			t;
+	bool			front_face;
 }	t_hit_record;
 
 /* Main Scene/Program Structure */
@@ -271,6 +277,7 @@ bool		quadratic(double a, double b, double c, double *t);
 int			color_to_int(t_color color);
 void		render(t_program *prog);
 t_color		trace_ray(const t_ray *ray, t_program *prog);
+t_color		get_checker_color(const t_hit_record *rec);
 
 /* Render utils */
 

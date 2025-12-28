@@ -51,10 +51,17 @@ void	parse_sphere(t_scene *scene, char *line)
 	parse_vector(index_split(line, 1), &sp->center);
 	sp->diameter = ft_atof(index_split(line, 2));
 	parse_vector(index_split(line, 3), &new_obj->color);
-	if (count == 5)
+	if (count >= 5)
 		new_obj->reflectivity = ft_atof(index_split(line, 4));
 	else
 		new_obj->reflectivity = 0.0;
+	if (count == 6)
+	{
+		new_obj->has_checkerboard = true;
+		parse_vector(index_split(line, 5), &new_obj->checker_color);
+	}
+	else
+		new_obj->has_checkerboard = false;
 }
 
 void	parse_plane(t_scene *scene, char *line)
@@ -76,8 +83,15 @@ void	parse_plane(t_scene *scene, char *line)
 	parse_vector(index_split(line, 1), &pl->point);
 	parse_vector(index_split(line, 2), &pl->normal);
 	parse_vector(index_split(line, 3), &new_obj->color);
-	if (count == 5)
+	if (count >= 5)
 		new_obj->reflectivity = ft_atof(index_split(line, 4));
 	else
 		new_obj->reflectivity = 0.0;
+	if (count == 6)
+	{
+		new_obj->has_checkerboard = true;
+		parse_vector(index_split(line, 5), &new_obj->checker_color);
+	}
+	else
+		new_obj->has_checkerboard = false;
 }
