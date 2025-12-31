@@ -1,6 +1,6 @@
 NAME = minirt
 SRC =	main.c $(SRCS_PARSER) $(SRCS_VECTORS) $(SRCS_INTERSECTIONS) $(SRCS_RENDER) \
-		$(SRCS_UTILS) $(SRCS_CAMERA)
+		$(SRCS_UTILS) $(SRCS_CAMERA) $(SRCS_TEXTURE)
 
 SRCS_PARSER =			parser/parser.c parser/parser_utils.c \
 						parser/parse_elements.c parser/parse_cylinder.c \
@@ -12,7 +12,9 @@ SRCS_INTERSECTIONS =	intersections/hit_sphere.c intersections/hit_plane.c \
 						intersections/hit_cone2.c intersections/intersections.c
  SRCS_RENDER =			render/render.c render/render_utils.c render/shading.c \
 					render/shading_utils.c render/color_ops.c render/color.c \
-					render/background.c render/texture.c render/texture_loader.c
+					render/background.c
+SRCS_TEXTURE =			texture/texture.c texture/texture_loader.c texture/texture_loader_utils.c \
+						texture/uv_mapping.c
 SRCS_UTILS =			utils/error.c utils/memory.c utils/string_utils.c utils/utils.c
 SRCS_CAMERA =			camera/camera.c camera/camera_utils.c camera/camera_creation.c \
 						camera/camera_utils2.c

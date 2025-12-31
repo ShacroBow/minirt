@@ -34,6 +34,7 @@
 # define ROT_SPEED 0.2
 # define SPEED_INCREMENT 0.5
 # define FILE_SIZE 4096
+# define TEXTURE_FILE_SIZE 4000000
 # define PIXEL_STEP_INC 1
 # define PIXEL_STEP_MAX 100
 # define PIXEL_STEP_MIN 1
@@ -141,34 +142,34 @@ typedef struct s_cap
 
 typedef struct s_object
 {
-	t_object_type	type;
-	void			*shape_data;
-	t_color			color;
-	double			reflectivity;
-	bool			has_checkerboard;
-	t_color			checker_color;
-	bool			has_texture;
+	t_object_type		type;
+	void				*shape_data;
+	t_color				color;
+	double				reflectivity;
+	bool				has_checkerboard;
+	t_color				checker_color;
+	bool				has_texture;
 	struct s_texture	*texture;
-	struct s_object	*next;
+	struct s_object		*next;
 }	t_object;
 
 /* Texture structure (PPM loader) */
 typedef struct s_texture
 {
-	int		width;
-	int		height;
-	int		channels;
+	int				width;
+	int				height;
+	int				channels;
 	unsigned char	*data;
 }	t_texture;
 
 /* Hit Record */
 typedef struct s_hit_record
 {
-	t_point	point;
-	t_vec3	normal;
-	t_color	color;
-	double	reflect;
-	bool	has_checkerboard;
+	t_point			point;
+	t_vec3			normal;
+	t_color			color;
+	double			reflect;
+	bool			has_checkerboard;
 	t_color			checker_color;
 	int				type;
 	struct s_object	*obj;
@@ -252,7 +253,7 @@ void		parse_cone(t_scene *scene, char *line);
 
 /* Parser Utils */
 bool		parse_vector(char *str, t_vec3 *vec);
-bool	check_ppm_filename(char *str);
+bool		check_ppm_filename(char *str);
 void		add_light(t_scene *scene, t_light *new_light);
 void		add_object(t_scene *scene, t_object *new_obj);
 double		ft_atof(const char *str);
@@ -347,5 +348,13 @@ void		cleanup(t_program *prog);
 void		free_scene(t_scene *scene);
 void		erorr(t_scene *scene, void *ptr, const char *message);
 bool		has_extension(const char *filename, const char *ext);
+
+/* Texture Loader */
+t_texture	*load_ppm(const char *path);
+void		free_texture(t_texture *tex);
+t_color		sample_texture(const t_texture *tex, double u, double v);
+int			ppm_header(const char *s, int *i, int *w, int *h);
+double		clamp01(double x);
+int			compute_uv(const t_hit_record *rec, double *u, double *v);
 
 #endif

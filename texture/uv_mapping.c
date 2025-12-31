@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   uv_mapping.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kmashkoo <kmashkoo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/31 12:00:00 by kmashkoo          #+#    #+#             */
+/*   Updated: 2025/12/31 12:00:00 by kmashkoo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minirt.h"
 
 static void	get_sphere_uv(const t_hit_record *rec, double *u, double *v)
@@ -63,7 +75,7 @@ static void	get_cone_uv(const t_hit_record *rec, double *u, double *v)
 			vec_dot(p_center, u_axis)) / (2 * M_PI);
 }
 
-static int	compute_uv(const t_hit_record *rec, double *u, double *v)
+int	compute_uv(const t_hit_record *rec, double *u, double *v)
 {
 	if (rec->type == SPHERE)
 		get_sphere_uv(rec, u, v);
@@ -76,42 +88,4 @@ static int	compute_uv(const t_hit_record *rec, double *u, double *v)
 	else
 		return (0);
 	return (1);
-}
-
-t_color	get_checker_color(const t_hit_record *rec)
-{
-	double	u;
-	double	v;
-	int		u2;
-	int		v2;
-
-	/* texture takes precedence */
-	if (rec->obj && rec->obj->has_texture && rec->obj->texture)
-	{
-		if (!compute_uv(rec, &u, &v))
-			return (rec->color);
-		return (sample_texture(rec->obj->texture, u - floor(u), v - floor(v)));
-	}
-	if (!rec->has_checkerboard)
-		return (rec->color);
-	if (!compute_uv(rec, &u, &v))
-		return (rec->color);
-	if (rec->type == PLANE)
-	{
-		u2 = floor(u * 0.5);
-		v2 = floor(v * 0.5);
-	}
-	else if (rec->type == SPHERE)
-	{
-		u2 = floor(u * 10);
-		v2 = floor(v * 7);
-	}
-	else
-	{
-		u2 = floor(u * 10);
-		v2 = floor(v * 2);
-	}
-	if ((u2 + v2) % 2 != 0)
-		return (rec->checker_color);
-	return (rec->color);
 }
