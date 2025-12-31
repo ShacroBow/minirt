@@ -55,7 +55,7 @@ bool	parse_vector(char *str, t_vec3 *vec)
 		return (false);
 	tmp_str = ft_strdup(str);
 	if (!tmp_str)
-		return (write(2, "Error: Allocation failed\n", 25), false);
+		return ((void)!write(2, "Error: Allocation failed\n", 25), false);
 	if (!split3_in_place(tmp_str, &a, &b, &c))
 	{
 		free(tmp_str);

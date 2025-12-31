@@ -41,3 +41,21 @@ t_color	get_checker_color(const t_hit_record *rec)
 		return (rec->checker_color);
 	return (rec->color);
 }
+
+t_color	sample_texture(const t_texture *tex, double u, double v)
+{
+	int		x;
+	int		y;
+	size_t	idx;
+
+	if (!tex || !tex->data)
+		return ((t_color){0.0, 0.0, 0.0});
+	u = clamp01(u);
+	v = clamp01(v);
+	x = (int)(u * (tex->width - 1));
+	y = (int)((1.0 - v) * (tex->height - 1));
+	idx = ((size_t)y * tex->width + (size_t)x) * tex->channels;
+	return ((t_color){(double)tex->data[idx],
+		(double)tex->data[idx + 1], (double)tex->data[idx + 2]});
+}
+
