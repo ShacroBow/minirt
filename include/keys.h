@@ -62,6 +62,8 @@
 #  define KEY_MINUS		XK_minus //45
 #  define KEY_SPACE		XK_space //32
 #  define KEY_X			XK_x //0x0078
+// Toggle bump for selected object
+#  define KEY_B			XK_b //0x0062
 
 // SELECT CAMERA AND OBJECTS
 #  define KEY_0			XK_0 //0x0030
@@ -74,6 +76,8 @@
 #  define KEY_7			XK_7 //0x0037
 #  define KEY_8			XK_8 //0x0038
 #  define KEY_9			XK_9 //0x0039
+
+// UV scale keys (per-object): 4/5 adjust U, 6/7 adjust V
 
 # endif /* __APPLE__ */
 

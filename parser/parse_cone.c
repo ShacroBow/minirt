@@ -34,13 +34,18 @@ void	parse_cone(t_scene *scene, char *line)
 	new_obj->shape_data = co;
 	new_obj->has_texture = false;
 	new_obj->texture = NULL;
+	new_obj->has_bump = false;
+	new_obj->bump = NULL;
+	new_obj->bump_enabled = false;
+	new_obj->uv_scale_u = 1.0;
+	new_obj->uv_scale_v = 1.0;
 	add_object(scene, new_obj);
 	parse_vector(index_split(line, 5), &new_obj->color);
 	if (count >= 7)
 		new_obj->reflectivity = ft_atof(index_split(line, 6));
 	else
 		new_obj->reflectivity = 0.0;
-	if (count == 8)
+	if (count >= 8)
 	{
 		if (check_color_fmt(index_split(line, 7)))
 		{
@@ -49,10 +54,22 @@ void	parse_cone(t_scene *scene, char *line)
 		}
 		else if (check_ppm_filename(index_split(line, 7)))
 		{
-			new_obj->texture = load_ppm(index_split(line, 7));
-			if (!new_obj->texture)
-				erorr(scene, NULL, "Error: Cone texture invalid.");
-			new_obj->has_texture = true;
+			if (has_extension(index_split(line, 7), ".bump.ppm"))
+			{
+				new_obj->bump = load_ppm(index_split(line, 7));
+				if (!new_obj->bump)
+					erorr(scene, NULL, "Error: Cone bump texture invalid.");
+				new_obj->has_bump = true;
+				new_obj->bump_enabled = true;
+			}
+			else
+			{
+				new_obj->texture = load_ppm(index_split(line, 7));
+				if (!new_obj->texture)
+					erorr(scene, NULL, "Error: Cone texture invalid.");
+				new_obj->has_texture = true;
+				new_obj->color = (t_color){255.0, 255.0, 255.0};
+			}
 		}
 		else
 			erorr(scene, NULL, "Error: Cone checker color or texture invalid.");
@@ -61,9 +78,21 @@ void	parse_cone(t_scene *scene, char *line)
 		new_obj->has_checkerboard = false;
 	if (count == 9)
 	{
-		new_obj->texture = load_ppm(index_split(line, 8));
-		if (!new_obj->texture)
-			erorr(scene, NULL, "Error: Cone texture invalid.");
-		new_obj->has_texture = true;
+		if (has_extension(index_split(line, 8), ".bump.ppm"))
+		{
+			new_obj->bump = load_ppm(index_split(line, 8));
+			if (!new_obj->bump)
+				erorr(scene, NULL, "Error: Cone bump texture invalid.");
+			new_obj->has_bump = true;
+			new_obj->bump_enabled = true;
+		}
+		else
+		{
+			new_obj->texture = load_ppm(index_split(line, 8));
+			if (!new_obj->texture)
+				erorr(scene, NULL, "Error: Cone texture invalid.");
+			new_obj->has_texture = true;
+			new_obj->color = (t_color){255.0, 255.0, 255.0};
+		}
 	}
 }

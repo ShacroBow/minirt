@@ -96,7 +96,46 @@ void	camera_handle_key(int keycode, t_program *prog, \
 	else if (keycode == KEY_MINUS && prog->move_speed > SPEED_INCREMENT)
 		prog->move_speed -= SPEED_INCREMENT;
 	else if (keycode == KEY_X)
-		prog->scene->camera = prog->default_camera;
+		prog->scene->camera = prog->default_camera;	else if (keycode == KEY_B)
+	{
+		if (!*is_cam && object && *object)
+		{
+			(*object)->bump_enabled = !(*object)->bump_enabled;
+			printf("Toggled bump for selected object: now %s\n", (*object)->bump_enabled ? "ENABLED" : "DISABLED");
+		}
+	}
+	else if (keycode == KEY_4)
+	{
+		if (!*is_cam && object && *object)
+		{
+			(*object)->uv_scale_u *= 1.25;
+			printf("uv_scale_u = %f\n", (*object)->uv_scale_u);
+		}
+	}
+	else if (keycode == KEY_5)
+	{
+		if (!*is_cam && object && *object)
+		{
+			(*object)->uv_scale_u /= 1.25;
+			printf("uv_scale_u = %f\n", (*object)->uv_scale_u);
+		}
+	}
+	else if (keycode == KEY_6)
+	{
+		if (!*is_cam && object && *object)
+		{
+			(*object)->uv_scale_v *= 1.25;
+			printf("uv_scale_v = %f\n", (*object)->uv_scale_v);
+		}
+	}
+	else if (keycode == KEY_7)
+	{
+		if (!*is_cam && object && *object)
+		{
+			(*object)->uv_scale_v /= 1.25;
+			printf("uv_scale_v = %f\n", (*object)->uv_scale_v);
+		}
+	}
 	else if (keycode == KEY_1 || keycode == KEY_2 || keycode == KEY_O)
 		camera_keystuffing(keycode, prog, object, is_cam);
 }

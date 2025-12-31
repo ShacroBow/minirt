@@ -149,7 +149,12 @@ typedef struct s_object
 	bool				has_checkerboard;
 	t_color				checker_color;
 	bool				has_texture;
+	bool				has_bump;
+	bool			bump_enabled;
 	struct s_texture	*texture;
+	struct s_texture	*bump;
+	double			uv_scale_u;
+	double			uv_scale_v;
 	struct s_object		*next;
 }	t_object;
 
@@ -349,6 +354,9 @@ void		free_scene(t_scene *scene);
 void		erorr(t_scene *scene, void *ptr, const char *message);
 bool		has_extension(const char *filename, const char *ext);
 
+/* Debug helpers */
+void		print_objects_status(const t_scene *scene);
+
 /* Texture Loader */
 t_texture	*load_ppm(const char *path);
 void		free_texture(t_texture *tex);
@@ -356,5 +364,7 @@ t_color		sample_texture(const t_texture *tex, double u, double v);
 int			ppm_header(const char *s, int *i, int *w, int *h);
 double		clamp01(double x);
 int			compute_uv(const t_hit_record *rec, double *u, double *v);
+/* Bump mapping */
+void		apply_bump(t_hit_record *rec, const t_ray *ray);
 
 #endif

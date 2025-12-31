@@ -1,3 +1,4 @@
+
 #include "../include/minirt.h"
 
 void	parse_ambient(t_scene *scene, char *line)
@@ -36,7 +37,7 @@ void	parse_sphere(t_scene *scene, char *line)
 {
 	t_object	*new_obj;
 	t_sphere	*sp;
-	int			count;
+	int		count;
 
 	count = ft_split_inplace(line, ' ');
 	sp = malloc(sizeof(t_sphere));
@@ -49,6 +50,11 @@ void	parse_sphere(t_scene *scene, char *line)
 	new_obj->shape_data = sp;
 	new_obj->has_texture = false;
 	new_obj->texture = NULL;
+	new_obj->has_bump = false;
+	new_obj->bump = NULL;
+	new_obj->bump_enabled = false;
+	new_obj->uv_scale_u = 1.0;
+	new_obj->uv_scale_v = 1.0;
 	add_object(scene, new_obj);
 	parse_vector(index_split(line, 1), &sp->center);
 	sp->diameter = ft_atof(index_split(line, 2));
@@ -57,7 +63,9 @@ void	parse_sphere(t_scene *scene, char *line)
 		new_obj->reflectivity = ft_atof(index_split(line, 4));
 	else
 		new_obj->reflectivity = 0.0;
-	if (count == 6)
+	/* optional checker/texture/bump at index 5 and optional extra file at index 6 */
+	new_obj->has_checkerboard = false;
+	if (count >= 6)
 	{
 		if (check_color_fmt(index_split(line, 5)))
 		{
@@ -66,23 +74,50 @@ void	parse_sphere(t_scene *scene, char *line)
 		}
 		else if (check_ppm_filename(index_split(line, 5)))
 		{
-			new_obj->texture = load_ppm(index_split(line, 5));
-			if (!new_obj->texture)
-				erorr(scene, NULL, "Error: Sphere texture invalid.");
-			new_obj->has_texture = true;
+			if (has_extension(index_split(line, 5), ".bump.ppm"))
+			{
+				new_obj->bump = load_ppm(index_split(line, 5));
+				if (!new_obj->bump)
+					erorr(scene, NULL, "Error: Sphere bump texture invalid.");
+				new_obj->has_bump = true;
+				new_obj->bump_enabled = true;
+			}
+			else
+			{
+				new_obj->texture = load_ppm(index_split(line, 5));
+				if (!new_obj->texture)
+					erorr(scene, NULL, "Error: Sphere texture invalid.");
+				new_obj->has_texture = true;
+				new_obj->color = (t_color){255.0, 255.0, 255.0};
+			}
 		}
 		else
 			erorr(scene, NULL, "Error: Sphere checker color or texture invalid.");
 	}
-	else
-		new_obj->has_checkerboard = false;
-	if (count == 7)
+	if (count >= 7)
 	{
-		/* reflectivity + checker + texture */
-		new_obj->texture = load_ppm(index_split(line, 6));
-		if (!new_obj->texture)
+		/* second file: could be additional texture or bump */
+		if (check_ppm_filename(index_split(line, 6)))
+		{
+			if (has_extension(index_split(line, 6), ".bump.ppm"))
+			{
+				new_obj->bump = load_ppm(index_split(line, 6));
+				if (!new_obj->bump)
+					erorr(scene, NULL, "Error: Sphere bump texture invalid.");
+				new_obj->has_bump = true;
+				new_obj->bump_enabled = true;
+			}
+			else
+			{
+				new_obj->texture = load_ppm(index_split(line, 6));
+				if (!new_obj->texture)
+					erorr(scene, NULL, "Error: Sphere texture invalid.");
+				new_obj->has_texture = true;
+				new_obj->color = (t_color){255.0, 255.0, 255.0};
+			}
+		}
+		else
 			erorr(scene, NULL, "Error: Sphere texture invalid.");
-		new_obj->has_texture = true;
 	}
 }
 
@@ -90,7 +125,7 @@ void	parse_plane(t_scene *scene, char *line)
 {
 	t_object	*new_obj;
 	t_plane		*pl;
-	int			count;
+	int		count;
 
 	count = ft_split_inplace(line, ' ');
 	pl = malloc(sizeof(t_plane));
@@ -103,6 +138,11 @@ void	parse_plane(t_scene *scene, char *line)
 	new_obj->shape_data = pl;
 	new_obj->has_texture = false;
 	new_obj->texture = NULL;
+	new_obj->has_bump = false;
+	new_obj->bump = NULL;
+	new_obj->bump_enabled = false;
+	new_obj->uv_scale_u = 1.0;
+	new_obj->uv_scale_v = 1.0;
 	add_object(scene, new_obj);
 	parse_vector(index_split(line, 1), &pl->point);
 	parse_vector(index_split(line, 2), &pl->normal);
@@ -111,7 +151,9 @@ void	parse_plane(t_scene *scene, char *line)
 		new_obj->reflectivity = ft_atof(index_split(line, 4));
 	else
 		new_obj->reflectivity = 0.0;
-	if (count == 6)
+	/* optional checker/texture/bump at index 5 and optional extra file at index 6 */
+	new_obj->has_checkerboard = false;
+	if (count >= 6)
 	{
 		if (check_color_fmt(index_split(line, 5)))
 		{
@@ -120,21 +162,48 @@ void	parse_plane(t_scene *scene, char *line)
 		}
 		else if (check_ppm_filename(index_split(line, 5)))
 		{
-			new_obj->texture = load_ppm(index_split(line, 5));
-			if (!new_obj->texture)
-				erorr(scene, NULL, "Error: Plane texture invalid.");
-			new_obj->has_texture = true;
+			if (has_extension(index_split(line, 5), ".bump.ppm"))
+			{
+				new_obj->bump = load_ppm(index_split(line, 5));
+				if (!new_obj->bump)
+					erorr(scene, NULL, "Error: Plane bump texture invalid.");
+				new_obj->has_bump = true;
+				new_obj->bump_enabled = true;
+			}
+			else
+			{
+				new_obj->texture = load_ppm(index_split(line, 5));
+				if (!new_obj->texture)
+					erorr(scene, NULL, "Error: Plane texture invalid.");
+				new_obj->has_texture = true;
+				new_obj->color = (t_color){255.0, 255.0, 255.0};
+			}
 		}
 		else
 			erorr(scene, NULL, "Error: Plane checker color or texture invalid.");
 	}
-	else
-		new_obj->has_checkerboard = false;
-	if (count == 7)
+	if (count >= 7)
 	{
-		new_obj->texture = load_ppm(index_split(line, 6));
-		if (!new_obj->texture)
+		if (check_ppm_filename(index_split(line, 6)))
+		{
+			if (has_extension(index_split(line, 6), ".bump.ppm"))
+			{
+				new_obj->bump = load_ppm(index_split(line, 6));
+				if (!new_obj->bump)
+					erorr(scene, NULL, "Error: Plane bump texture invalid.");
+				new_obj->has_bump = true;
+				new_obj->bump_enabled = true;
+			}
+			else
+			{
+				new_obj->texture = load_ppm(index_split(line, 6));
+				if (!new_obj->texture)
+					erorr(scene, NULL, "Error: Plane texture invalid.");
+				new_obj->has_texture = true;
+				new_obj->color = (t_color){255.0, 255.0, 255.0};
+			}
+		}
+		else
 			erorr(scene, NULL, "Error: Plane texture invalid.");
-		new_obj->has_texture = true;
 	}
 }

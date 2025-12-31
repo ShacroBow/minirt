@@ -11,11 +11,11 @@ static void	debug_progress(t_program *prog, int y)
 	{
 		current_time = get_time_us();
 		elapsed_ms = (current_time - prog->render_start_time) / 1000;
-		printf("\r[DEBUG] Progress: %3d%% | Rays: %7ld | Total: %4ldms | "\
-			"Shading: %3ldms | Intersect: %3ldms", (y * 100) / HEIGHT,
-			prog->ray_count, elapsed_ms, prog->shading_time / 1000,
-			prog->intersect_time / 1000);
-		fflush(stdout);
+		// printf("[DEBUG] Progress: %3d%% | Rays: %7ld | Total: %4ldms | "\
+		// 	"Shading: %3ldms | Intersect: %3ldms\n", (y * 100) / HEIGHT,
+		// 	prog->ray_count, elapsed_ms, prog->shading_time / 1000,
+		// 	prog->intersect_time / 1000);
+		// fflush(stdout);
 	}
 	if (y == HEIGHT - 1 && false)
 		printf("\n");
@@ -35,6 +35,8 @@ t_color	trace_ray_recursive(const t_ray *ray, t_program *prog, \
 	if (hit(prog->scene->objects, ray, INFINITY, &rec))
 	{
 		update_render_stats(prog, &t_start, false);
+		/* apply centralized bump mapping (if present) before shading */
+		apply_bump(&rec, ray);
 		local = phong_shading(&rec, prog->scene, &ray->direction);
 		update_render_stats(prog, &t_start, true);
 		if (depth > 0 && rec.reflect > 0.0)

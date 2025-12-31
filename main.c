@@ -65,6 +65,7 @@ int	main(int argc, char **argv)
 	prog.aa_enabled = ENABLE_AA;
 	prog.pixel_step = ENABLE_PIXEL_STEP;
 	parse_scene(prog.scene_file, &prog.scene);
+	print_objects_status(prog.scene);
 	prog.default_camera = prog.scene->camera;
 	init_mlx(&prog);
 	prog.program_start_time = get_time_ms();
