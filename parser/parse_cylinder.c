@@ -28,6 +28,8 @@ void	parse_cylinder(t_scene *scene, char *line)
 		erorr(scene, cy, "Error: Allocation failed.\n");
 	new_obj->type = CYLINDER;
 	new_obj->shape_data = cy;
+	new_obj->has_texture = false;
+	new_obj->texture = NULL;
 	add_object(scene, new_obj);
 	parse_vector(index_split(line, 5), &new_obj->color);
 	if (count >= 7)
@@ -36,9 +38,28 @@ void	parse_cylinder(t_scene *scene, char *line)
 		new_obj->reflectivity = 0.0;
 	if (count == 8)
 	{
-		new_obj->has_checkerboard = true;
-		parse_vector(index_split(line, 7), &new_obj->checker_color);
+		if (check_color_fmt(index_split(line, 7)))
+		{
+			new_obj->has_checkerboard = true;
+			parse_vector(index_split(line, 7), &new_obj->checker_color);
+		}
+		else if (check_ppm_filename(index_split(line, 7)))
+		{
+			new_obj->texture = load_ppm(index_split(line, 7));
+			if (!new_obj->texture)
+				erorr(scene, NULL, "Error: Cylinder texture invalid.");
+			new_obj->has_texture = true;
+		}
+		else
+			erorr(scene, NULL, "Error: Cylinder checker color or texture invalid.");
 	}
 	else
 		new_obj->has_checkerboard = false;
+	if (count == 9)
+	{
+		new_obj->texture = load_ppm(index_split(line, 8));
+		if (!new_obj->texture)
+			erorr(scene, NULL, "Error: Cylinder texture invalid.");
+		new_obj->has_texture = true;
+	}
 }

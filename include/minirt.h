@@ -147,8 +147,19 @@ typedef struct s_object
 	double			reflectivity;
 	bool			has_checkerboard;
 	t_color			checker_color;
+	bool			has_texture;
+	struct s_texture	*texture;
 	struct s_object	*next;
 }	t_object;
+
+/* Texture structure (PPM loader) */
+typedef struct s_texture
+{
+	int		width;
+	int		height;
+	int		channels;
+	unsigned char	*data;
+}	t_texture;
 
 /* Hit Record */
 typedef struct s_hit_record
@@ -241,6 +252,7 @@ void		parse_cone(t_scene *scene, char *line);
 
 /* Parser Utils */
 bool		parse_vector(char *str, t_vec3 *vec);
+bool	check_ppm_filename(char *str);
 void		add_light(t_scene *scene, t_light *new_light);
 void		add_object(t_scene *scene, t_object *new_obj);
 double		ft_atof(const char *str);
@@ -278,6 +290,10 @@ int			color_to_int(t_color color);
 void		render(t_program *prog);
 t_color		trace_ray(const t_ray *ray, t_program *prog);
 t_color		get_checker_color(const t_hit_record *rec);
+/* Texture loader / sampler (PPM, clamp behaviour) */
+t_texture	*load_ppm(const char *path);
+void		free_texture(t_texture *tex);
+t_color		sample_texture(const t_texture *tex, double u, double v);
 
 /* Render utils */
 

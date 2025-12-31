@@ -47,6 +47,8 @@ void	parse_sphere(t_scene *scene, char *line)
 		erorr(scene, sp, "Error: allocation failed.\n");
 	new_obj->type = SPHERE;
 	new_obj->shape_data = sp;
+	new_obj->has_texture = false;
+	new_obj->texture = NULL;
 	add_object(scene, new_obj);
 	parse_vector(index_split(line, 1), &sp->center);
 	sp->diameter = ft_atof(index_split(line, 2));
@@ -57,11 +59,31 @@ void	parse_sphere(t_scene *scene, char *line)
 		new_obj->reflectivity = 0.0;
 	if (count == 6)
 	{
-		new_obj->has_checkerboard = true;
-		parse_vector(index_split(line, 5), &new_obj->checker_color);
+		if (check_color_fmt(index_split(line, 5)))
+		{
+			new_obj->has_checkerboard = true;
+			parse_vector(index_split(line, 5), &new_obj->checker_color);
+		}
+		else if (check_ppm_filename(index_split(line, 5)))
+		{
+			new_obj->texture = load_ppm(index_split(line, 5));
+			if (!new_obj->texture)
+				erorr(scene, NULL, "Error: Sphere texture invalid.");
+			new_obj->has_texture = true;
+		}
+		else
+			erorr(scene, NULL, "Error: Sphere checker color or texture invalid.");
 	}
 	else
 		new_obj->has_checkerboard = false;
+	if (count == 7)
+	{
+		/* reflectivity + checker + texture */
+		new_obj->texture = load_ppm(index_split(line, 6));
+		if (!new_obj->texture)
+			erorr(scene, NULL, "Error: Sphere texture invalid.");
+		new_obj->has_texture = true;
+	}
 }
 
 void	parse_plane(t_scene *scene, char *line)
@@ -79,6 +101,8 @@ void	parse_plane(t_scene *scene, char *line)
 		erorr(scene, pl, "Error: allocation failed.\n");
 	new_obj->type = PLANE;
 	new_obj->shape_data = pl;
+	new_obj->has_texture = false;
+	new_obj->texture = NULL;
 	add_object(scene, new_obj);
 	parse_vector(index_split(line, 1), &pl->point);
 	parse_vector(index_split(line, 2), &pl->normal);
@@ -89,9 +113,28 @@ void	parse_plane(t_scene *scene, char *line)
 		new_obj->reflectivity = 0.0;
 	if (count == 6)
 	{
-		new_obj->has_checkerboard = true;
-		parse_vector(index_split(line, 5), &new_obj->checker_color);
+		if (check_color_fmt(index_split(line, 5)))
+		{
+			new_obj->has_checkerboard = true;
+			parse_vector(index_split(line, 5), &new_obj->checker_color);
+		}
+		else if (check_ppm_filename(index_split(line, 5)))
+		{
+			new_obj->texture = load_ppm(index_split(line, 5));
+			if (!new_obj->texture)
+				erorr(scene, NULL, "Error: Plane texture invalid.");
+			new_obj->has_texture = true;
+		}
+		else
+			erorr(scene, NULL, "Error: Plane checker color or texture invalid.");
 	}
 	else
 		new_obj->has_checkerboard = false;
+	if (count == 7)
+	{
+		new_obj->texture = load_ppm(index_split(line, 6));
+		if (!new_obj->texture)
+			erorr(scene, NULL, "Error: Plane texture invalid.");
+		new_obj->has_texture = true;
+	}
 }

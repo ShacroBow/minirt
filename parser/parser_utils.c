@@ -68,6 +68,20 @@ bool	parse_vector(char *str, t_vec3 *vec)
 	return (true);
 }
 
+bool	check_ppm_filename(char *str)
+{
+	int len;
+
+	if (!str)
+		return (false);
+	len = ft_strlen(str);
+	if (len < 4)
+		return (false);
+	if (ft_strcmp(str + len - 4, ".ppm") == 0)
+		return (true);
+	return (false);
+}
+
 bool	is_ignorable(const char *s)
 {
 	int	i;

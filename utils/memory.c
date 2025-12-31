@@ -23,6 +23,8 @@ static void	free_objects(t_object *objects)
 	while (current)
 	{
 		next = current->next;
+		if (current->has_texture && current->texture)
+			free_texture(current->texture);
 		free(current->shape_data);
 		free(current);
 		current = next;

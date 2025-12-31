@@ -5,7 +5,7 @@ void	lint_cylinder(char *line, t_scene *scene)
 	int	count;
 
 	count = ft_split_inplace(line, ' ');
-	if (count != 6 && count != 7 && count != 8)
+	if (count < 6 || count > 9)
 		erorr(scene, NULL, "Error: Cylinder args count.");
 	if (!check_vector_fmt(index_split(line, 1)))
 		erorr(scene, NULL, "Error: Cylinder center invalid.");
@@ -23,7 +23,12 @@ void	lint_cylinder(char *line, t_scene *scene)
 		!check_range(ft_atof(index_split(line, 6)), 0.0, 1.0)))
 		erorr(scene, NULL, "Error: Cylinder reflectivity invalid.");
 	if (count == 8 && !check_color_fmt(index_split(line, 7)))
-		erorr(scene, NULL, "Error: Cylinder checker color invalid.");
+	{
+		if (!check_ppm_filename(index_split(line, 7)))
+			erorr(scene, NULL, "Error: Cylinder checker color or texture invalid.");
+	}
+	if (count == 9 && (!check_color_fmt(index_split(line, 7)) || !check_ppm_filename(index_split(line, 8))))
+		erorr(scene, NULL, "Error: Cylinder checker color or texture invalid.");
 }
 
 void	lint_cone(char *line, t_scene *scene)
@@ -31,7 +36,7 @@ void	lint_cone(char *line, t_scene *scene)
 	int	count;
 
 	count = ft_split_inplace(line, ' ');
-	if (count != 6 && count != 7 && count != 8)
+	if (count < 6 || count > 9)
 		erorr(scene, NULL, "Error: Cone args count.");
 	if (!check_vector_fmt(index_split(line, 1)))
 		erorr(scene, NULL, "Error: Cone center invalid.");
@@ -49,5 +54,10 @@ void	lint_cone(char *line, t_scene *scene)
 		!check_range(ft_atof(index_split(line, 6)), 0.0, 1.0)))
 		erorr(scene, NULL, "Error: Cone reflectivity invalid.");
 	if (count == 8 && !check_color_fmt(index_split(line, 7)))
-		erorr(scene, NULL, "Error: Cone checker color invalid.");
+	{
+		if (!check_ppm_filename(index_split(line, 7)))
+			erorr(scene, NULL, "Error: Cone checker color or texture invalid.");
+	}
+	if (count == 9 && (!check_color_fmt(index_split(line, 7)) || !check_ppm_filename(index_split(line, 8))))
+		erorr(scene, NULL, "Error: Cone checker color or texture invalid.");
 }
