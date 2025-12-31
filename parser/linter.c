@@ -60,9 +60,8 @@ void	lint_scene(char *filename, t_scene *scene)
 
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		erorr(scene, NULL, "Error: Cannot open file.");
+		erorr(scene, NULL, "Error: Cannot open scene file.");
 	read_file(fd, file_content, scene);
-	close(fd);
 	line_count = ft_split_inplace(file_content, '\n');
 	lint_loop(file_content, line_count, scene);
 	if (!scene->ambient_light.is_set)

@@ -49,7 +49,6 @@ static void	parse_file(char *filename, t_scene *scene)
 	read_file(fd, file_content, scene);
 	line_count = ft_split_inplace(file_content, '\n');
 	parse_loop(file_content, line_count, scene);
-	close(fd);
 }
 
 void	parse_scene(const char *filename, t_scene **scene)
