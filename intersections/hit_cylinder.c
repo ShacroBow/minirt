@@ -106,20 +106,24 @@ static bool	side_hit(const t_cylinder *cy, const t_ray *ray, double t_max,
 bool	hit_cylinder(const t_cylinder *cy, const t_ray *ray, double t_max,
 		t_hit_record *rec)
 {
-	double	t;
+	double			t;
+	bool			side;
+	bool			cap;
+	t_hit_record	side_rec;
 
-	if (side_hit(cy, ray, t_max, rec))
-		return (true);
+	side = side_hit(cy, ray, t_max, &side_rec);
 	t = t_max;
-	if (check_caps(cy, ray, &t, rec))
+	if (side)
+		t = side_rec.t;
+	cap = check_caps(cy, ray, &t, rec);
+	if (cap && rec)
 	{
-		if (rec)
-		{
-			rec->t = t;
-			rec->point = vec_add(ray->origin, vec_mult(ray->direction, t));
-			rec->front_face = (vec_dot(ray->direction, rec->normal) < 0);
-		}
+		rec->t = t;
+		rec->point = vec_add(ray->origin, vec_mult(ray->direction, t));
+		rec->front_face = (vec_dot(ray->direction, rec->normal) < 0);
 		return (true);
 	}
-	return (false);
+	if (side && rec)
+		*rec = side_rec;
+	return (side || cap);
 }
