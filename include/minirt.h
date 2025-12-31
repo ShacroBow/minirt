@@ -230,7 +230,7 @@ typedef struct s_program
 int			main(int argc, char **argv);
 
 /* --- Parser --- */
-t_scene		*parse_scene(const char *filename, t_scene **scene);
+void		parse_scene(const char *filename, t_scene **scene);
 void		read_file(int fd, char *content, t_scene *scene);
 void		lint_scene(char *filename, t_scene *scene);
 bool		is_ignorable(const char *s);
@@ -352,7 +352,6 @@ t_color		color_scale(t_color c, double scalar);
 t_color		color_gamma(t_color c, double gamma);
 
 /* --- Utils --- */
-void		exit_error(const char *message);
 void		exit_cleanup(t_program *prog, const char *message);
 void		cleanup(t_program *prog);
 void		free_scene(t_scene *scene);

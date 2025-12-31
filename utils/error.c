@@ -1,7 +1,8 @@
 #include "../include/minirt.h"
 
-void	exit_error(const char *message)
+void	exit_cleanup(t_program *prog, const char *message)
 {
+	cleanup(prog);
 	if (message)
 	{
 		write(2, message, ft_strlen(message));
@@ -10,18 +11,17 @@ void	exit_error(const char *message)
 	exit(EXIT_FAILURE);
 }
 
-void	exit_cleanup(t_program *prog, const char *message)
-{
-	cleanup(prog);
-	exit_error(message);
-}
-
 void	erorr(t_scene *scene, void *ptr, const char *message)
 {
 	if (ptr)
 		free(ptr);
 	free_scene(scene);
-	exit_error(message);
+	if (message)
+	{
+		write(2, message, ft_strlen(message));
+		write(2, "\n", 1);
+	}
+	exit(EXIT_FAILURE);
 }
 
 void	cleanup(t_program *prog)

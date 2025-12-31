@@ -19,10 +19,7 @@ void	parse_line(char *line, t_scene *scene)
 	else if (ft_strncmp(line, "co ", 3) == 0)
 		parse_cone(scene, line);
 	else
-	{
-		free_scene(scene);
-		exit_error("Error: Invalid identifier in scene file.");
-	}
+		erorr(scene, NULL, "Error: Invalid identifier in scene file.");
 }
 
 static void	parse_loop(char *line, size_t line_count, t_scene *scene)
@@ -40,7 +37,7 @@ static void	parse_loop(char *line, size_t line_count, t_scene *scene)
 	}
 }
 
-static t_scene	*parse_file(char *filename, t_scene *scene)
+static void	parse_file(char *filename, t_scene *scene)
 {
 	int		fd;
 	size_t	line_count;
@@ -48,37 +45,33 @@ static t_scene	*parse_file(char *filename, t_scene *scene)
 
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-	{
-		free_scene(scene);
-		exit_error("Error: Cannot open scene file.");
-	}
+		erorr(scene, NULL, "Error: Cannot open scene file.");
 	read_file(fd, file_content, scene);
 	line_count = ft_split_inplace(file_content, '\n');
 	parse_loop(file_content, line_count, scene);
 	close(fd);
-	return (scene);
 }
 
-t_scene	*parse_scene(const char *filename, t_scene **scene)
+void	parse_scene(const char *filename, t_scene **scene)
 {
 	long	t;
 
 	*scene = malloc(sizeof(t_scene));
 	if (!*scene)
-		exit_error("Error: Allocation failure.");
+		erorr(NULL, NULL, "Error: Allocation failure.");
 	ft_bzero(*scene, sizeof(t_scene));
-	if (DEBUG)
-		t = get_time_us();
-	lint_scene((char *)filename, *scene);
-	if (DEBUG)
+	if (!DEBUG)
 	{
+		lint_scene((char *)filename, *scene);
+		parse_file((char *)filename, *scene);
+	}
+	else
+	{
+		t = get_time_us();
+		lint_scene((char *)filename, *scene);
 		printf("[DEBUG] Linter: %ldus\n", (get_time_us() - t));
 		t = get_time_us();
-	}
-	*scene = parse_file((char *)filename, *scene);
-	if (DEBUG)
-	{
+		parse_file((char *)filename, *scene);
 		printf("[DEBUG] Parser: %ldus\n", (get_time_us() - t));
 	}
-	return (*scene);
 }
