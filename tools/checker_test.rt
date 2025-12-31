@@ -1,0 +1,9 @@
+A 0.2 255,255,255
+C 0,0,0 0,0,1 70
+L 0,10,0 0.7 255,255,255
+
+# Plane with checkerboard (white/black)
+pl 0,-10,0 0,1,0 255,255,255 0.0 0,0,0
+
+# Sphere with checkerboard (red/blue)
+sp 0,0,20 10 255,0,0 0.0 0,0,255

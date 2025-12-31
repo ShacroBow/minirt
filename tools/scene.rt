@@ -10,13 +10,13 @@ C 0,0,20 0,0,-1 70
 L 10,10,10 0.6 250,220,220
 
 # Red sphere: center at origin, radius 5, color red
-sp 0,0,0 5 255,0,0 0.7
+sp 0,0,0 5 255,0,0 0.7 0,200,0
 
 # # Green plane: passes through y = –5 with normal (0,1,0), color green
-pl 0,-5,0 0,1,0 0,255,0 0.3
+pl 0,-5,0 0,1,0 0,255,0 0.3 220,200,0
 
 # # Blue cylinder: base at (3,0,0), axis (0,1,0), diameter 2, height 4, color blue
-cy 10,0,0 0,1,0 2 4 0,0,255
+cy 10,0,0 0,1,0 2 4 0,0,255 0 220,200,0
 
 # Cyan cone: base at (0,10,0), axis (0,1,0), diameter 2, height 4, color cyan
-co 5,5,0 0,1,0 2 2 0,0,255 0.4
+co 5,5,0 0,1,0 2 2 220,0,255 0.4 220,200,0

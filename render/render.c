@@ -15,11 +15,11 @@ static void	debug_progress(t_program *prog, int y)
 			"Shading: %3ldms | Intersect: %3ldms", (y * 100) / HEIGHT,
 			prog->ray_count, elapsed_ms, prog->shading_time / 1000,
 			prog->intersect_time / 1000);
-		fflush(stdout);
 	}
 	if (y == HEIGHT - 1 && false)
 		printf("\n");
 }
+	// fflush(stdout);
 
 t_color	trace_ray_recursive(const t_ray *ray, t_program *prog, \
 	int depth)

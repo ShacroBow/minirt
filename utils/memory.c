@@ -23,6 +23,8 @@ static void	free_objects(t_object *objects)
 	while (current)
 	{
 		next = current->next;
+		if (current->has_texture && current->texture)
+			free_texture(current->texture);
 		free(current->shape_data);
 		free(current);
 		current = next;
@@ -35,5 +37,9 @@ void	free_scene(t_scene *scene)
 		return ;
 	free_lights(scene->lights);
 	free_objects(scene->objects);
+	if (scene->file_content)
+		free(scene->file_content);
+	if (scene->line_copy)
+		free(scene->line_copy);
 	free(scene);
 }

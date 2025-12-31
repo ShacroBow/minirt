@@ -6,7 +6,7 @@
 /*   By: kmashkoo <kmashkoo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:10:40 by kmashkoo          #+#    #+#             */
-/*   Updated: 2024/09/11 18:56:35 by kmashkoo         ###   ########.fr       */
+/*   Updated: 2025/12/31 03:42:53 by kmashkoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	size_t	i;
 
 	i = 0;
-	if (!dest && !src)
+	if (!dest || !src)
 		return (NULL);
 	while (i < n)
 	{

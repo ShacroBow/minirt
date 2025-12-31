@@ -46,6 +46,10 @@ static bool	try_hit_object(const t_object *obj, const t_ray *ray,
 	{
 		out->color = obj->color;
 		out->reflect = obj->reflectivity;
+		out->has_checkerboard = obj->has_checkerboard;
+		out->checker_color = obj->checker_color;
+		out->type = obj->type;
+		out->obj = (t_object *)obj;
 	}
 	return (hit);
 }

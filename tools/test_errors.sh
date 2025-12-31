@@ -60,7 +60,7 @@ run_test() {
 # --- 1. File Errors ---
 
 # Non-existent file
-run_test "non_existent_file.rt" "Non-existent file" "Error: Cannot open file"
+run_test "non_existent_file.rt" "Non-existent file" "Error: Cannot open scene file."
 
 # Empty file
 touch empty.rt
@@ -73,7 +73,7 @@ run_test "dummy_dir.rt" "Directory as file" "Error: reading file"
 rmdir dummy_dir.rt
 
 # File too big
-perl -e 'print "A 0.2 255,255,255\n" x 300' > big_file.rt
+perl -e 'print "A 0.2 255,255,255\n" x 60000' > big_file.rt
 run_test "big_file.rt" "File too big" "Error: file too big"
 rm big_file.rt
 
@@ -152,7 +152,7 @@ run_test "test.rt" "Light: Invalid color" "Error: Light color invalid."
 echo "sp 0,0,0" > test.rt
 run_test "test.rt" "Sphere: Missing args" "Error: Sphere args count."
 
-echo "sp 0,0,0 10 255,0,0 0.5 1" > test.rt
+echo "sp 0,0,0 10 255,0,0 0.5 255,255,255 1 1" > test.rt
 run_test "test.rt" "Sphere: Extra args" "Error: Sphere args count."
 
 echo "sp 0,0,0 -10 255,0,0" > test.rt
@@ -165,7 +165,7 @@ run_test "test.rt" "Sphere: Invalid color" "Error: Sphere color invalid."
 echo "pl 0,0,0" > test.rt
 run_test "test.rt" "Plane: Missing args" "Error: Plane args count."
 
-echo "pl 0,0,0 0,1,0 255,0,0 0.5 1" > test.rt
+echo "pl 0,0,0 0,1,0 255,0,0 0.5 255,255,255 1 1" > test.rt
 run_test "test.rt" "Plane: Extra args" "Error: Plane args count."
 
 echo "pl 0,0,0 0,2,0 255,0,0" > test.rt
@@ -178,7 +178,7 @@ run_test "test.rt" "Plane: Invalid color" "Error: Plane color invalid."
 echo "cy 0,0,0" > test.rt
 run_test "test.rt" "Cylinder: Missing args" "Error: Cylinder args count."
 
-echo "cy 0,0,0 0,1,0 10 20 255,0,0 0.5 1" > test.rt
+echo "cy 0,0,0 0,1,0 10 20 255,0,0 0.5 255,255,255 1 1" > test.rt
 run_test "test.rt" "Cylinder: Extra args" "Error: Cylinder args count."
 
 echo "cy 0,0,0 0,2,0 10 20 255,0,0" > test.rt
@@ -201,6 +201,17 @@ run_test "test.rt" "Missing Ambient" "Error: Missing A or C."
 # Missing Camera
 echo "A 0.2 255,255,255" > test.rt
 run_test "test.rt" "Missing Camera" "Error: Missing A or C."
+
+# --- Vector Format Errors ---
+echo "A 0.2 255,255,255" > test.rt
+echo "C 0,0,0 0,0,1 70" >> test.rt
+echo "sp ,, 10 255,0,0" >> test.rt
+run_test "test.rt" "Vector: Empty fields" "Error: Sphere center invalid."
+
+echo "A 0.2 255,255,255" > test.rt
+echo "C 0,0,0 0,0,1 70" >> test.rt
+echo "sp 0,0,0....5..50 10 255,0,0" >> test.rt
+run_test "test.rt" "Vector: Multiple dots" "Error: Sphere center invalid."
 
 # Cleanup
 rm -f test.rt

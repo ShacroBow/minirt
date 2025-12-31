@@ -4,6 +4,28 @@
 # define _GNU_SOURCE // needed for M_PI macro (only for vscode c/c++ extension)
 # define DEBUG 1
 
+# define NR _Noreturn
+// # ifndef NORETURN
+// #  if defined(__cplusplus)
+// #   ifdef __has_cpp_attribute
+// #    if __has_cpp_attribute(noreturn)
+// #     define NORETURN [[noreturn]]
+// #    endif
+// #   endif
+// #  else
+// #   ifdef __has_c_attribute
+// #    if __has_c_attribute(noreturn)
+// #     define NORETURN [[noreturn]]
+// #    endif
+// #   endif
+// #  endif
+// #  if defined(__GNUC__) || defined(__clang__)
+// #   define NORETURN __attribute__((noreturn))
+// #  else
+// #   define NORETURN
+// #  endif
+// # endif
+
 # include <stdlib.h>
 # include <stdbool.h>
 # include <math.h>
@@ -33,7 +55,8 @@
 # define MOVE_SPEED_BASE 0.5
 # define ROT_SPEED 0.2
 # define SPEED_INCREMENT 0.5
-# define FILE_SIZE 4096
+# define FILE_SIZE 1000000
+# define TEXTURE_FILE_SIZE 4000000
 # define PIXEL_STEP_INC 1
 # define PIXEL_STEP_MAX 100
 # define PIXEL_STEP_MIN 1
@@ -141,23 +164,40 @@ typedef struct s_cap
 
 typedef struct s_object
 {
-	t_object_type	type;
-	void			*shape_data;
-	t_color			color;
-	double			reflectivity;
-	struct s_object	*next;
+	t_object_type		type;
+	void				*shape_data;
+	t_color				color;
+	double				reflectivity;
+	bool				has_checkerboard;
+	t_color				checker_color;
+	bool				has_texture;
+	struct s_texture	*texture;
+	struct s_object		*next;
 }	t_object;
+
+/* Texture structure (PPM loader) */
+typedef struct s_texture
+{
+	int				width;
+	int				height;
+	int				channels;
+	unsigned char	*data;
+}	t_texture;
 
 /* Hit Record */
 typedef struct s_hit_record
 {
-	t_point	point;
-	t_vec3	normal;
-	t_color	color;
-	double	reflect;
-	double	reflect_depth;
-	double	t;
-	bool	front_face;
+	t_point			point;
+	t_vec3			normal;
+	t_color			color;
+	double			reflect;
+	bool			has_checkerboard;
+	t_color			checker_color;
+	int				type;
+	struct s_object	*obj;
+	double			reflect_depth;
+	double			t;
+	bool			front_face;
 }	t_hit_record;
 
 /* Main Scene/Program Structure */
@@ -167,6 +207,8 @@ typedef struct s_scene
 	t_camera		camera;
 	t_light			*lights;
 	t_object		*objects;
+	char			*file_content;
+	char			*line_copy;
 }	t_scene;
 
 typedef struct s_mlx_data
@@ -204,7 +246,7 @@ int			main(int argc, char **argv);
 /* --- Parser --- */
 t_scene		*parse_scene(const char *filename, t_scene **scene);
 void		read_file(int fd, char *content, t_scene *scene);
-void		lint_scene(char *filename, t_scene *scene);
+void		lint_scene(char *file_content, size_t line_count, t_scene *scene);
 bool		is_ignorable(const char *s);
 
 /* Linter Utils */
@@ -237,8 +279,6 @@ void		parse_cone(t_scene *scene, char *line);
 bool		parse_vector(char *str, t_vec3 *vec);
 void		add_light(t_scene *scene, t_light *new_light);
 void		add_object(t_scene *scene, t_object *new_obj);
-double		ft_atof(const char *str);
-char		**ft_split(char const *s, char c);
 
 /* --- Vectors --- */
 t_vec3		vec_add(t_vec3 v1, t_vec3 v2);
@@ -271,6 +311,11 @@ bool		quadratic(double a, double b, double c, double *t);
 int			color_to_int(t_color color);
 void		render(t_program *prog);
 t_color		trace_ray(const t_ray *ray, t_program *prog);
+t_color		get_checker_color(const t_hit_record *rec);
+/* Texture loader / sampler (PPM, clamp behaviour) */
+t_texture	*load_ppm(const char *path);
+void		free_texture(t_texture *tex);
+t_color		sample_texture(const t_texture *tex, double u, double v);
 
 /* Render utils */
 
@@ -318,11 +363,19 @@ t_color		color_scale(t_color c, double scalar);
 t_color		color_gamma(t_color c, double gamma);
 
 /* --- Utils --- */
-void		exit_error(const char *message);
-void		exit_cleanup(t_program *prog, const char *message);
+NR void		exit_error(const char *message);
+NR void		exit_cleanup(t_program *prog, const char *message);
 void		cleanup(t_program *prog);
 void		free_scene(t_scene *scene);
-void		erorr(t_scene *scene, void *ptr, const char *message);
+NR void		erorr(t_scene *scene, void *ptr, const char *message);
 bool		has_extension(const char *filename, const char *ext);
+
+/* Texture Loader */
+t_texture	*load_ppm(const char *path);
+void		free_texture(t_texture *tex);
+t_color		sample_texture(const t_texture *tex, double u, double v);
+int			ppm_header(const char *s, int *i, int *w, int *h);
+double		clamp01(double x);
+int			compute_uv(const t_hit_record *rec, double *u, double *v);
 
 #endif

@@ -47,25 +47,25 @@ static void	lint_loop(char *line, size_t line_count, t_scene *scene)
 		while (*line == 0)
 			line += 1;
 		line_len = ft_strlen(line);
-		lint_line(line, scene);
+		scene->line_copy = ft_strdup(line);
+		if (!scene->line_copy)
+			erorr(scene, NULL, "Error: Allocation failure.");
+		lint_line(scene->line_copy, scene);
+		free(scene->line_copy);
+		scene->line_copy = NULL;
 		line += line_len;
 	}
 }
 
-void	lint_scene(char *filename, t_scene *scene)
+void	lint_scene(char *file_content, size_t line_count, t_scene *scene)
 {
-	int		fd;
-	size_t	line_count;
-	char	file_content[FILE_SIZE + 1];
+	char	*saved_file_content;
 
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-		erorr(scene, NULL, "Error: Cannot open file.");
-	read_file(fd, file_content, scene);
-	close(fd);
-	line_count = ft_split_inplace(file_content, '\n');
+	saved_file_content = scene->file_content;
+	scene->line_copy = NULL;
 	lint_loop(file_content, line_count, scene);
 	if (!scene->ambient_light.is_set || !scene->camera.is_set)
 		erorr(scene, NULL, "Error: Missing A or C.");
 	ft_bzero(scene, sizeof(t_scene));
+	scene->file_content = saved_file_content;
 }

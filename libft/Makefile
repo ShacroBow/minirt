@@ -18,7 +18,7 @@ OBJ = $(SRC:.c=.o)
 CC = cc
 AR = ar
 ARFLAGS = rcs
-CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address,undefined
+CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=address,bounds,undefined,float-divide-by-zero
 
 all: $(NAME)
 
