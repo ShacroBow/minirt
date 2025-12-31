@@ -37,8 +37,8 @@
 
 # define ENABLE_BG 1
 
-# define ENABLE_REFLECTIONS 1
-# define MAX_REFLECTION_DEPTH 7
+# define ENABLE_REFLECTIONS 0
+# define MAX_REFLECTION_DEPTH 1
 
 # define ENABLE_PIXEL_STEP 1 //downscaling
 # define PIXEL_STEP_INC 1

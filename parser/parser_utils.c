@@ -98,12 +98,14 @@ bool	has_null_byte(const char *content, ssize_t size)
 {
 	ssize_t	i;
 
+	i = 0;
 	while (i < size)
 	{
 		if (content[i] == '\0')
 			return (true);
 		i++;
 	}
+	return (false);
 }
 
 void	read_file(int fd, char *content, t_scene *scene)
