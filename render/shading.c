@@ -19,6 +19,17 @@ static bool	is_point_in_shadow(const t_point *point, const t_light *light, \
 	return (false);
 }
 
+static t_color	clamp255(t_color c)
+{
+	if (c.x > 255.0)
+		c.x = 255.0;
+	if (c.y > 255.0)
+		c.y = 255.0;
+	if (c.z > 255.0)
+		c.z = 255.0;
+	return (c);
+}
+
 t_color	phong_shading(const t_hit_record *rec, const t_scene *scene,
 	const t_vec3 *ray_dir)
 {
@@ -37,17 +48,14 @@ t_color	phong_shading(const t_hit_record *rec, const t_scene *scene,
 	{
 		if (!is_point_in_shadow(&mod_rec.point, nowlight, scene->objects))
 		{
-			light_dir = vec_normalize(vec_sub(nowlight->center, mod_rec.point));
+			light_dir = vec_normalize(\
+				vec_sub(nowlight->center, mod_rec.point));
 			c = color_add(c, diffuse(nowlight, &mod_rec, &light_dir));
-			c = color_add(c, specular(nowlight, &mod_rec, &view_dir, &light_dir));
+			c = color_add(c, \
+				specular(nowlight, &mod_rec, &view_dir, &light_dir));
 		}
 		nowlight = nowlight->next;
 	}
-	if (c.x > 255.0)
-		c.x = 255.0;
-	if (c.y > 255.0)
-		c.y = 255.0;
-	if (c.z > 255.0)
-		c.z = 255.0;
+	c = clamp255(c);
 	return (c);
 }

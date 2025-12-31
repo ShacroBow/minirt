@@ -55,8 +55,13 @@ bool	parse_vector(char *str, t_vec3 *vec)
 		return (false);
 	tmp_str = ft_strdup(str);
 	if (!tmp_str)
-		return (write(2, "Error: allocation failed\n", 25), false);
+		return (write(2, "Error: Allocation failed\n", 25), false);
 	if (!split3_in_place(tmp_str, &a, &b, &c))
+	{
+		free(tmp_str);
+		return (false);
+	}
+	if (!is_valid_float(a) || !is_valid_float(b) || !is_valid_float(c))
 	{
 		free(tmp_str);
 		return (false);
@@ -66,20 +71,6 @@ bool	parse_vector(char *str, t_vec3 *vec)
 	vec->z = ft_atof(c);
 	free(tmp_str);
 	return (true);
-}
-
-bool	check_ppm_filename(char *str)
-{
-	int len;
-
-	if (!str)
-		return (false);
-	len = ft_strlen(str);
-	if (len < 4)
-		return (false);
-	if (ft_strcmp(str + len - 4, ".ppm") == 0)
-		return (true);
-	return (false);
 }
 
 bool	is_ignorable(const char *s)
@@ -92,30 +83,4 @@ bool	is_ignorable(const char *s)
 	while (s[i] && ft_isspace((unsigned char)s[i]))
 		i++;
 	return (s[i] == '\0' || s[i] == '#');
-}
-
-void	read_file(int fd, char *content, t_scene *scene)
-{
-	ssize_t	bytes_read;
-
-	bytes_read = read(fd, content, FILE_SIZE + 1);
-	if (bytes_read == -1)
-	{
-		close(fd);
-		free_scene(scene);
-		exit_error("Error: reading file.\n");
-	}
-	if (bytes_read == FILE_SIZE + 1)
-	{
-		close(fd);
-		free_scene(scene);
-		exit_error("Error: file too big. Max: 1000000 bytes\n");
-	}
-	if (bytes_read == 0)
-	{
-		close(fd);
-		free_scene(scene);
-		exit_error("Error: empty file.\n");
-	}
-	content[bytes_read] = 0;
 }

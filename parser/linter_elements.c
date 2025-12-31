@@ -54,10 +54,11 @@ void	lint_sphere(char *line, t_scene *scene)
 	if (count >= 5 && (!is_valid_float(index_split(line, 4)) || \
 		!check_range(ft_atof(index_split(line, 4)), 0.0, 1.0)))
 		erorr(scene, NULL, "Error: Sphere reflectivity invalid.");
-	if (count == 6 && !check_color_fmt(index_split(line, 5)))
-		if (!check_ppm_filename(index_split(line, 5)))
-			erorr(scene, NULL, "Error: Sphere checker color or texture invalid.");
-	if (count == 7 && (!check_color_fmt(index_split(line, 5)) || !check_ppm_filename(index_split(line, 6))))
+	if (count == 6 && !check_color_fmt(index_split(line, 5))
+		&& !has_extension(index_split(line, 5), ".ppm"))
+		erorr(scene, NULL, "Error: Sphere checker color or texture invalid.");
+	if (count == 7 && (!check_color_fmt(index_split(line, 5))
+			|| !has_extension(index_split(line, 6), ".ppm")))
 		erorr(scene, NULL, "Error: Sphere checker color or texture invalid.");
 }
 
@@ -77,11 +78,10 @@ void	lint_plane(char *line, t_scene *scene)
 	if (count >= 5 && (!is_valid_float(index_split(line, 4)) || \
 		!check_range(ft_atof(index_split(line, 4)), 0.0, 1.0)))
 		erorr(scene, NULL, "Error: Plane reflectivity invalid.");
-	if (count == 6 && !check_color_fmt(index_split(line, 5)))
-	{
-		if (!check_ppm_filename(index_split(line, 5)))
-			erorr(scene, NULL, "Error: Plane checker color or texture invalid.");
-	}
-	if (count == 7 && (!check_color_fmt(index_split(line, 5)) || !check_ppm_filename(index_split(line, 6))))
+	if (count == 6 && !check_color_fmt(index_split(line, 5))
+		&& !has_extension(index_split(line, 5), ".ppm"))
+		erorr(scene, NULL, "Error: Plane checker color or texture invalid.");
+	if (count == 7 && (!check_color_fmt(index_split(line, 5))
+			|| !has_extension(index_split(line, 6), ".ppm")))
 		erorr(scene, NULL, "Error: Plane checker color or texture invalid.");
 }
