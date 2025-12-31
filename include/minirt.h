@@ -20,27 +20,32 @@
 # define WIDTH 555  // 1024
 # define HEIGHT 555 // 768
 # define EPSILON 1e-6 // 0.000001
+# define FILE_SIZE 4096 // scene.rt
+# define TEXTURE_FILE_SIZE 4000000 // texture.ppm
+# define WIN_TITLE "minirt"
+# define SPEED_INCREMENT 0.2
+# define MOVE_SPEED_BASE 0.4
 # define SHININESS 32.0
-# define AA_SAMPLES 8
-# define DISPLAY_GAMMA 0.6
-# define ENABLE_GAMMA 1
+# define GRID 3 //for render_utils
+# define INV_GRID 0.33333333333333 //for render_utils
+
 # define ENABLE_AA 0
+# define AA_SAMPLES 8
+
+# define ENABLE_GAMMA 1
+# define DISPLAY_GAMMA 0.6
+
 # define ENABLE_BG 1
+
 # define ENABLE_REFLECTIONS 0
-# define ENABLE_PIXEL_STEP 1 //downscaling
 # define MAX_REFLECTION_DEPTH 1
-# define WIN_TITLE "miniRT"
-# define MOVE_SPEED_BASE 0.5
-# define ROT_SPEED 0.2
-# define SPEED_INCREMENT 0.5
-# define FILE_SIZE 4096
-# define TEXTURE_FILE_SIZE 4000000
+
+# define ENABLE_PIXEL_STEP 1 //downscaling
 # define PIXEL_STEP_INC 1
 # define PIXEL_STEP_MAX 100
 # define PIXEL_STEP_MIN 1
 
-# define GRID 3 //for render_utils
-# define INV_GRID 0.33333333333333 //for render_utils
+# define ROT_SPEED 0.2
 
 /* --- Core Data Structures --- */
 

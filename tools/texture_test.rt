@@ -9,3 +9,4 @@ sp 0,0,20 10 255,0,0 0 face.ppm face.bump.ppm
 co 2,0,35 0,1,0 1 5 255,0,0 0 face.ppm face.bump.ppm
 cy -15,0,5 0,0,1 4.5 15 255,0,0 0 face.ppm face.bump.ppm
 pl 0,-1,0 0,1,0 255,0,0 0.9 face.ppm face.bump.ppm
+
