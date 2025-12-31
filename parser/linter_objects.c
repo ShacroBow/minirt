@@ -5,7 +5,7 @@ void	lint_cylinder(char *line, t_scene *scene)
 	int	count;
 
 	count = ft_split_inplace(line, ' ');
-	if (count < 6 || count > 10)
+	if (count < 6 || count > 12)
 		erorr(scene, NULL, "Error: Cylinder args count.");
 	if (!check_vector_fmt(index_split(line, 1)))
 		erorr(scene, NULL, "Error: Cylinder center invalid.");
@@ -42,7 +42,7 @@ void	lint_cone(char *line, t_scene *scene)
 	int	count;
 
 	count = ft_split_inplace(line, ' ');
-	if (count < 6 || count > 10)
+	if (count < 6 || count > 12)
 		erorr(scene, NULL, "Error: Cone args count.");
 	if (!check_vector_fmt(index_split(line, 1)))
 		erorr(scene, NULL, "Error: Cone center invalid.");

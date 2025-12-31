@@ -69,7 +69,18 @@ void	parse_cone(t_scene *scene, char *line)
 					erorr(scene, NULL, "Error: Cone texture invalid.");
 				new_obj->has_texture = true;
 				new_obj->color = (t_color){255.0, 255.0, 255.0};
+					/* set sensible default UV scales: u ~ base circumference, v ~ height */
+					if (new_obj->texture && co)
+					{
+						new_obj->uv_scale_u = compute_uv_scale(M_PI * co->diameter, new_obj->texture->width);
+						new_obj->uv_scale_v = compute_uv_scale(co->height, new_obj->texture->height);
+					}
 			}
+		/* optional per-object UV scales: index 9 and 10 (1-based) */
+		if (count >= 10)
+			new_obj->uv_scale_u = ft_atof(index_split(line, 9));
+		if (count >= 11)
+			new_obj->uv_scale_v = ft_atof(index_split(line, 10));
 		}
 		else
 			erorr(scene, NULL, "Error: Cone checker color or texture invalid.");
@@ -93,6 +104,11 @@ void	parse_cone(t_scene *scene, char *line)
 				erorr(scene, NULL, "Error: Cone texture invalid.");
 			new_obj->has_texture = true;
 			new_obj->color = (t_color){255.0, 255.0, 255.0};
+				if (new_obj->texture && co)
+				{
+					new_obj->uv_scale_u = compute_uv_scale(M_PI * co->diameter, new_obj->texture->width);
+					new_obj->uv_scale_v = compute_uv_scale(co->height, new_obj->texture->height);
+				}
 		}
 	}
 }

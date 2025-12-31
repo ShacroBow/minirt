@@ -42,7 +42,7 @@ void	lint_sphere(char *line, t_scene *scene)
 	int	count;
 
 	count = ft_split_inplace(line, ' ');
-	if (count < 4 || count > 8)
+	if (count < 4 || count > 10)
 		erorr(scene, NULL, "Error: Sphere args count.");
 	if (!check_vector_fmt(index_split(line, 1)))
 		erorr(scene, NULL, "Error: Sphere center invalid.");
@@ -72,7 +72,7 @@ void	lint_plane(char *line, t_scene *scene)
 	int	count;
 
 	count = ft_split_inplace(line, ' ');
-	if (count < 4 || count > 8)
+	if (count < 4 || count > 10)
 		erorr(scene, NULL, "Error: Plane args count.");
 	if (!check_vector_fmt(index_split(line, 1)))
 		erorr(scene, NULL, "Error: Plane point invalid.");

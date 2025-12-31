@@ -75,7 +75,7 @@ bool	check_ppm_filename(char *str)
 	if (!str)
 		return (false);
 	len = ft_strlen(str);
-	if (len < 4)
+	if (len < 5)
 		return (false);
 	if (ft_strcmp(str + len - 4, ".ppm") == 0)
 		return (true);
@@ -94,28 +94,47 @@ bool	is_ignorable(const char *s)
 	return (s[i] == '\0' || s[i] == '#');
 }
 
+bool	has_null_byte(const char *content, ssize_t size)
+{
+	ssize_t	i;
+
+	while (i < size)
+	{
+		if (content[i] == '\0')
+			return (true);
+		i++;
+	}
+}
+
 void	read_file(int fd, char *content, t_scene *scene)
 {
 	ssize_t	bytes_read;
 
 	bytes_read = read(fd, content, FILE_SIZE + 1);
+	close(fd);
 	if (bytes_read == -1)
-	{
-		close(fd);
-		free_scene(scene);
-		exit_error("Error: reading file.\n");
-	}
+		erorr(scene, NULL, "Error: reading scene file.\n");
 	if (bytes_read == FILE_SIZE + 1)
-	{
-		close(fd);
-		free_scene(scene);
-		exit_error("Error: file too big. Max: 1000000 bytes\n");
-	}
+		erorr(scene, NULL, "Error: scene file too big.\n");
 	if (bytes_read == 0)
-	{
-		close(fd);
-		free_scene(scene);
-		exit_error("Error: empty file.\n");
-	}
+		erorr(scene, NULL, "Error: empty scene file.\n");
+	if (has_null_byte(content, bytes_read))
+		erorr(scene, NULL, "Error: Null byte in scene file.\n");
 	content[bytes_read] = 0;
+}
+
+double	compute_uv_scale(double size_m, int tex_dim_pixels)
+{
+	if (tex_dim_pixels <= 0)
+		return (1.0);
+	/* Adjusted heuristic to reduce excessive repeats for typical textures.
+	   Use a larger divisor so a 512px texture on a ~1m object doesn't repeat
+	   many times by default. Also allow scales < 1.0 so textures can stretch
+	   when appropriate, but clamp to a small positive lower bound. */
+	// double scale = size_m * (double)tex_dim_pixels / 1000.0;
+	// if (scale < 0.25)
+	// 	return (0.25);
+	(void)size_m;
+	double scale = 0.4;
+	return (scale);
 }

@@ -89,7 +89,23 @@ void	parse_sphere(t_scene *scene, char *line)
 					erorr(scene, NULL, "Error: Sphere texture invalid.");
 				new_obj->has_texture = true;
 				new_obj->color = (t_color){255.0, 255.0, 255.0};
+					/* set sensible default UV scales based on sphere size and texture */
+					if (new_obj->texture && sp)
+					{
+						new_obj->uv_scale_u = compute_uv_scale(M_PI * sp->diameter, new_obj->texture->width);
+						new_obj->uv_scale_v = compute_uv_scale(sp->diameter, new_obj->texture->height);
+					}
 			}
+			/* optional per-object UV scales: index 7 and 8 (1-based) */
+			if (count >= 8)
+				new_obj->uv_scale_u = ft_atof(index_split(line, 7));
+			if (count >= 9)
+				new_obj->uv_scale_v = ft_atof(index_split(line, 8));
+			/* optional per-object UV scales: index 7 and 8 (1-based) */
+			if (count >= 8)
+				new_obj->uv_scale_u = ft_atof(index_split(line, 7));
+			if (count >= 9)
+				new_obj->uv_scale_v = ft_atof(index_split(line, 8));
 		}
 		else
 			erorr(scene, NULL, "Error: Sphere checker color or texture invalid.");
@@ -114,6 +130,12 @@ void	parse_sphere(t_scene *scene, char *line)
 					erorr(scene, NULL, "Error: Sphere texture invalid.");
 				new_obj->has_texture = true;
 				new_obj->color = (t_color){255.0, 255.0, 255.0};
+					/* set sensible default UV scales for second texture if present */
+					if (new_obj->texture && sp)
+					{
+						new_obj->uv_scale_u = compute_uv_scale(M_PI * sp->diameter, new_obj->texture->width);
+						new_obj->uv_scale_v = compute_uv_scale(sp->diameter, new_obj->texture->height);
+					}
 			}
 		}
 		else
@@ -177,6 +199,12 @@ void	parse_plane(t_scene *scene, char *line)
 					erorr(scene, NULL, "Error: Plane texture invalid.");
 				new_obj->has_texture = true;
 				new_obj->color = (t_color){255.0, 255.0, 255.0};
+					/* sensible defaults: planes are unit-scaled, but scale by texture resolution */
+					if (new_obj->texture)
+					{
+						new_obj->uv_scale_u = compute_uv_scale(1.0, new_obj->texture->width);
+						new_obj->uv_scale_v = compute_uv_scale(1.0, new_obj->texture->height);
+					}
 			}
 		}
 		else
@@ -201,6 +229,11 @@ void	parse_plane(t_scene *scene, char *line)
 					erorr(scene, NULL, "Error: Plane texture invalid.");
 				new_obj->has_texture = true;
 				new_obj->color = (t_color){255.0, 255.0, 255.0};
+					if (new_obj->texture)
+					{
+						new_obj->uv_scale_u = compute_uv_scale(1.0, new_obj->texture->width);
+						new_obj->uv_scale_v = compute_uv_scale(1.0, new_obj->texture->height);
+					}
 			}
 		}
 		else

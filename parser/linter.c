@@ -65,7 +65,9 @@ void	lint_scene(char *filename, t_scene *scene)
 	close(fd);
 	line_count = ft_split_inplace(file_content, '\n');
 	lint_loop(file_content, line_count, scene);
-	if (!scene->ambient_light.is_set || !scene->camera.is_set)
-		erorr(scene, NULL, "Error: Missing A or C.");
+	if (!scene->ambient_light.is_set)
+		erorr(scene, NULL, "Error: Missing A.");
+	if (!scene->camera.is_set)
+		erorr(scene, NULL, "Error: Missing C.");
 	ft_bzero(scene, sizeof(t_scene));
 }

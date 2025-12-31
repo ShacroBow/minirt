@@ -17,8 +17,8 @@
 # include <sys/time.h>
 
 /* --- Constants (single source of truth) --- */
-# define WIDTH 555  // 1024
-# define HEIGHT 555 // 768
+# define WIDTH 512  // 1024
+# define HEIGHT 512 // 768
 # define EPSILON 1e-6 // 0.000001
 # define FILE_SIZE 4096 // scene.rt
 # define TEXTURE_FILE_SIZE 4000000 // texture.ppm
@@ -37,8 +37,8 @@
 
 # define ENABLE_BG 1
 
-# define ENABLE_REFLECTIONS 0
-# define MAX_REFLECTION_DEPTH 1
+# define ENABLE_REFLECTIONS 1
+# define MAX_REFLECTION_DEPTH 7
 
 # define ENABLE_PIXEL_STEP 1 //downscaling
 # define PIXEL_STEP_INC 1
@@ -155,11 +155,11 @@ typedef struct s_object
 	t_color				checker_color;
 	bool				has_texture;
 	bool				has_bump;
-	bool			bump_enabled;
+	bool				bump_enabled;
 	struct s_texture	*texture;
 	struct s_texture	*bump;
-	double			uv_scale_u;
-	double			uv_scale_v;
+	double				uv_scale_u;
+	double				uv_scale_v;
 	struct s_object		*next;
 }	t_object;
 
@@ -369,6 +369,7 @@ t_color		sample_texture(const t_texture *tex, double u, double v);
 int			ppm_header(const char *s, int *i, int *w, int *h);
 double		clamp01(double x);
 int			compute_uv(const t_hit_record *rec, double *u, double *v);
+double		compute_uv_scale(double size_m, int tex_dim_pixels);
 /* Bump mapping */
 void		apply_bump(t_hit_record *rec, const t_ray *ray);
 

@@ -31,9 +31,9 @@ t_color	get_checker_color(const t_hit_record *rec)
 			return (rec->color);
 		double u_s = (uv[0] * rec->obj->uv_scale_u) - floor(uv[0] * rec->obj->uv_scale_u);
 		double v_s = (uv[1] * rec->obj->uv_scale_v) - floor(uv[1] * rec->obj->uv_scale_v);
-		if (DEBUG)
-			printf("[DEBUG] sample_texture: obj_type=%d has_texture=%d bump_enabled=%d u_s=%f v_s=%f\n",
-				rec->type, rec->obj->has_texture, rec->obj->bump_enabled, u_s, v_s);
+		// if (DEBUG)
+		// 	printf("[DEBUG] sample_texture: obj_type=%d has_texture=%d bump_enabled=%d u_s=%f v_s=%f\n",
+		// 		rec->type, rec->obj->has_texture, rec->obj->bump_enabled, u_s, v_s);
 		return (sample_texture(rec->obj->texture, u_s, v_s));
 	}
 	if (!rec->has_checkerboard)
