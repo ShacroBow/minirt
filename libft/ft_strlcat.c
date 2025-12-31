@@ -6,7 +6,7 @@
 /*   By: kmashkoo <kmashkoo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 13:52:10 by kmashkoo          #+#    #+#             */
-/*   Updated: 2024/09/11 18:19:28 by kmashkoo         ###   ########.fr       */
+/*   Updated: 2025/12/31 03:42:32 by kmashkoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 
 	len_dst = ft_strlen_strlcat(dst);
 	len_src = ft_strlen_strlcat((char *)src);
-	rem = 0;
 	i = 0;
 	if (size > len_dst)
 		rem = len_src + len_dst;

@@ -37,40 +37,29 @@ static void	parse_loop(char *line, size_t line_count, t_scene *scene)
 	}
 }
 
-static void	parse_file(char *filename, t_scene *scene)
+static void	read_scene_content(const char *filename, t_scene *scene)
 {
 	int		fd;
-	size_t	line_count;
-	char	file_content[FILE_SIZE + 1];
 
+	scene->file_content = malloc(FILE_SIZE + 1);
+	if (!scene->file_content)
+		erorr(scene, NULL, "Error: Allocation failure.");
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		erorr(scene, NULL, "Error: Cannot open scene file.");
-	read_file(fd, file_content, scene);
-	line_count = ft_split_inplace(file_content, '\n');
-	parse_loop(file_content, line_count, scene);
+	read_file(fd, scene->file_content, scene);
 }
 
 void	parse_scene(const char *filename, t_scene **scene)
 {
-	long	t;
+	size_t		line_count;
 
 	*scene = malloc(sizeof(t_scene));
 	if (!*scene)
 		erorr(NULL, NULL, "Error: Allocation failure.");
 	ft_bzero(*scene, sizeof(t_scene));
-	if (!DEBUG)
-	{
-		lint_scene((char *)filename, *scene);
-		parse_file((char *)filename, *scene);
-	}
-	else
-	{
-		t = get_time_us();
-		lint_scene((char *)filename, *scene);
-		printf("[DEBUG] Linter: %ldus\n", (get_time_us() - t));
-		t = get_time_us();
-		parse_file((char *)filename, *scene);
-		printf("[DEBUG] Parser: %ldus\n", (get_time_us() - t));
-	}
+	read_scene_content(filename, *scene);
+	line_count = ft_split_inplace((*scene)->file_content, '\n');
+	lint_scene((*scene)->file_content, line_count, *scene);
+	parse_loop((*scene)->file_content, line_count, *scene);
 }

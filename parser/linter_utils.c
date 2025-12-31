@@ -2,11 +2,13 @@
 
 bool	is_valid_float(char *str)
 {
-	int	i;
-	int	dot_count;
+	int		i;
+	int		dot_count;
+	bool	has_digit;
 
 	i = 0;
 	dot_count = 0;
+	has_digit = false;
 	if (!str)
 		return (false);
 	if (str[i] == '-' || str[i] == '+')
@@ -17,11 +19,13 @@ bool	is_valid_float(char *str)
 	{
 		if (str[i] == '.')
 			dot_count++;
-		else if (!ft_isdigit(str[i]))
+		else if (ft_isdigit(str[i]))
+			has_digit = true;
+		else
 			return (false);
 		i++;
 	}
-	return (dot_count <= 1);
+	return (dot_count <= 1 && has_digit);
 }
 
 bool	check_range(double val, double min, double max)

@@ -4,6 +4,28 @@
 # define _GNU_SOURCE // needed for M_PI macro (only for vscode c/c++ extension)
 # define DEBUG 1
 
+# define NR _Noreturn
+// # ifndef NORETURN
+// #  if defined(__cplusplus)
+// #   ifdef __has_cpp_attribute
+// #    if __has_cpp_attribute(noreturn)
+// #     define NORETURN [[noreturn]]
+// #    endif
+// #   endif
+// #  else
+// #   ifdef __has_c_attribute
+// #    if __has_c_attribute(noreturn)
+// #     define NORETURN [[noreturn]]
+// #    endif
+// #   endif
+// #  endif
+// #  if defined(__GNUC__) || defined(__clang__)
+// #   define NORETURN __attribute__((noreturn))
+// #  else
+// #   define NORETURN
+// #  endif
+// # endif
+
 # include <stdlib.h>
 # include <stdbool.h>
 # include <math.h>
@@ -29,6 +51,7 @@
 # define GRID 3 //for render_utils
 # define INV_GRID 0.33333333333333 //for render_utils
 
+/* Could be made changable while running */
 # define ENABLE_AA 0
 # define AA_SAMPLES 8
 
@@ -195,6 +218,8 @@ typedef struct s_scene
 	t_camera		camera;
 	t_light			*lights;
 	t_object		*objects;
+	char			*file_content;
+	char			*line_copy;
 }	t_scene;
 
 typedef struct s_mlx_data
@@ -232,7 +257,7 @@ int			main(int argc, char **argv);
 /* --- Parser --- */
 void		parse_scene(const char *filename, t_scene **scene);
 void		read_file(int fd, char *content, t_scene *scene);
-void		lint_scene(char *filename, t_scene *scene);
+void		lint_scene(char *file_content, size_t line_count, t_scene *scene);
 bool		is_ignorable(const char *s);
 
 /* Linter Utils */
@@ -263,11 +288,8 @@ void		parse_cone(t_scene *scene, char *line);
 
 /* Parser Utils */
 bool		parse_vector(char *str, t_vec3 *vec);
-bool		check_ppm_filename(char *str);
 void		add_light(t_scene *scene, t_light *new_light);
 void		add_object(t_scene *scene, t_object *new_obj);
-double		ft_atof(const char *str);
-char		**ft_split(char const *s, char c);
 
 /* --- Vectors --- */
 t_vec3		vec_add(t_vec3 v1, t_vec3 v2);
@@ -352,10 +374,10 @@ t_color		color_scale(t_color c, double scalar);
 t_color		color_gamma(t_color c, double gamma);
 
 /* --- Utils --- */
-void		exit_cleanup(t_program *prog, const char *message);
+NR void		exit_cleanup(t_program *prog, const char *message);
 void		cleanup(t_program *prog);
 void		free_scene(t_scene *scene);
-void		erorr(t_scene *scene, void *ptr, const char *message);
+NR void		erorr(t_scene *scene, void *ptr, const char *message);
 bool		has_extension(const char *filename, const char *ext);
 
 /* Debug helpers */

@@ -5,8 +5,8 @@ void	exit_cleanup(t_program *prog, const char *message)
 	cleanup(prog);
 	if (message)
 	{
-		write(2, message, ft_strlen(message));
-		write(2, "\n", 1);
+		(void)!write(2, message, ft_strlen(message));
+		(void)!write(2, "\n", 1);
 	}
 	exit(EXIT_FAILURE);
 }

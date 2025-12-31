@@ -15,6 +15,46 @@ static t_cylinder	*parse_cylinder_struct(t_scene *scene, char *line)
 	return (cy);
 }
 
+static void	parse_cylinder_texture(t_object *new_obj, char *line, \
+									t_scene *scene)
+{
+	new_obj->texture = load_ppm(index_split(line, 8));
+	if (!new_obj->texture)
+		erorr(scene, NULL, "Error: Cylinder texture invalid.");
+	new_obj->has_texture = true;
+}
+
+static void	parse_cylinder_checker(t_object *new_obj, char *line, \
+									t_scene *scene)
+{
+	if (check_color_fmt(index_split(line, 7)))
+	{
+		new_obj->has_checkerboard = true;
+		parse_vector(index_split(line, 7), &new_obj->checker_color);
+	}
+	else if (has_extension(index_split(line, 7), ".ppm"))
+	{
+		new_obj->texture = load_ppm(index_split(line, 7));
+		if (!new_obj->texture)
+			erorr(scene, NULL, "Error: Cylinder texture invalid.");
+		new_obj->has_texture = true;
+	}
+	else
+		erorr(scene, NULL, \
+			"Error: Cylinder checker color or texture invalid.");
+}
+
+static void	parse_cylinder_extra(t_object *new_obj, char *line, \
+								int count, t_scene *scene)
+{
+	if (count == 8)
+		parse_cylinder_checker(new_obj, line, scene);
+	else
+		new_obj->has_checkerboard = false;
+	if (count == 9)
+		parse_cylinder_texture(new_obj, line, scene);
+}
+
 void	parse_cylinder(t_scene *scene, char *line)
 {
 	t_object	*new_obj;
@@ -35,12 +75,14 @@ void	parse_cylinder(t_scene *scene, char *line)
 	new_obj->bump_enabled = false;
 	new_obj->uv_scale_u = 1.0;
 	new_obj->uv_scale_v = 1.0;
+	new_obj->has_checkerboard = false;
 	add_object(scene, new_obj);
 	parse_vector(index_split(line, 5), &new_obj->color);
 	if (count >= 7)
 		new_obj->reflectivity = ft_atof(index_split(line, 6));
 	else
 		new_obj->reflectivity = 0.0;
+	// MERGE  CONFLICT HERE PROBABLY WITH parse_cylinder_extra() !!!!!!!!!!!!!!!!!1
 	if (count >= 8)
 	{
 		if (check_color_fmt(index_split(line, 7)))
@@ -48,7 +90,7 @@ void	parse_cylinder(t_scene *scene, char *line)
 			new_obj->has_checkerboard = true;
 			parse_vector(index_split(line, 7), &new_obj->checker_color);
 		}
-		else if (check_ppm_filename(index_split(line, 7)))
+		else if (has_extension(index_split(line, 7), ".ppm"))
 		{
 			if (has_extension(index_split(line, 7), ".bump.ppm"))
 			{
@@ -107,4 +149,5 @@ void	parse_cylinder(t_scene *scene, char *line)
 				}
 		}
 	}
+	parse_cylinder_extra(new_obj, line, count, scene);
 }

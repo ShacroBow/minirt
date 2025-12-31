@@ -26,7 +26,7 @@ void	parse_light(t_scene *scene, char *line)
 	ft_split_inplace(line, ' ');
 	nlight = malloc(sizeof(t_light));
 	if (!nlight)
-		erorr(scene, NULL, "Error: allocation failed.\n");
+		erorr(scene, NULL, "Error: Allocation failed.\n");
 	add_light(scene, nlight);
 	parse_vector(index_split(line, 1), &nlight->center);
 	nlight->ratio = ft_atof(index_split(line, 2));
@@ -72,7 +72,7 @@ void	parse_sphere(t_scene *scene, char *line)
 			new_obj->has_checkerboard = true;
 			parse_vector(index_split(line, 5), &new_obj->checker_color);
 		}
-		else if (check_ppm_filename(index_split(line, 5)))
+		else if (has_extension(index_split(line, 5), ".ppm"))
 		{
 			if (has_extension(index_split(line, 5), ".bump.ppm"))
 			{
@@ -113,7 +113,7 @@ void	parse_sphere(t_scene *scene, char *line)
 	if (count >= 7)
 	{
 		/* second file: could be additional texture or bump */
-		if (check_ppm_filename(index_split(line, 6)))
+		if (has_extension(index_split(line, 6), ".ppm"))
 		{
 			if (has_extension(index_split(line, 6), ".bump.ppm"))
 			{
@@ -182,7 +182,7 @@ void	parse_plane(t_scene *scene, char *line)
 			new_obj->has_checkerboard = true;
 			parse_vector(index_split(line, 5), &new_obj->checker_color);
 		}
-		else if (check_ppm_filename(index_split(line, 5)))
+		else if (has_extension(index_split(line, 5), ".ppm"))
 		{
 			if (has_extension(index_split(line, 5), ".bump.ppm"))
 			{
@@ -212,7 +212,7 @@ void	parse_plane(t_scene *scene, char *line)
 	}
 	if (count >= 7)
 	{
-		if (check_ppm_filename(index_split(line, 6)))
+		if (has_extension(index_split(line, 6), ".ppm"))
 		{
 			if (has_extension(index_split(line, 6), ".bump.ppm"))
 			{

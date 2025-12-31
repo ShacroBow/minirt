@@ -1,0 +1,31 @@
+# Mirror cube scene - reflective walls and overlapping spheres at the center
+#get reflections depth at around 7
+# Ambient light (low)
+A 0.9 255,255,255
+
+# Camera: inside the cube looking towards +z
+C 1,0,-2.5 0,0,1 90
+
+# Single strong light inside the cube
+L 0,4,-1 0.2 255,255,255
+
+# 6 planes forming a unit cube centered at origin with highly reflective walls
+pl 3.5,0,0 -1,0,0 65,65,65 0.6
+pl -3.5,0,0 1,0,0 65,65,65 0.6
+pl 0,10,0 0,-1,0 170,190,170 0.1
+pl 0,-1.5,0 0,1,0 170,190,170 0.1
+pl 0,0,3.5 0,0,-1 65,65,65 0.6
+pl 0,0,-3.5 0,0,1 65,65,65 0.6
+
+# A bunch of spheres placed at the exact same position (center of the cube)
+# Each has the same center; this intentionally creates overlapping objects
+sp 0,0.1,0 0.6 255,0,0
+sp -0.1,0.1,0.1 0.6 0,255,0
+sp 0,0.1,-0.1 0.6 0,0,255
+sp 0,-0.1,0.1 0.6 255,255,0
+sp -0.1,-0.1,0 0.6 0,255,255
+sp 0,0,0 0.6 255,0,255
+sp 0.1,0.1,-0.1 0.6 255,255,255
+sp 0.1,0.1,0.1 0.6 128,128,128
+
+# End of scene

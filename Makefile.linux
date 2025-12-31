@@ -5,7 +5,8 @@ SRC =	main.c $(SRCS_PARSER) $(SRCS_VECTORS) $(SRCS_INTERSECTIONS) $(SRCS_RENDER)
 SRCS_PARSER =			parser/parser.c parser/parser_utils.c \
 						parser/parse_elements.c parser/parse_cylinder.c \
 						parser/parse_cone.c parser/scene_add.c parser/linter_objects.c\
-						parser/linter.c parser/linter_elements.c parser/linter_utils.c
+						parser/linter.c parser/linter_elements.c parser/linter_utils.c \
+						parser/parser_read.c parser/parse_objects.c parser/parse_plane.c
 SRCS_VECTORS =			vectors/vec_operations_1.c vectors/vec_operations_2.c
 SRCS_INTERSECTIONS =	intersections/hit_sphere.c intersections/hit_plane.c \
 						intersections/hit_cylinder.c intersections/hit_cone.c \
@@ -27,8 +28,8 @@ DEPS_BONUS = $(OBJ_BONUS:.o=.d)
 
 LIBFT_PATH = ./libft/
 LIBFT = libft.a
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -O3 -flto -march=native -g -I./include
+CC = cc #-fsanitize=address,bounds,undefined,float-divide-by-zero
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -I./include -g -O3 -flto -march=native
 LIBFLAGS = -L. $(LIBFT_PATH)$(LIBFT) -lmlx -lX11 -lXext -lm
 
 
@@ -50,7 +51,7 @@ $(OBJ_DIR):
 	mkdir -p $@
 
 $(LIBFT_PATH)$(LIBFT):
-	make -C $(LIBFT_PATH) all -j8
+	make -C $(LIBFT_PATH) all -j
 
 clean:
 	rm -rf $(OBJ) $(DEPS)
