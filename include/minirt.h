@@ -48,7 +48,7 @@
 # define TEXTURE_FILE_SIZE 4000000 // texture.ppm
 # define WIN_TITLE "minirt"
 # define SPEED_INCREMENT 0.2
-# define MOVE_SPEED_BASE 0.4
+# define MOVE_SPEED_BASE 0.8
 # define SHININESS 32.0
 # define GRID 3 //for render_utils
 # define INV_GRID 0.33333333333333 //for render_utils
@@ -63,14 +63,16 @@
 # define ENABLE_BG 1
 
 # define ENABLE_REFLECTIONS 0
-# define MAX_REFLECTION_DEPTH 1
+# define ENABLE_TRANSPARENCY 1
+# define MAX_DEPTH 6
+
 
 # define ENABLE_PIXEL_STEP 1 //downscaling
 # define PIXEL_STEP_INC 1
 # define PIXEL_STEP_MAX 100
 # define PIXEL_STEP_MIN 1
 
-# define ROT_SPEED 0.2
+# define ROT_SPEED 0.4
 
 /* --- Core Data Structures --- */
 
@@ -84,6 +86,11 @@ typedef struct s_vec3
 
 typedef t_vec3	t_point;
 typedef t_vec3	t_color;
+
+/* --- Color Ops --- */
+t_color		color_add(t_color c1, t_color c2);
+t_color		color_mult(t_color c1, t_color c2);
+t_color		color_scale(t_color c, double scalar);
 
 /* Ray */
 typedef struct s_ray
@@ -176,6 +183,8 @@ typedef struct s_object
 	void				*shape_data;
 	t_color				color;
 	double				reflectivity;
+	double				transparency;
+	double				refractive_index;
 	bool				has_checkerboard;
 	t_color				checker_color;
 	bool				has_texture;
@@ -204,6 +213,8 @@ typedef struct s_hit_record
 	t_vec3			normal;
 	t_color			color;
 	double			reflect;
+	double			transparency;
+	double			refractive_index;
 	bool			has_checkerboard;
 	t_color			checker_color;
 	int				type;
@@ -304,6 +315,9 @@ double		vec_lensqrt(t_vec3 v);
 double		vec_len(t_vec3 v);
 t_vec3		vec_normalize(t_vec3 v);
 t_vec3		vec_reflect(t_vec3 v, t_vec3 n);
+t_vec3		vec_refract(t_vec3 uv, t_vec3 n, double etai_over_etat);
+double		schlick(double cosine, double ref_idx);
+double		vec_len_squared(t_vec3 v);
 
 /* --- Intersections --- */
 bool		hit(const t_object *world, const t_ray *ray, double t_max, \
@@ -324,6 +338,9 @@ bool		quadratic(double a, double b, double c, double *t);
 int			color_to_int(t_color color);
 void		render(t_program *prog);
 t_color		trace_ray(const t_ray *ray, t_program *prog);
+t_color		trace_ray_recursive(const t_ray *ray, t_program *prog, int depth);
+t_color		handle_transparency(const t_ray *ray, t_hit_record *rec, \
+								t_program *prog, int depth);
 t_color		get_checker_color(const t_hit_record *rec);
 /* Texture loader / sampler (PPM, clamp behaviour) */
 t_texture	*load_ppm(const char *path);
@@ -356,6 +373,8 @@ t_color		trace_ray_recursive(const t_ray *ray, t_program *prog, int depth);
 /* Shading / Rays */
 t_color		phong_shading(const t_hit_record *rec, const t_scene *scene, \
 						const t_vec3 *ray_dir);
+t_color		get_specular_only(const t_hit_record *rec, const t_scene *scene, \
+						const t_vec3 *ray_dir);
 t_ray		create_ray(const t_camera *cam, double u, double v);
 
 /* Shading helpers */
@@ -381,6 +400,11 @@ void		cleanup(t_program *prog);
 void		free_scene(t_scene *scene);
 NR void		erorr(t_scene *scene, void *ptr, const char *message);
 bool		has_extension(const char *filename, const char *ext);
+bool		is_valid_float(char *str);
+bool		check_color_fmt(char *str);
+bool		check_vector_fmt(char *str);
+bool		check_normalized(char *str);
+bool		check_range(double val, double min, double max);
 
 /* Debug helpers */
 void		print_objects_status(const t_scene *scene);

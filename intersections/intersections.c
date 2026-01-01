@@ -46,6 +46,8 @@ static bool	try_hit_object(const t_object *obj, const t_ray *ray,
 	{
 		out->color = obj->color;
 		out->reflect = obj->reflectivity;
+		out->transparency = obj->transparency;
+		out->refractive_index = obj->refractive_index;
 		out->has_checkerboard = obj->has_checkerboard;
 		out->checker_color = obj->checker_color;
 		out->type = obj->type;
@@ -84,7 +86,10 @@ bool	hit_any(const t_object *world, const t_ray *ray, double t_max)
 	while (cur)
 	{
 		if (try_hit_object(cur, ray, t_max, NULL))
-			return (true);
+		{
+			if (cur->transparency < 1.0)
+				return (true);
+		}
 		cur = cur->next;
 	}
 	return (false);

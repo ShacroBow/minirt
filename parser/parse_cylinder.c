@@ -39,7 +39,7 @@ static void	parse_cylinder_checker(t_object *new_obj, char *line, \
 			erorr(scene, NULL, "Error: Cylinder texture invalid.");
 		new_obj->has_texture = true;
 	}
-	else
+	else if (!is_valid_float(index_split(line, 7)))
 		erorr(scene, NULL, \
 			"Error: Cylinder checker color or texture invalid.");
 }
@@ -120,7 +120,7 @@ void	parse_cylinder(t_scene *scene, char *line)
 		if (count >= 11)
 			new_obj->scale_v = ft_atof(index_split(line, 10));
 		}
-		else
+		else if (!is_valid_float(index_split(line, 7)))
 			erorr(scene, NULL, "Error: Cylinder checker color or texture invalid.");
 	}
 	else
@@ -150,4 +150,15 @@ void	parse_cylinder(t_scene *scene, char *line)
 		}
 	}
 	parse_cylinder_extra(new_obj, line, count, scene);
+	new_obj->transparency = 0.0;
+	new_obj->refractive_index = 1.0;
+	int idx = 7;
+	if (new_obj->has_checkerboard || new_obj->has_texture) idx++;
+	if (new_obj->has_bump) idx++;
+	if (new_obj->has_texture && count >= (size_t)idx + 2) idx += 2;
+	if (count > (size_t)idx)
+	{
+		new_obj->transparency = ft_atof(index_split(line, idx));
+		new_obj->refractive_index = 1.5;
+	}
 }

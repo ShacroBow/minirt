@@ -45,15 +45,18 @@ void	lint_sphere_extra(char *line, t_scene *scene, int count)
 		!check_range(ft_atof(index_split(line, 4)), 0.0, 1.0)))
 		erorr(scene, NULL, "Error: Sphere reflectivity invalid.");
 	if (count == 6 && !check_color_fmt(index_split(line, 5)))
-		if (!has_extension(index_split(line, 5), ".ppm"))
-			erorr(scene, NULL, "Error: Sphere checker color or texture invalid.");
+		if (!has_extension(index_split(line, 5), ".ppm") && \
+			!is_valid_float(index_split(line, 5)))
+			erorr(scene, NULL, "Error: Sphere checker/texture/transparency invalid.");
 	if (count == 7)
 	{
 		bool idx5_color = check_color_fmt(index_split(line, 5));
 		bool idx5_ppm = has_extension(index_split(line, 5), ".ppm");
 		bool idx6_ppm = has_extension(index_split(line, 6), ".ppm");
-		if (!((idx5_color && idx6_ppm) || (idx5_ppm && idx6_ppm)))
-			erorr(scene, NULL, "Error: Sphere checker color or texture invalid.");
+		bool idx6_float = is_valid_float(index_split(line, 6));
+		if (!((idx5_color && idx6_ppm) || (idx5_ppm && idx6_ppm) || \
+			((idx5_color || idx5_ppm) && idx6_float)))
+			erorr(scene, NULL, "Error: Sphere checker/texture/transparency invalid.");
 	}
 }
 
@@ -83,15 +86,18 @@ static void	lint_plane_extra(char *line, t_scene *scene, int count)
 		!check_range(ft_atof(index_split(line, 4)), 0.0, 1.0)))
 		erorr(scene, NULL, "Error: Plane reflectivity invalid.");
 	if (count == 6 && !check_color_fmt(index_split(line, 5)))
-		if (!has_extension(index_split(line, 5), ".ppm"))
-			erorr(scene, NULL, "Error: Plane checker color or texture invalid.");
+		if (!has_extension(index_split(line, 5), ".ppm") && \
+			!is_valid_float(index_split(line, 5)))
+			erorr(scene, NULL, "Error: Plane checker/texture/transparency invalid.");
 	if (count == 7)
 	{
 		bool idx5_color = check_color_fmt(index_split(line, 5));
 		bool idx5_ppm = has_extension(index_split(line, 5), ".ppm");
 		bool idx6_ppm = has_extension(index_split(line, 6), ".ppm");
-		if (!((idx5_color && idx6_ppm) || (idx5_ppm && idx6_ppm)))
-			erorr(scene, NULL, "Error: Plane checker color or texture invalid.");
+		bool idx6_float = is_valid_float(index_split(line, 6));
+		if (!((idx5_color && idx6_ppm) || (idx5_ppm && idx6_ppm) || \
+			((idx5_color || idx5_ppm) && idx6_float)))
+			erorr(scene, NULL, "Error: Plane checker/texture/transparency invalid.");
 	}
 }
 	

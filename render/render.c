@@ -37,9 +37,17 @@ t_color	trace_ray_recursive(const t_ray *ray, t_program *prog, \
 		apply_bump(&rec, ray);
 		local = phong_shading(&rec, prog->scene, &ray->direction);
 		update_render_stats(prog, &t_start, true);
-		if (depth > 0 && rec.reflect > 0.0)
-			return (color_add(local, \
-				handle_reflection(ray, &rec, prog, depth)));
+		if (depth > 0)
+		{
+			if (ENABLE_TRANSPARENCY && rec.transparency > 0.0)
+				local = color_add(color_add(color_scale(handle_transparency(ray, &rec, \
+					prog, depth), rec.transparency), \
+					color_scale(local, 1.0 - rec.transparency)), \
+					get_specular_only(&rec, prog->scene, &ray->direction));
+			if (ENABLE_REFLECTIONS && rec.reflect > 0.0)
+				local = color_add(local, \
+					handle_reflection(ray, &rec, prog, depth));
+		}
 		return (local);
 	}
 	update_render_stats(prog, &t_start, false);
@@ -69,9 +77,12 @@ static void	pixel_block(t_program *prog, int x, int y, int color)
 
 t_color	trace_ray(const t_ray *ray, t_program *prog)
 {
-	if (ENABLE_REFLECTIONS)
-		return (trace_ray_recursive(ray, prog, MAX_REFLECTION_DEPTH));
-	return (trace_ray_recursive(ray, prog, 0));
+	int	depth;
+
+	depth = 0;
+	if ((ENABLE_REFLECTIONS || ENABLE_TRANSPARENCY) && MAX_DEPTH > depth)
+		depth = MAX_DEPTH;
+	return (trace_ray_recursive(ray, prog, depth));
 }
 
 void	render(t_program *prog)

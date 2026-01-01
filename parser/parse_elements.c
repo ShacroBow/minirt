@@ -101,13 +101,8 @@ void	parse_sphere(t_scene *scene, char *line)
 				new_obj->scale_u = ft_atof(index_split(line, 7));
 			if (count >= 9)
 				new_obj->scale_v = ft_atof(index_split(line, 8));
-			/* optional per-object UV scales: index 7 and 8 (1-based) */
-			if (count >= 8)
-				new_obj->scale_u = ft_atof(index_split(line, 7));
-			if (count >= 9)
-				new_obj->scale_v = ft_atof(index_split(line, 8));
 		}
-		else
+		else if (!is_valid_float(index_split(line, 5)))
 			erorr(scene, NULL, "Error: Sphere checker color or texture invalid.");
 	}
 	if (count >= 7)
@@ -138,8 +133,19 @@ void	parse_sphere(t_scene *scene, char *line)
 					}
 			}
 		}
-		else
+		else if (!is_valid_float(index_split(line, 6)))
 			erorr(scene, NULL, "Error: Sphere texture invalid.");
+	}
+	new_obj->transparency = 0.0;
+	new_obj->refractive_index = 1.0;
+	int idx = 5;
+	if (new_obj->has_checkerboard || new_obj->has_texture) idx++;
+	if (new_obj->has_bump) idx++;
+	if (new_obj->has_texture && count >= (size_t)idx + 2) idx += 2;
+	if (count > (size_t)idx)
+	{
+		new_obj->transparency = ft_atof(index_split(line, idx));
+		new_obj->refractive_index = 1.5;
 	}
 }
 
@@ -236,7 +242,18 @@ void	parse_plane(t_scene *scene, char *line)
 					}
 			}
 		}
-		else
-			erorr(scene, NULL, "Error: Plane texture invalid.");
+		else if (!is_valid_float(index_split(line, 5)))
+			erorr(scene, NULL, "Error: Plane checker color or texture invalid.");
+	}
+	new_obj->transparency = 0.0;
+	new_obj->refractive_index = 1.0;
+	int idx = 5;
+	if (new_obj->has_checkerboard || new_obj->has_texture) idx++;
+	if (new_obj->has_bump) idx++;
+	if (new_obj->has_texture && count >= (size_t)idx + 2) idx += 2;
+	if (count > (size_t)idx)
+	{
+		new_obj->transparency = ft_atof(index_split(line, idx));
+		new_obj->refractive_index = 1.5;
 	}
 }

@@ -9,16 +9,19 @@ static void	lint_cylinder_extra(char *line, t_scene *scene, int count)
 		erorr(scene, NULL, "Error: Cylinder reflectivity invalid.");
 	if (count == 8 && !check_color_fmt(index_split(line, 7)))
 	{
-		if (!has_extension(index_split(line, 7), ".ppm"))
-			erorr(scene, NULL, "Error: Cylinder checker color or texture invalid.");
+		if (!has_extension(index_split(line, 7), ".ppm") && \
+			!is_valid_float(index_split(line, 7)))
+			erorr(scene, NULL, "Error: Cylinder checker/texture/transparency invalid.");
 	}
 	if (count == 9)
 	{
 		bool idx7_color = check_color_fmt(index_split(line, 7));
 		bool idx7_ppm = has_extension(index_split(line, 7), ".ppm");
 		bool idx8_ppm = has_extension(index_split(line, 8), ".ppm");
-		if (!((idx7_color && idx8_ppm) || (idx7_ppm && idx8_ppm)))
-			erorr(scene, NULL, "Error: Cylinder checker color or texture invalid.");
+		bool idx8_float = is_valid_float(index_split(line, 8));
+		if (!((idx7_color && idx8_ppm) || (idx7_ppm && idx8_ppm) || \
+			((idx7_color || idx7_ppm) && idx8_float)))
+			erorr(scene, NULL, "Error: Cylinder checker/texture/transparency invalid.");
 	}
 }
 
