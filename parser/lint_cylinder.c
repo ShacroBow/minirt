@@ -22,7 +22,7 @@ static void	lint_cylinder_extra(char *line, t_scene *scene, size_t count)
 
 void	lint_cylinder(char *line, t_scene *scene)
 {
-	size_t  count;
+	size_t	count;
 
 	count = ft_split_inplace(line, ' ');
 	if (count < 6 || count > 12)

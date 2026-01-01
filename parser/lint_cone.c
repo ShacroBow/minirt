@@ -22,7 +22,7 @@ static void	lint_cone_extra(char *line, t_scene *scene, size_t count)
 
 void	lint_cone(char *line, t_scene *scene)
 {
-	size_t  count;
+	size_t	count;
 
 	count = ft_split_inplace(line, ' ');
 	if (count < 6 || count > 12)
@@ -39,5 +39,6 @@ void	lint_cone(char *line, t_scene *scene)
 		erorr(scene, NULL, "Error: Cone height invalid.");
 	if (!check_color_fmt(index_split(line, 5)))
 		erorr(scene, NULL, "Error: Cone color invalid.");
-	lint_cone_extra(line, scene, count);
+	if (count >= 7)
+		lint_cone_extra(line, scene, count);
 }

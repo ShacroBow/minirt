@@ -260,9 +260,17 @@ void		read_file(int fd, char *content, t_scene *scene);
 void		lint_scene(char *file_content, size_t line_count, t_scene *scene);
 bool		is_ignorable(const char *s);
 
-/* Linter Utils */
-bool		check_arg(char *arg, char **valid_args, t_scene *scene,
+/* Linter Arg Validation */
+void	    validate_reflectivity(char *str, t_scene *scene, const char *object);
+void	    validate_checker_color(char *str, t_scene *scene, const char *object);
+void        validate_texture(char *str, t_scene *scene, const char *object);
+void        validate_bumpmap(char *str, t_scene *scene, const char *object);
+void        validate_u_scale(char *str, t_scene *scene, const char *object);
+void        validate_v_scale(char *str, t_scene *scene, const char *object);
+void		check_arg(char *arg, char **valid_args, t_scene *scene,
 				const char *object);
+
+/* Linter Utils */
 bool		is_valid_float(char *str);
 bool		check_range(double val, double min, double max);
 bool		check_color_fmt(char *str);

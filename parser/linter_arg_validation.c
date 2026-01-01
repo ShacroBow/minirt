@@ -1,37 +1,5 @@
 #include "../include/minirt.h"
 
-void	validate_reflectivity(char *str, t_scene *scene, const char *object)
-{
-	if (!*str)
-	{
-		write(2, "Error: ", 7);
-		write(2, object, ft_strlen(object));
-		erorr(scene, NULL, " reflectivity invalid.");
-	}
-	if (!is_valid_float(str) || !check_range(ft_atof(str), 0.0, 1.0))
-	{
-		write(2, "Error: ", 7);
-		write(2, object, ft_strlen(object));
-		erorr(scene, NULL, " reflectivity invalid.");
-	}
-}
-
-void	validate_checker_color(char *str, t_scene *scene, const char *object)
-{
-	if (!*str)
-	{
-		write(2, "Error: ", 7);
-		write(2, object, ft_strlen(object));
-		erorr(scene, NULL, " checker color invalid.");
-	}
-	if (!check_color_fmt(str))
-	{
-		write(2, "Error: ", 7);
-		write(2, object, ft_strlen(object));
-		erorr(scene, NULL, " checker color invalid.");
-	}
-}
-
 void	validate_texture(char *str, t_scene *scene, const char *object)
 {
 	if (!*str)
@@ -64,7 +32,7 @@ void	validate_bumpmap(char *str, t_scene *scene, const char *object)
 	}
 }
 
-void    validate_u_scale(char *str, t_scene *scene, const char *object)
+void	validate_u_scale(char *str, t_scene *scene, const char *object)
 {
 	if (!*str)
 	{
@@ -80,7 +48,7 @@ void    validate_u_scale(char *str, t_scene *scene, const char *object)
 	}
 }
 
-void    validate_v_scale(char *str, t_scene *scene, const char *object)
+void	validate_v_scale(char *str, t_scene *scene, const char *object)
 {
 	if (!*str)
 	{
@@ -102,14 +70,14 @@ void    validate_v_scale(char *str, t_scene *scene, const char *object)
  * 
  * @note Will raise an error if the argument is invalid.
  */
-bool    check_arg(char *arg, char **valid_args, t_scene *scene, const char *object)
+void	check_arg(char *arg, char **valid_args, t_scene *scene,
+			const char *object)
 {
-	size_t	i;
+	ssize_t	i;
 
-	i = 0;
-	while (valid_args[i])
+	i = -1;
+	while (valid_args[++i])
 	{
-        printf("Checking arg: %s against valid prefix: %s\n", arg, valid_args[i]);
 		if (ft_strncmp(arg, valid_args[i], ft_strlen(valid_args[i])) == 0)
 		{
 			if (ft_strncmp(arg, "r=", 2) == 0)
@@ -124,10 +92,10 @@ bool    check_arg(char *arg, char **valid_args, t_scene *scene, const char *obje
 				validate_u_scale(arg + 2, scene, object);
 			else if (ft_strncmp(arg, "v=", 2) == 0)
 				validate_v_scale(arg + 2, scene, object);
-            return (true);
+			return ;
 		}
-		i++;
 	}
-	erorr(scene, NULL, "Error: Sphere extra argument invalid.");
-    return (true);
+	write(2, "Error: ", 7);
+	write(2, object, ft_strlen(object));
+	erorr(scene, NULL, " argument invalid.");
 }
