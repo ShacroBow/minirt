@@ -1,6 +1,6 @@
 #include "../include/minirt.h"
 
-static void	get_checker_indices(const t_hit_record *rec, double u, double v,
+static void	get_checker_indices(const t_hit_record *rec, double u, double v, \
 		int *indices)
 {
 	if (rec->type == PLANE)
