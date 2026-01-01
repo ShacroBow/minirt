@@ -261,6 +261,8 @@ void		lint_scene(char *file_content, size_t line_count, t_scene *scene);
 bool		is_ignorable(const char *s);
 
 /* Linter Utils */
+bool		check_arg(char *arg, char **valid_args, t_scene *scene,
+				const char *object);
 bool		is_valid_float(char *str);
 bool		check_range(double val, double min, double max);
 bool		check_color_fmt(char *str);
