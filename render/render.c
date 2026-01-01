@@ -4,10 +4,11 @@ static void	debug_progress(t_program *prog, int y)
 {
 	long		current_time;
 	long		elapsed_ms;
+	static long	every_while = (HEIGHT / 100) * 5;
 
 	if (y == 0)
 		prog->render_start_time = get_time_us();
-	if (y % 5 == 0 || y == HEIGHT - 1)
+	if ((y % every_while == 0) || y == HEIGHT - 1 || y == 0)
 	{
 		current_time = get_time_us();
 		elapsed_ms = (current_time - prog->render_start_time) / 1000;
@@ -15,8 +16,9 @@ static void	debug_progress(t_program *prog, int y)
 			"Shading: %3ldms | Intersect: %3ldms", (y * 100) / HEIGHT,
 			prog->ray_count, elapsed_ms, prog->shading_time / 1000,
 			prog->intersect_time / 1000);
+		fflush(stdout); // needed when program slow.
 	}
-	if (y == HEIGHT - 1)
+	if (y + prog->pixel_step >= HEIGHT)
 		printf("\n");
 }
 
@@ -89,10 +91,12 @@ void	render(t_program *prog)
 {
 	int				x;
 	int				y;
+	int				every_while;
 	t_render_ctx	ctx;
 
 	init_render_utils(prog, &ctx);
 	y = 0;
+	every_while = HEIGHT / 100;
 	while (y < HEIGHT)
 	{
 		x = 0;

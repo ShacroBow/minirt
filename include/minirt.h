@@ -55,16 +55,20 @@
 
 /* Could be made changable while running */
 # define ENABLE_AA 0
-# define AA_SAMPLES 8
+# define AA_SAMPLES 64
 
 # define ENABLE_GAMMA 1
 # define DISPLAY_GAMMA 0.6
 
 # define ENABLE_BG 1
 
-# define ENABLE_REFLECTIONS 0
+# define ENABLE_REFLECTIONS 1
 # define ENABLE_TRANSPARENCY 1
-# define MAX_DEPTH 6
+# define MAX_DEPTH 2
+
+# define ENABLE_SOFT_SHADOWS 1
+# define SOFT_SHADOW_SAMPLES 30
+# define LIGHT_RADIUS 3
 
 
 # define ENABLE_PIXEL_STEP 1 //downscaling
