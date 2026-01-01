@@ -1,7 +1,8 @@
 #ifndef MINIRT_H
 # define MINIRT_H
 
-# define _GNU_SOURCE // needed for M_PI macro (only for vscode c/c++ extension)
+// # define _GNU_SOURCE //M_PI macro (only for vscode c/c++ extension)
+# define M_PI 3.14159265358979323846264338327950288 //unneeded.
 # define DEBUG 1
 
 # define NR _Noreturn
@@ -37,6 +38,7 @@
 # include "camera.h"
 # include <stdio.h>
 # include <sys/time.h>
+# include <stddef.h>
 
 /* --- Constants (single source of truth) --- */
 # define WIDTH 512  // 1024
@@ -181,8 +183,8 @@ typedef struct s_object
 	bool				bump_enabled;
 	struct s_texture	*texture;
 	struct s_texture	*bump;
-	double				uv_scale_u;
-	double				uv_scale_v;
+	double				scale_u;
+	double				scale_v;
 	struct s_object		*next;
 }	t_object;
 

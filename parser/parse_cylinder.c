@@ -59,7 +59,7 @@ void	parse_cylinder(t_scene *scene, char *line)
 {
 	t_object	*new_obj;
 	t_cylinder	*cy;
-	int			count;
+	size_t		count;
 
 	count = ft_split_inplace(line, ' ');
 	cy = parse_cylinder_struct(scene, line);
@@ -73,8 +73,8 @@ void	parse_cylinder(t_scene *scene, char *line)
 	new_obj->has_bump = false;
 	new_obj->bump = NULL;
 	new_obj->bump_enabled = false;
-	new_obj->uv_scale_u = 1.0;
-	new_obj->uv_scale_v = 1.0;
+	new_obj->scale_u = 1.0;
+	new_obj->scale_v = 1.0;
 	new_obj->has_checkerboard = false;
 	add_object(scene, new_obj);
 	parse_vector(index_split(line, 5), &new_obj->color);
@@ -110,15 +110,15 @@ void	parse_cylinder(t_scene *scene, char *line)
 					/* set sensible default UV scales: u -> circumference, v -> height */
 					if (new_obj->texture && cy)
 					{
-						new_obj->uv_scale_u = compute_uv_scale(M_PI * cy->diameter, new_obj->texture->width);
-						new_obj->uv_scale_v = compute_uv_scale(cy->height, new_obj->texture->height);
+						new_obj->scale_u = compute_uv_scale(M_PI * cy->diameter, new_obj->texture->width);
+						new_obj->scale_v = compute_uv_scale(cy->height, new_obj->texture->height);
 					}
 			}
 		/* optional per-object UV scales: index 9 and 10 (1-based) */
 		if (count >= 10)
-			new_obj->uv_scale_u = ft_atof(index_split(line, 9));
+			new_obj->scale_u = ft_atof(index_split(line, 9));
 		if (count >= 11)
-			new_obj->uv_scale_v = ft_atof(index_split(line, 10));
+			new_obj->scale_v = ft_atof(index_split(line, 10));
 		}
 		else
 			erorr(scene, NULL, "Error: Cylinder checker color or texture invalid.");
@@ -144,8 +144,8 @@ void	parse_cylinder(t_scene *scene, char *line)
 			new_obj->color = (t_color){255.0, 255.0, 255.0};
 				if (new_obj->texture && cy)
 				{
-					new_obj->uv_scale_u = compute_uv_scale(M_PI * cy->diameter, new_obj->texture->width);
-					new_obj->uv_scale_v = compute_uv_scale(cy->height, new_obj->texture->height);
+					new_obj->scale_u = compute_uv_scale(M_PI * cy->diameter, new_obj->texture->width);
+					new_obj->scale_v = compute_uv_scale(cy->height, new_obj->texture->height);
 				}
 		}
 	}

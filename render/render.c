@@ -11,12 +11,12 @@ static void	debug_progress(t_program *prog, int y)
 	{
 		current_time = get_time_us();
 		elapsed_ms = (current_time - prog->render_start_time) / 1000;
-		// printf("[DEBUG] Progress: %3d%% | Rays: %7ld | Total: %4ldms | "\
-		// 	"Shading: %3ldms | Intersect: %3ldms\n", (y * 100) / HEIGHT,
+		// printf("\r[DEBUG] Progress: %2d%% | Rays: %7ld | Total: %4ldms | "\
+		// 	"Shading: %3ldms | Intersect: %3ldms", (y * 100) / HEIGHT,
 		// 	prog->ray_count, elapsed_ms, prog->shading_time / 1000,
 		// 	prog->intersect_time / 1000);
 	}
-	if (y == HEIGHT - 1 && false)
+	if (y == HEIGHT - 1)
 		printf("\n");
 }
 
@@ -34,7 +34,6 @@ t_color	trace_ray_recursive(const t_ray *ray, t_program *prog, \
 	if (hit(prog->scene->objects, ray, INFINITY, &rec))
 	{
 		update_render_stats(prog, &t_start, false);
-		/* apply centralized bump mapping (if present) before shading */
 		apply_bump(&rec, ray);
 		local = phong_shading(&rec, prog->scene, &ray->direction);
 		update_render_stats(prog, &t_start, true);
@@ -59,8 +58,8 @@ static void	pixel_block(t_program *prog, int x, int y, int color)
 		i = 0;
 		while (i < prog->pixel_step && (x + i) < WIDTH)
 		{
-			dst = prog->mlx.addr + (y + j) * prog->mlx.line_length + \
-				(x + i) * (prog->mlx.bits_per_pixel / 8);
+			dst = prog->mlx.addr + (ptrdiff_t)(y + j) * prog->mlx.line_length + \
+				(ptrdiff_t)(x + i) * (prog->mlx.bits_per_pixel / 8);
 			*(unsigned int *)dst = color;
 			i++;
 		}

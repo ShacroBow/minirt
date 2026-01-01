@@ -1,5 +1,7 @@
 #include "../include/minirt.h"
 
+//Useless file? should i delete if it isnt used.
+
 static bool	plane_t(const t_texture_plane *pl, const t_ray *ray, double *t)
 {
 	double	denom;
@@ -100,8 +102,8 @@ bool	hit_texture_plane(const t_texture_plane *pl, const t_ray *ray, double t_max
 	/* apply per-object UV scale if available */
 	if (rec && rec->obj)
 	{
-		u_uv *= rec->obj->uv_scale_u;
-		v_uv *= rec->obj->uv_scale_v;
+		u_uv *= rec->obj->scale_u;
+		v_uv *= rec->obj->scale_v;
 		u_uv = u_uv - floor(u_uv);
 		v_uv = v_uv - floor(v_uv);
 	}

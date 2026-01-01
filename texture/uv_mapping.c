@@ -65,8 +65,8 @@ static void	get_cone_uv(const t_hit_record *rec, double *u, double *v)
 		u_axis = (t_vec3){0, 1, 0};
 	u_axis = vec_normalize(vec_cross(u_axis, co->center_dir));
 	v_axis = vec_cross(co->center_dir, u_axis);
-		*u = 0.5 + atan2(vec_dot(p_center, v_axis), \
-			vec_dot(p_center, u_axis)) / (2 * M_PI);
+	*u = 0.5 + atan2(vec_dot(p_center, v_axis), \
+					vec_dot(p_center, u_axis)) / (2 * M_PI);
 }
 
 int	compute_uv(const t_hit_record *rec, double *u, double *v)

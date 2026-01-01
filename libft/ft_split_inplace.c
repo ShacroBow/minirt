@@ -6,7 +6,7 @@
 /*   By: kmashkoo <kmashkoo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/24 19:37:01 by kmashkoo          #+#    #+#             */
-/*   Updated: 2025/12/24 19:43:36 by kmashkoo         ###   ########.fr       */
+/*   Updated: 2026/01/01 19:54:57 by kmashkoo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,6 @@ size_t	ft_split_inplace(char *str, char c)
 // 		else
 // 			write(1, &str[i], 1);
 // 	}
-// 	write(2, "]\n", 2);
+// 	(void)!write(2, "]\n", 2);
 // 	return (0);
 // }

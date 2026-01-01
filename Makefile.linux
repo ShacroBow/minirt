@@ -1,4 +1,4 @@
-NAME = minirt
+NAME = miniRT
 SRC =	main.c $(SRCS_PARSER) $(SRCS_VECTORS) $(SRCS_INTERSECTIONS) $(SRCS_RENDER) \
 		$(SRCS_UTILS) $(SRCS_CAMERA) $(SRCS_TEXTURE)
 
@@ -8,19 +8,19 @@ SRCS_PARSER =			parser/parser.c parser/parser_utils.c \
 						parser/linter.c parser/linter_elements.c parser/linter_utils.c \
                         parser/linter_arg_validation.c parser/linter_arg_validation_2.c \
                         parser/lint_sphere.c parser/lint_plane.c parser/lint_cylinder.c parser/lint_cone.c \
-						parser/parser_read.c parser/parse_objects.c parser/parse_plane.c
+						parser/parser_read.c
 SRCS_VECTORS =			vectors/vec_operations_1.c vectors/vec_operations_2.c
 SRCS_INTERSECTIONS =	intersections/hit_sphere.c intersections/hit_plane.c \
 						intersections/hit_cylinder.c intersections/hit_cone.c \
 						intersections/hit_cone2.c intersections/intersections.c
 SRCS_RENDER =			render/render.c render/render_utils.c render/shading.c \
 						render/shading_utils.c render/color_ops.c render/color.c \
-						render/background.c render/bump.c
+						render/background.c
 SRCS_TEXTURE =			texture/texture.c texture/texture_loader.c texture/texture_loader_utils.c \
-						texture/uv_mapping.c
+						texture/uv_mapping.c texture/bump.c
 SRCS_UTILS =			utils/error.c utils/memory.c utils/string_utils.c utils/utils.c
 SRCS_CAMERA =			camera/camera.c camera/camera_utils.c camera/camera_creation.c \
-						camera/camera_utils2.c
+						camera/camera_utils2.c camera/camera_actions.c
 
 OBJ_DIR = ./dir/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
@@ -61,7 +61,7 @@ clean:
 	make -C $(LIBFT_PATH) clean
 
 fclean: clean
-	rm -rf $(NAME) $(NAME_BONUS) a.out $(OBJ_DIR) files.supp
+	rm -rf $(NAME) $(NAME_BONUS) a.out $(OBJ_DIR) minirt
 	make -C $(LIBFT_PATH) fclean
 
 re: fclean all
@@ -70,4 +70,6 @@ re: fclean all
 -include $(DEPS)
 -include $(DEPS_BONUS)
 
-.PHONY: all clean fclean re #bonus
+#clang-tidy -checks='-*,performance-*,clang-analyzer-*' \
+# main.c camera/*.c intersections/*.c parser/*.c render/*.c texture/*.c utils/*.c vectors/*.c -- -I./include
+.PHONY: all clean fclean re #bonu

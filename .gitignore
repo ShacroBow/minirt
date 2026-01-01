@@ -4,6 +4,7 @@ libft/*.o
 
 # Executable
 minirt
+miniRT
 
 # PDF files
 en.subject.pdf
