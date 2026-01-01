@@ -1,5 +1,7 @@
 # scene.rt — test file for MiniRT
 
+# objects extra arguments: r=reflectivity, ch=checkerboard color, tx=texture file, bump=bumpmap file, u=u_scale, v=v_scale
+
 # Ambient lighting: 20% white
 A 0.3 255,255,255
 
@@ -9,15 +11,14 @@ C 0,0,20 0,0,-1 70
 # Light source: position (10,10,10), brightness 40%, white
 L 10,10,10 0.6 250,220,220
 
-# Red sphere: center at origin, radius 5, color red
-# extra arguments: r=reflectivity, ch=checkerboard color, tx=texture file, bump=bumpmap file
+# center diameter color
 sp 0,0,0 5 255,0,0 r=0.7 ch=0,0,0 tx=face.ppm
-
-# # Green plane: passes through y = –5 with normal (0,1,0), color green
+    
+# center normal color
 pl 0,-5,0 0,1,0 0,255,0 r=0.3 ch=220,200,0
 
-# # Blue cylinder: base at (3,0,0), axis (0,1,0), diameter 2, height 4, color blue
+# center normal diameter height color
 cy 10,0,0 0,1,0 2 4 0,0,255 r=0 ch=220,200,0
 
-# Cyan cone: base at (0,10,0), axis (0,1,0), diameter 2, height 4, color cyan
+# center normal diameter height color
 co 5,5,0 0,1,0 2 2 220,0,255 r=0.4 ch=220,200,0

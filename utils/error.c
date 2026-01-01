@@ -24,6 +24,13 @@ void	erorr(t_scene *scene, void *ptr, const char *message)
 	exit(EXIT_FAILURE);
 }
 
+void    erorrf(t_scene *scene, void *ptr, const char *f, const char *message)
+{
+    write(2, "Error: ", 7);
+    write(2, f, ft_strlen(f));
+    erorr(scene, ptr, message);
+}
+
 void	cleanup(t_program *prog)
 {
 	if (prog->mlx.img_ptr)

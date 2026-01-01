@@ -8,7 +8,7 @@ t_vec3	cone_coeffs(const t_cone *cy, const t_ray *ray)
 	t_vec3	coeffs;
 
 	oc = vec_sub(ray->origin, cy->apex);
-	dir = cy->center_dir;
+	dir = cy->normal;
 	k = (cy->diameter * 0.5) / cy->height;
 	k = k * k;
 	coeffs.x = vec_dot(ray->direction, ray->direction)

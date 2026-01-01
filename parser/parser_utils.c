@@ -85,6 +85,15 @@ bool	is_ignorable(const char *s)
 	return (s[i] == '\0' || s[i] == '#');
 }
 
+void    validate_object_extra_args(t_object *obj, t_scene *scene,
+            const char *name)
+{
+    if (obj->has_checkerboard && obj->has_texture)
+        obj->checker_enabled = false;
+    if (obj->has_bump && !obj->has_texture)
+        erorrf(scene, NULL, name, " bump map without texture.");
+}
+
 double	compute_uv_scale(double size_m, int tex_dim_pixels)
 {
 	if (tex_dim_pixels <= 0)

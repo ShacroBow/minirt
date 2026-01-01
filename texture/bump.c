@@ -7,7 +7,7 @@ static t_vec3	get_geometric_normal(const t_hit_record *rec)
 	if (rec->type == CYLINDER)
 		return (((t_cylinder *)rec->obj->shape_data)->normal);
 	if (rec->type == CONE)
-		return (((t_cone *)rec->obj->shape_data)->center_dir);
+		return (((t_cone *)rec->obj->shape_data)->normal);
 	return (rec->normal);
 }
 

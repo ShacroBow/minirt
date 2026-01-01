@@ -1,60 +1,54 @@
 #include "../include/minirt.h"
 
-static t_cone	*parse_cone_struct(t_scene *scene, char *line)
+static void	parse_cone_struct(char *line, t_cone *co)
 {
-	t_cone	*co;
-
-	ft_split_inplace(line, ' ');
-	co = malloc(sizeof(t_cone));
-	if (!co)
-		erorr(scene, NULL, "Error: Allocation failed.\n");
 	parse_vector(index_split(line, 1), &co->center);
-	parse_vector(index_split(line, 2), &co->center_dir);
-	co->center_dir = vec_normalize(co->center_dir);
+	parse_vector(index_split(line, 2), &co->normal);
+	co->normal = vec_normalize(co->normal); // DON'T WE ALREADY DECLINE NORMALS THAT ARE NOT NORMALIZED IN LINTING ??????
 	co->diameter = ft_atof(index_split(line, 3));
 	co->height = ft_atof(index_split(line, 4));
 	co->apex = vec_add(co->center, \
-		vec_mult(co->center_dir, co->height / 2));
+		vec_mult(co->normal, co->height / 2));
 	co->center = vec_sub(co->center, \
-		vec_mult(co->center_dir, co->height / 2));
-	return (co);
+		vec_mult(co->normal, co->height / 2));
 }
 
-static void	parse_cone_texture(t_object *new_obj, char *line, t_scene *scene)
+static void	init_cone_obj(t_object *obj, t_cone *co)
 {
-	new_obj->texture = load_ppm(index_split(line, 8));
-	if (!new_obj->texture)
-		erorr(scene, NULL, "Error: Cone texture invalid.");
-	new_obj->has_texture = true;
+	ft_bzero(obj, sizeof(t_object));
+	obj->type = CONE;
+	obj->shape_data = co;
+	obj->reflectivity = 0.0;
+	obj->scale_u = 1.0;
+	obj->scale_v = 1.0;
+	obj->name = ft_strdup("Cone");
+	if (!obj->name)
+		erorr(NULL, co, "Error: allocation failed.\n");
 }
 
-static void	parse_cone_checker(t_object *new_obj, char *line, t_scene *scene)
+static void	parse_cone_extra_args(char *line, size_t count, t_object *obj, t_scene *scene)
 {
-	if (check_color_fmt(index_split(line, 7)))
+	size_t  i;
+
+	i = CONE_MIN_ARGS;
+	while (i < count)
 	{
-		new_obj->has_checkerboard = true;
-		parse_vector(index_split(line, 7), &new_obj->checker_color);
+		char *arg = index_split(line, i);
+		if (ft_strncmp(arg, "r=", 2) == 0)
+			parse_reflectivity(arg + 2, obj, scene);
+		else if (ft_strncmp(arg, "ch=", 3) == 0)
+			parse_checker_color(arg + 3, obj, scene);
+		else if (ft_strncmp(arg, "tx=", 3) == 0)
+			parse_texture(arg + 3, obj, scene);
+		else if (ft_strncmp(arg, "bump=", 5) == 0)
+			parse_bumpmap(arg + 5, obj, scene);
+		else if (ft_strncmp(arg, "u=", 2) == 0)
+			obj->scale_u = ft_atof(arg + 2);
+		else if (ft_strncmp(arg, "v=", 2) == 0)
+			obj->scale_v = ft_atof(arg + 2);
+		i++;
 	}
-	else if (has_extension(index_split(line, 7), ".ppm"))
-	{
-		new_obj->texture = load_ppm(index_split(line, 7));
-		if (!new_obj->texture)
-			erorr(scene, NULL, "Error: Cone texture invalid.");
-		new_obj->has_texture = true;
-	}
-	else
-		erorr(scene, NULL, "Error: Cone checker color or texture invalid.");
-}
-
-static void	parse_cone_extra(t_object *new_obj, char *line, \
-							int count, t_scene *scene)
-{
-	if (count == 8)
-		parse_cone_checker(new_obj, line, scene);
-	else
-		new_obj->has_checkerboard = false;
-	if (count == 9)
-		parse_cone_texture(new_obj, line, scene);
+	validate_object_extra_args(obj, scene, "Cone");
 }
 
 void	parse_cone(t_scene *scene, char *line)
@@ -64,91 +58,16 @@ void	parse_cone(t_scene *scene, char *line)
 	size_t		count;
 
 	count = ft_split_inplace(line, ' ');
-	co = parse_cone_struct(scene, line);
+	co = malloc(sizeof(t_cone));
+	if (!co)
+		erorr(scene, NULL, "Error: Allocation failed.\n");
 	new_obj = malloc(sizeof(t_object));
 	if (!new_obj)
 		erorr(scene, co, "Error: Allocation failed.\n");
-	new_obj->type = CONE;
-	new_obj->shape_data = co;
-	new_obj->has_texture = false;
-	new_obj->texture = NULL;
-	new_obj->has_bump = false;
-	new_obj->bump = NULL;
-	new_obj->bump_enabled = false;
-	new_obj->scale_u = 1.0;
-	new_obj->scale_v = 1.0;
-	new_obj->has_checkerboard = false;
+	init_cone_obj(new_obj, co);
 	add_object(scene, new_obj);
+	parse_cone_struct(line, co);
 	parse_vector(index_split(line, 5), &new_obj->color);
-	if (count >= 7)
-		new_obj->reflectivity = ft_atof(index_split(line, 6));
-	else
-		new_obj->reflectivity = 0.0;
-	if (count >= 8)
-	{
-		if (check_color_fmt(index_split(line, 7)))
-		{
-			new_obj->has_checkerboard = true;
-			parse_vector(index_split(line, 7), &new_obj->checker_color);
-		}
-		else if (has_extension(index_split(line, 7), ".ppm"))
-		{
-			if (has_extension(index_split(line, 7), ".bump.ppm"))
-			{
-				new_obj->bump = load_ppm(index_split(line, 7));
-				if (!new_obj->bump)
-					erorr(scene, NULL, "Error: Cone bump texture invalid.");
-				new_obj->has_bump = true;
-				new_obj->bump_enabled = true;
-			}
-			else
-			{
-				new_obj->texture = load_ppm(index_split(line, 7));
-				if (!new_obj->texture)
-					erorr(scene, NULL, "Error: Cone texture invalid.");
-				new_obj->has_texture = true;
-				new_obj->color = (t_color){255.0, 255.0, 255.0};
-					/* set sensible default UV scales: u ~ base circumference, v ~ height */
-					if (new_obj->texture && co)
-					{
-						new_obj->scale_u = compute_uv_scale(M_PI * co->diameter, new_obj->texture->width);
-						new_obj->scale_v = compute_uv_scale(co->height, new_obj->texture->height);
-					}
-			}
-		/* optional per-object UV scales: index 9 and 10 (1-based) */
-		if (count >= 10)
-			new_obj->scale_u = ft_atof(index_split(line, 9));
-		if (count >= 11)
-			new_obj->scale_v = ft_atof(index_split(line, 10));
-		}
-		else
-			erorr(scene, NULL, "Error: Cone checker color or texture invalid.");
-	}
-	else
-		new_obj->has_checkerboard = false;
-	if (count == 9)
-	{
-		if (has_extension(index_split(line, 8), ".bump.ppm"))
-		{
-			new_obj->bump = load_ppm(index_split(line, 8));
-			if (!new_obj->bump)
-				erorr(scene, NULL, "Error: Cone bump texture invalid.");
-			new_obj->has_bump = true;
-			new_obj->bump_enabled = true;
-		}
-		else
-		{
-			new_obj->texture = load_ppm(index_split(line, 8));
-			if (!new_obj->texture)
-				erorr(scene, NULL, "Error: Cone texture invalid.");
-			new_obj->has_texture = true;
-			new_obj->color = (t_color){255.0, 255.0, 255.0};
-				if (new_obj->texture && co)
-				{
-					new_obj->scale_u = compute_uv_scale(M_PI * co->diameter, new_obj->texture->width);
-					new_obj->scale_v = compute_uv_scale(co->height, new_obj->texture->height);
-				}
-		}
-	}
-	parse_cone_extra(new_obj, line, count, scene);
+	if (count > CONE_MIN_ARGS)
+		parse_cone_extra_args(line, count, new_obj, scene);
 }

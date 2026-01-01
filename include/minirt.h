@@ -52,6 +52,10 @@
 # define SHININESS 32.0
 # define GRID 3 //for render_utils
 # define INV_GRID 0.33333333333333 //for render_utils
+# define SPHERE_MIN_ARGS 4
+# define PLANE_MIN_ARGS 4
+# define CYLINDER_MIN_ARGS 6
+# define CONE_MIN_ARGS 6
 
 /* Could be made changable while running */
 # define ENABLE_AA 0
@@ -156,7 +160,7 @@ typedef struct s_cylinder
 typedef struct s_cone
 {
 	t_point	center;
-	t_vec3	center_dir;
+	t_vec3	normal;
 	t_vec3	apex;
 	double	diameter;
 	double	height;
@@ -173,15 +177,19 @@ typedef struct s_cap
 typedef struct s_object
 {
 	t_object_type		type;
+	char				*name;
 	void				*shape_data;
 	t_color				color;
+	bool				reflectivity_enabled;
 	double				reflectivity;
 	bool				has_checkerboard;
+	bool				checker_enabled;
 	t_color				checker_color;
 	bool				has_texture;
+	bool				texture_enabled;
+	struct s_texture	*texture;
 	bool				has_bump;
 	bool				bump_enabled;
-	struct s_texture	*texture;
 	struct s_texture	*bump;
 	double				scale_u;
 	double				scale_v;
@@ -261,16 +269,18 @@ void		parse_scene(const char *filename, t_scene **scene);
 void		read_file(int fd, char *content, t_scene *scene);
 void		lint_scene(char *file_content, size_t line_count, t_scene *scene);
 bool		is_ignorable(const char *s);
+void		validate_object_extra_args(t_object *obj, t_scene *scene,
+            	const char *name);
 
 /* Linter Arg Validation */
-void	    validate_reflectivity(char *str, t_scene *scene, const char *object);
-void	    validate_checker_color(char *str, t_scene *scene, const char *object);
-void        validate_texture(char *str, t_scene *scene, const char *object);
-void        validate_bumpmap(char *str, t_scene *scene, const char *object);
-void        validate_u_scale(char *str, t_scene *scene, const char *object);
-void        validate_v_scale(char *str, t_scene *scene, const char *object);
+void	    validate_reflectivity(char *str, t_scene *scene, const char *obj_name);
+void	    validate_checker_color(char *str, t_scene *scene, const char *obj_name);
+void        validate_texture(char *str, t_scene *scene, const char *obj_name);
+void        validate_bumpmap(char *str, t_scene *scene, const char *obj_name);
+void        validate_u_scale(char *str, t_scene *scene, const char *obj_name);
+void        validate_v_scale(char *str, t_scene *scene, const char *obj_name);
 void		check_arg(char *arg, char **valid_args, t_scene *scene,
-				const char *object);
+				const char *obj_name);
 
 /* Linter Utils */
 bool		is_valid_float(char *str);
@@ -289,7 +299,6 @@ void		lint_cylinder(char *line, t_scene *scene);
 void		lint_cone(char *line, t_scene *scene);
 
 /* --- Vectors --- */
-void		parse_line(char *line, t_scene *scene);
 void		parse_ambient(t_scene *scene, char *line);
 void		parse_camera(t_scene *scene, char *line);
 void		parse_light(t_scene *scene, char *line);
@@ -297,7 +306,11 @@ void		parse_sphere(t_scene *scene, char *line);
 void		parse_plane(t_scene *scene, char *line);
 void		parse_cylinder(t_scene *scene, char *line);
 void		parse_cone(t_scene *scene, char *line);
-
+/* Parser Extra Args */
+void		parse_reflectivity(char *str, t_object *obj, t_scene *scene);
+void		parse_checker_color(char *str, t_object *obj, t_scene *scene);
+void		parse_texture(char *str, t_object *obj, t_scene *scene);
+void		parse_bumpmap(char *str, t_object *obj, t_scene *scene);
 /* Parser Utils */
 bool		parse_vector(char *str, t_vec3 *vec);
 void		add_light(t_scene *scene, t_light *new_light);
@@ -390,6 +403,8 @@ NR void		exit_cleanup(t_program *prog, const char *message);
 void		cleanup(t_program *prog);
 void		free_scene(t_scene *scene);
 NR void		erorr(t_scene *scene, void *ptr, const char *message);
+NR void		erorrf(t_scene *scene, void *ptr,const char *f,
+				const char *message);
 bool		has_extension(const char *filename, const char *ext);
 
 /* Debug helpers */

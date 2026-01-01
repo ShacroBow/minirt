@@ -58,13 +58,13 @@ static void	get_cone_uv(const t_hit_record *rec, double *u, double *v)
 
 	co = (t_cone *)rec->obj->shape_data;
 	p_center = vec_sub(rec->point, co->center);
-	*v = vec_dot(p_center, co->center_dir);
-	if (fabs(co->center_dir.y) > 0.9)
+	*v = vec_dot(p_center, co->normal);
+	if (fabs(co->normal.y) > 0.9)
 		u_axis = (t_vec3){1, 0, 0};
 	else
 		u_axis = (t_vec3){0, 1, 0};
-	u_axis = vec_normalize(vec_cross(u_axis, co->center_dir));
-	v_axis = vec_cross(co->center_dir, u_axis);
+	u_axis = vec_normalize(vec_cross(u_axis, co->normal));
+	v_axis = vec_cross(co->normal, u_axis);
 	*u = 0.5 + atan2(vec_dot(p_center, v_axis), \
 					vec_dot(p_center, u_axis)) / (2 * M_PI);
 }

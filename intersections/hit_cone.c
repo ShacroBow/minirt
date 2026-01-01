@@ -51,7 +51,7 @@
 // 	t_vec3	coeffs;
 
 // 	oc = vec_sub(ray->origin, cy->apex);
-// 	dir = cy->center_dir;
+// 	dir = cy->normal;
 // 	k = (cy->diameter * 0.5) / cy->height;
 // 	k = k * k;
 // 	coeffs.x = vec_dot(ray->direction, ray->direction)
@@ -79,8 +79,8 @@ static void	set_cone_hit(const t_cone *cy, const t_ray *ray, double t, \
 	q = vec_sub(hit_point, cy->apex);
 	k = (cy->diameter * 0.5 / cy->height);
 	k = k * k;
-	normal_vec = vec_sub(q, vec_mult(cy->center_dir, \
-		(1.0 + k) * vec_dot(q, cy->center_dir)));
+	normal_vec = vec_sub(q, vec_mult(cy->normal, \
+		(1.0 + k) * vec_dot(q, cy->normal)));
 	rec->normal = vec_normalize(normal_vec);
 	if (vec_dot(ray->direction, rec->normal) > 0)
 	{
@@ -126,7 +126,7 @@ static bool	check_caps(const t_cone *co, const t_ray *ray, double *t,
 	bool	hit;
 
 	bottom.center = co->center;
-	bottom.normal = co->center_dir;
+	bottom.normal = co->normal;
 	bottom.r2 = (co->diameter * co->diameter) / 4.0;
 	bottom.invert = 0;
 	hit = false;
@@ -147,7 +147,7 @@ static bool	try_cone_body_hit(const t_cone *cy, const t_ray *ray,
 	if (!quadratic(coeffs.x, coeffs.y, coeffs.z, &t) || t >= t_max)
 		return (false);
 	hit_point = vec_add(ray->origin, vec_mult(ray->direction, t));
-	dist = vec_dot(vec_sub(hit_point, cy->apex), cy->center_dir);
+	dist = vec_dot(vec_sub(hit_point, cy->apex), cy->normal);
 	if (dist < -cy->height || dist > 0)
 		return (false);
 	if (rec)

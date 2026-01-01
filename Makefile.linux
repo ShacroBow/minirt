@@ -3,12 +3,12 @@ SRC =	main.c $(SRCS_PARSER) $(SRCS_VECTORS) $(SRCS_INTERSECTIONS) $(SRCS_RENDER)
 		$(SRCS_UTILS) $(SRCS_CAMERA) $(SRCS_TEXTURE)
 
 SRCS_PARSER =			parser/parser.c parser/parser_utils.c \
-						parser/parse_elements.c parser/parse_cylinder.c \
-						parser/parse_cone.c parser/scene_add.c \
+						parser/parse_elements.c parser/scene_add.c parser/parser_read.c \
+						parser/parse_sphere.c parser/parse_plane.c parser/parse_cylinder.c parser/parse_cone.c \
+						parser/parse_extra_args.c \
 						parser/linter.c parser/linter_elements.c parser/linter_utils.c \
                         parser/linter_arg_validation.c parser/linter_arg_validation_2.c \
-                        parser/lint_sphere.c parser/lint_plane.c parser/lint_cylinder.c parser/lint_cone.c \
-						parser/parser_read.c
+                        parser/lint_sphere.c parser/lint_plane.c parser/lint_cylinder.c parser/lint_cone.c
 SRCS_VECTORS =			vectors/vec_operations_1.c vectors/vec_operations_2.c
 SRCS_INTERSECTIONS =	intersections/hit_sphere.c intersections/hit_plane.c \
 						intersections/hit_cylinder.c intersections/hit_cone.c \

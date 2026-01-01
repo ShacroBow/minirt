@@ -1,6 +1,6 @@
 #include "../include/minirt.h"
 
-void	parse_line(char *line, t_scene *scene)
+static void	parse_line(char *line, t_scene *scene)
 {
 	if (is_ignorable(line))
 		return ;
