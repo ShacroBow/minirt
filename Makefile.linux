@@ -13,7 +13,8 @@ SRCS_INTERSECTIONS =	intersections/hit_sphere.c intersections/hit_plane.c \
 						intersections/hit_cone2.c intersections/intersections.c
 SRCS_RENDER =			render/render.c render/render_utils.c render/shading.c \
 						render/shading_utils.c render/color_ops.c render/color.c \
-						render/background.c render/transparency.c render/specular_only.c
+						render/background.c render/transparency.c render/specular_only.c \
+						render/shadows.c
 SRCS_TEXTURE =			texture/texture.c texture/texture_loader.c texture/texture_loader_utils.c \
 						texture/uv_mapping.c texture/bump.c
 SRCS_UTILS =			utils/error.c utils/memory.c utils/string_utils.c utils/utils.c

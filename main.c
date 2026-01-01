@@ -32,13 +32,17 @@ int	key_hook(int keycode, t_program *prog)
 {
 	static t_object		*object = NULL;
 	static int			is_cam = 1;
+	int					tmp;
 
 	if (keycode == KEY_ESC)
 		close_window(prog);
 	else if (keycode == KEY_P)
 	{
 		prog->aa_enabled = 1;
+		tmp = prog->pixel_step;
+		prog->pixel_step = 1;
 		render(prog);
+		prog->pixel_step = tmp;
 		prog->aa_enabled = 0;
 		return (0);
 	}

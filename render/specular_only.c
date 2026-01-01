@@ -6,6 +6,7 @@ static bool	is_point_in_shadow(const t_point *point, const t_light *light, \
 	t_ray	shadow_ray;
 	t_vec3	light_dir;
 	double	light_distance;
+	double	trans;
 
 	light_dir = vec_sub(light->center, *point);
 	light_distance = vec_len(light_dir);
@@ -14,7 +15,8 @@ static bool	is_point_in_shadow(const t_point *point, const t_light *light, \
 	light_dir = vec_mult(light_dir, 1.0 / light_distance);
 	shadow_ray.origin = vec_add(*point, vec_mult(light_dir, 0.001));
 	shadow_ray.direction = light_dir;
-	if (hit_any(objects, &shadow_ray, light_distance - 0.001))
+	trans = shadow_transmittance(objects, &shadow_ray, light_distance - 0.001);
+	if (trans < 0.001)
 		return (true);
 	return (false);
 }

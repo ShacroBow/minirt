@@ -55,7 +55,7 @@
 
 /* Could be made changable while running */
 # define ENABLE_AA 0
-# define AA_SAMPLES 64
+# define AA_SAMPLES 32
 
 # define ENABLE_GAMMA 1
 # define DISPLAY_GAMMA 0.6
@@ -67,8 +67,14 @@
 # define MAX_DEPTH 2
 
 # define ENABLE_SOFT_SHADOWS 1
-# define SOFT_SHADOW_SAMPLES 30
+# define SOFT_SHADOW_SAMPLES 3
 # define LIGHT_RADIUS 3
+
+/* Soft shadow transmission through transparent objects */
+# define ENABLE_TINTED_SHADOWS 1
+# define ENABLE_BEER_LAMBERT 1
+# define SHADOW_ABSORPTION_STRENGTH 0.04
+# define SHADOW_TINT_INTENSITY 0.4
 
 
 # define ENABLE_PIXEL_STEP 1 //downscaling
@@ -327,6 +333,14 @@ double		vec_len_squared(t_vec3 v);
 bool		hit(const t_object *world, const t_ray *ray, double t_max, \
 				t_hit_record *rec);
 bool		hit_any(const t_object *world, const t_ray *ray, double t_max);
+bool		hit_any_cached(const t_object *world, const t_ray *ray, \
+				double t_max, const t_object **cache);
+
+double		shadow_transmittance(const t_object *world, const t_ray *ray, \
+				double t_max);
+
+t_color		shadow_transmittance_color(const t_object *world, const t_ray *ray, \
+				double t_max);
 bool		hit_sphere(const t_sphere *sp, const t_ray *ray, double t_max, \
 				t_hit_record *rec);
 bool		hit_plane(const t_plane *pl, const t_ray *ray, double t_max, \

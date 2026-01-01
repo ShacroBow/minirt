@@ -1,13 +1,13 @@
 #include "../include/minirt.h"
 
-static double	calculate_shadow_factor(const t_point *point, \
+static t_color	calculate_shadow_color(const t_point *point, \
 	const t_light *light, const t_object *objects)
 {
 	t_ray			shadow_ray;
 	t_vec3			light_dir;
 	double			light_dist;
 	int				i;
-	int				unblocked;
+	t_color			sum;
 	unsigned long	seed;
 	t_point			sample_pos;
 
@@ -16,15 +16,14 @@ static double	calculate_shadow_factor(const t_point *point, \
 		light_dir = vec_sub(light->center, *point);
 		light_dist = vec_len(light_dir);
 		if (light_dist <= EPSILON)
-			return (0.0);
+			return ((t_color){0.0, 0.0, 0.0});
 		light_dir = vec_mult(light_dir, 1.0 / light_dist);
 		shadow_ray.origin = vec_add(*point, vec_mult(light_dir, 0.001));
 		shadow_ray.direction = light_dir;
-		if (hit_any(objects, &shadow_ray, light_dist - 0.001))
-			return (0.0);
-		return (1.0);
+		return (shadow_transmittance_color(objects, &shadow_ray, \
+			light_dist - 0.001));
 	}
-	unblocked = 0;
+	sum = (t_color){0.0, 0.0, 0.0};
 	seed = (unsigned long)((point->x * 12345 + point->y * 6789 + point->z * 42));
 	i = 0;
 	while (i < SOFT_SHADOW_SAMPLES)
@@ -39,12 +38,12 @@ static double	calculate_shadow_factor(const t_point *point, \
 			light_dir = vec_mult(light_dir, 1.0 / light_dist);
 			shadow_ray.origin = vec_add(*point, vec_mult(light_dir, 0.001));
 			shadow_ray.direction = light_dir;
-			if (!hit_any(objects, &shadow_ray, light_dist - 0.001))
-				unblocked++;
+			sum = color_add(sum, shadow_transmittance_color(objects, &shadow_ray, \
+				light_dist - 0.001));
 		}
 		i++;
 	}
-	return ((double)unblocked / (double)SOFT_SHADOW_SAMPLES);
+	return (color_scale(sum, 1.0 / (double)SOFT_SHADOW_SAMPLES));
 }
 
 static t_color	clamp255(t_color c)
@@ -66,7 +65,6 @@ t_color	phong_shading(const t_hit_record *rec, const t_scene *scene,
 	t_vec3			view_dir;
 	t_vec3			light_dir;
 	t_hit_record	mod_rec;
-	double			shadow_factor;
 
 	mod_rec = *rec;
 	mod_rec.color = get_checker_color(rec);
@@ -75,16 +73,20 @@ t_color	phong_shading(const t_hit_record *rec, const t_scene *scene,
 	nowlight = scene->lights;
 	while (nowlight)
 	{
-		shadow_factor = calculate_shadow_factor(&mod_rec.point, nowlight, \
-			scene->objects);
-		if (shadow_factor > 0.0)
 		{
-			light_dir = vec_normalize(\
-				vec_sub(nowlight->center, mod_rec.point));
-			c = color_add(c, color_scale(color_add(\
-				diffuse(nowlight, &mod_rec, &light_dir), \
-				specular(nowlight, &mod_rec, &view_dir, &light_dir)), \
-				shadow_factor));
+			t_color	shadow_c;
+			t_color	contrib;
+
+			shadow_c = calculate_shadow_color(&mod_rec.point, nowlight, \
+				scene->objects);
+			if (shadow_c.x > 0.0 || shadow_c.y > 0.0 || shadow_c.z > 0.0)
+			{
+				light_dir = vec_normalize(\
+					vec_sub(nowlight->center, mod_rec.point));
+				contrib = color_add(diffuse(nowlight, &mod_rec, &light_dir), \
+					specular(nowlight, &mod_rec, &view_dir, &light_dir));
+				c = color_add(c, color_mult(contrib, color_scale(shadow_c, 255.0)));
+			}
 		}
 		nowlight = nowlight->next;
 	}

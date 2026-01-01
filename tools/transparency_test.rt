@@ -4,7 +4,7 @@
 A 0.2 255,255,255
 
 # Camera: Positioned back and slightly up
-C 0,15,40 0,-0.1,-1 70
+C 0,5,20 0,-0.1,-1 70
 
 # Light: Top right
 L 15,20,15 0.8 255,255,255
