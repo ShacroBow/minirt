@@ -2,8 +2,8 @@
 
 static int	read_file_to_buf(const char *path, char *buf)
 {
-	int	fd;
-	int	n;
+	int		fd;
+	ssize_t	n;
 
 	fd = open(path, O_RDONLY);
 	if (fd < 0)

@@ -37,7 +37,7 @@ void	parse_sphere(t_scene *scene, char *line)
 {
 	t_object	*new_obj;
 	t_sphere	*sp;
-	int		count;
+	size_t		count;
 
 	count = ft_split_inplace(line, ' ');
 	sp = malloc(sizeof(t_sphere));
@@ -147,7 +147,7 @@ void	parse_plane(t_scene *scene, char *line)
 {
 	t_object	*new_obj;
 	t_plane		*pl;
-	int		count;
+	size_t		count;
 
 	count = ft_split_inplace(line, ' ');
 	pl = malloc(sizeof(t_plane));

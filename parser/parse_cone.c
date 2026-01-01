@@ -61,7 +61,7 @@ void	parse_cone(t_scene *scene, char *line)
 {
 	t_object	*new_obj;
 	t_cone		*co;
-	int			count;
+	size_t		count;
 
 	count = ft_split_inplace(line, ' ');
 	co = parse_cone_struct(scene, line);

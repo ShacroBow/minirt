@@ -59,7 +59,7 @@ void	lint_sphere_extra(char *line, t_scene *scene, int count)
 
 void	lint_sphere(char *line, t_scene *scene)
 {
-	int	count;
+	size_t	count;
 
 	count = ft_split_inplace(line, ' ');
 	if (count < 4 || count > 10)
@@ -97,7 +97,7 @@ static void	lint_plane_extra(char *line, t_scene *scene, int count)
 	
 void	lint_plane(char *line, t_scene *scene)
 {
-	int	count;
+	size_t	count;
 
 	count = ft_split_inplace(line, ' ');
 	if (count < 4 || count > 10)

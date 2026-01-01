@@ -13,6 +13,7 @@ static bool	has_null_byte(const char *content, ssize_t size)
 	}
 	return (false);
 }
+
 void	read_file(int fd, char *content, t_scene *scene)
 {
 	ssize_t	bytes_read;

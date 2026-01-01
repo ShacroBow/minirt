@@ -58,8 +58,8 @@ static void	pixel_block(t_program *prog, int x, int y, int color)
 		i = 0;
 		while (i < prog->pixel_step && (x + i) < WIDTH)
 		{
-			dst = prog->mlx.addr + (y + j) * prog->mlx.line_length + \
-				(x + i) * (prog->mlx.bits_per_pixel / 8);
+			dst = prog->mlx.addr + (ptrdiff_t)(y + j) * prog->mlx.line_length + \
+				(ptrdiff_t)(x + i) * (prog->mlx.bits_per_pixel / 8);
 			*(unsigned int *)dst = color;
 			i++;
 		}

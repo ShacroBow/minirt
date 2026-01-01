@@ -59,7 +59,7 @@ void	parse_cylinder(t_scene *scene, char *line)
 {
 	t_object	*new_obj;
 	t_cylinder	*cy;
-	int			count;
+	size_t		count;
 
 	count = ft_split_inplace(line, ' ');
 	cy = parse_cylinder_struct(scene, line);
