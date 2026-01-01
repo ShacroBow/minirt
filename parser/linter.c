@@ -57,17 +57,24 @@ static void	lint_loop(char *line, size_t line_count, t_scene *scene)
 	}
 }
 
+/**
+ * Validates the content of the scene file.
+ * Ensures that required elements are present and correctly formatted.
+ * 
+ * @note will clear the @p scene struct except for the content pointer
+ * before returning.
+ */
 void	lint_scene(char *file_content, size_t line_count, t_scene *scene)
 {
 	char	*saved_file_content;
 
-	saved_file_content = scene->file_content;
 	scene->line_copy = NULL;
 	lint_loop(file_content, line_count, scene);
 	if (!scene->ambient_light.is_set)
 		erorr(scene, NULL, "Error: Missing A.");
 	if (!scene->camera.is_set)
 		erorr(scene, NULL, "Error: Missing C.");
+	saved_file_content = scene->file_content;
 	ft_bzero(scene, sizeof(t_scene));
 	scene->file_content = saved_file_content;
 }
