@@ -20,20 +20,24 @@ static void	get_checker_indices(const t_hit_record *rec, double u, double v, \
 	}
 }
 
+// if (DEBUG)
+// 	printf("[DEBUG] sample_texture: obj_type=%d " \
+// "has_texture=%d bump_enabled=%d u_s=%f v_s=%f\n", \
+// rec->type, rec->obj->has_texture, rec->obj->bump_enabled, u_s, v_s);
+
 t_color	get_checker_color(const t_hit_record *rec)
 {
 	double	uv[2];
 	int		indices[2];
+	double	u_s;
+	double	v_s;
 
 	if (rec->obj && rec->obj->has_texture && rec->obj->texture)
 	{
 		if (!compute_uv(rec, &uv[0], &uv[1]))
 			return (rec->color);
-		double u_s = (uv[0] * rec->obj->uv_scale_u) - floor(uv[0] * rec->obj->uv_scale_u);
-		double v_s = (uv[1] * rec->obj->uv_scale_v) - floor(uv[1] * rec->obj->uv_scale_v);
-		// if (DEBUG)
-		// 	printf("[DEBUG] sample_texture: obj_type=%d has_texture=%d bump_enabled=%d u_s=%f v_s=%f\n",
-		// 		rec->type, rec->obj->has_texture, rec->obj->bump_enabled, u_s, v_s);
+		u_s = (uv[0] * rec->obj->scale_u) - floor(uv[0] * rec->obj->scale_u);
+		v_s = (uv[1] * rec->obj->scale_v) - floor(uv[1] * rec->obj->scale_v);
 		return (sample_texture(rec->obj->texture, u_s, v_s));
 	}
 	if (!rec->has_checkerboard)
@@ -62,4 +66,3 @@ t_color	sample_texture(const t_texture *tex, double u, double v)
 	return ((t_color){(double)tex->data[idx],
 		(double)tex->data[idx + 1], (double)tex->data[idx + 2]});
 }
-

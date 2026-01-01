@@ -34,7 +34,6 @@ t_color	trace_ray_recursive(const t_ray *ray, t_program *prog, \
 	if (hit(prog->scene->objects, ray, INFINITY, &rec))
 	{
 		update_render_stats(prog, &t_start, false);
-		/* apply centralized bump mapping (if present) before shading */
 		apply_bump(&rec, ray);
 		local = phong_shading(&rec, prog->scene, &ray->direction);
 		update_render_stats(prog, &t_start, true);

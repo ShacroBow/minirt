@@ -33,8 +33,8 @@ static t_vec3	sample_bump_normal(t_texture *tex, double u, double v, \
 	double	uv_w[2];
 	t_vec3	n;
 
-	uv_w[0] = (u * obj->uv_scale_u);
-	uv_w[1] = (v * obj->uv_scale_v);
+	uv_w[0] = (u * obj->scale_u);
+	uv_w[1] = (v * obj->scale_v);
 	uv_w[0] = uv_w[0] - floor(uv_w[0]);
 	uv_w[1] = uv_w[1] - floor(uv_w[1]);
 	c = sample_texture(tex, uv_w[0], uv_w[1]);

@@ -1,4 +1,4 @@
-NAME = minirt
+NAME = miniRT
 SRC =	main.c $(SRCS_PARSER) $(SRCS_VECTORS) $(SRCS_INTERSECTIONS) $(SRCS_RENDER) \
 		$(SRCS_UTILS) $(SRCS_CAMERA) $(SRCS_TEXTURE)
 
@@ -18,7 +18,7 @@ SRCS_TEXTURE =			texture/texture.c texture/texture_loader.c texture/texture_load
 						texture/uv_mapping.c texture/bump.c
 SRCS_UTILS =			utils/error.c utils/memory.c utils/string_utils.c utils/utils.c
 SRCS_CAMERA =			camera/camera.c camera/camera_utils.c camera/camera_creation.c \
-						camera/camera_utils2.c
+						camera/camera_utils2.c camera/camera_actions.c
 
 OBJ_DIR = ./dir/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
@@ -59,7 +59,7 @@ clean:
 	make -C $(LIBFT_PATH) clean
 
 fclean: clean
-	rm -rf $(NAME) $(NAME_BONUS) a.out $(OBJ_DIR) files.supp
+	rm -rf $(NAME) $(NAME_BONUS) a.out $(OBJ_DIR) minirt
 	make -C $(LIBFT_PATH) fclean
 
 re: fclean all

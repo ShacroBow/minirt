@@ -1,4 +1,3 @@
-
 #include "../include/minirt.h"
 
 static int	read_file_to_buf(const char *path, char *buf)
@@ -81,4 +80,3 @@ void	free_texture(t_texture *tex)
 		free(tex->data);
 	free(tex);
 }
-

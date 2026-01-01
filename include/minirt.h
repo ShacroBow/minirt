@@ -181,8 +181,8 @@ typedef struct s_object
 	bool				bump_enabled;
 	struct s_texture	*texture;
 	struct s_texture	*bump;
-	double				uv_scale_u;
-	double				uv_scale_v;
+	double				scale_u;
+	double				scale_v;
 	struct s_object		*next;
 }	t_object;
 

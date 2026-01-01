@@ -83,59 +83,18 @@ void	camera_handle_key(int keycode, t_program *prog, \
 	else if (keycode == KEY_W || keycode == KEY_S || keycode == KEY_D || \
 		keycode == KEY_A || keycode == KEY_PG_UP || keycode == KEY_PG_DOWN)
 		move_element(*is_cam, *object, prog, keycode);
-	else if (keycode == KEY_LEFT)
-		rotate_camera(cam, 0, ROT_SPEED);
-	else if (keycode == KEY_RIGHT)
-		rotate_camera(cam, 0, -ROT_SPEED);
-	else if (keycode == KEY_UP)
-		rotate_camera(cam, ROT_SPEED, 0);
-	else if (keycode == KEY_DOWN)
-		rotate_camera(cam, -ROT_SPEED, 0);
-	else if (keycode == KEY_PLUS)
-		prog->move_speed += SPEED_INCREMENT;
-	else if (keycode == KEY_MINUS && prog->move_speed > SPEED_INCREMENT)
-		prog->move_speed -= SPEED_INCREMENT;
+	else if (keycode == KEY_LEFT || keycode == KEY_RIGHT || \
+			keycode == KEY_UP || keycode == KEY_DOWN)
+		handle_camera_rotation(cam, keycode);
+	else if (keycode == KEY_PLUS || keycode == KEY_MINUS)
+		handle_speed_change(prog, keycode);
 	else if (keycode == KEY_X)
-		prog->scene->camera = prog->default_camera;	else if (keycode == KEY_B)
-	{
-		if (!*is_cam && object && *object)
-		{
-			(*object)->bump_enabled = !(*object)->bump_enabled;
-			printf("Toggled bump for selected object: now %s\n", (*object)->bump_enabled ? "ENABLED" : "DISABLED");
-		}
-	}
-	else if (keycode == KEY_4)
-	{
-		if (!*is_cam && object && *object)
-		{
-			(*object)->uv_scale_u *= 1.25;
-			printf("uv_scale_u = %f\n", (*object)->uv_scale_u);
-		}
-	}
-	else if (keycode == KEY_5)
-	{
-		if (!*is_cam && object && *object)
-		{
-			(*object)->uv_scale_u /= 1.25;
-			printf("uv_scale_u = %f\n", (*object)->uv_scale_u);
-		}
-	}
-	else if (keycode == KEY_6)
-	{
-		if (!*is_cam && object && *object)
-		{
-			(*object)->uv_scale_v *= 1.25;
-			printf("uv_scale_v = %f\n", (*object)->uv_scale_v);
-		}
-	}
-	else if (keycode == KEY_7)
-	{
-		if (!*is_cam && object && *object)
-		{
-			(*object)->uv_scale_v /= 1.25;
-			printf("uv_scale_v = %f\n", (*object)->uv_scale_v);
-		}
-	}
+		prog->scene->camera = prog->default_camera;
+	else if (keycode == KEY_B)
+		handle_bump_action(object, is_cam);
+	else if (keycode == KEY_4 || keycode == KEY_5 || \
+			keycode == KEY_6 || keycode == KEY_7)
+		handle_scaling_action(keycode, object, is_cam);
 	else if (keycode == KEY_1 || keycode == KEY_2 || keycode == KEY_O)
 		camera_keystuffing(keycode, prog, object, is_cam);
 }

@@ -40,7 +40,7 @@ t_color	handle_reflection(const t_ray *ray, t_hit_record *rec, \
 	return (color_scale(reflect, rec->reflect));
 }
 
-void	print_objects_status(const t_scene *scene)
+void	print_objects_status(const t_scene *scene) // i think just dont use this function in eval?
 {
 	const t_object *cur;
 	int i;

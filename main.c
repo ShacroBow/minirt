@@ -11,6 +11,23 @@ int	close_window(t_program *prog)
 	return (0);
 }
 
+static bool	key_changes_scene(int k)
+{
+	if (k == KEY_W || k == KEY_S || k == KEY_D || k == KEY_A)
+		return (true);
+	if (k == KEY_LEFT || k == KEY_RIGHT || k == KEY_UP || k == KEY_DOWN)
+		return (true);
+	if (k == KEY_X || k == KEY_B || k == KEY_PG_UP || k == KEY_PG_DOWN)
+		return (true);
+	if (k == KEY_4 || k == KEY_5 || k == KEY_6 || k == KEY_7)
+		return (true);
+	if (k == KEY_O || k == KEY_1 || k == KEY_2)
+		return (true);
+	if (k == XK_Return)
+		return (true);
+	return (false);
+}
+
 int	key_hook(int keycode, t_program *prog)
 {
 	static t_object		*object = NULL;
@@ -29,7 +46,8 @@ int	key_hook(int keycode, t_program *prog)
 		camera_handle_key(keycode, prog, &object, &is_cam);
 	if ((keycode == KEY_0 || keycode == KEY_3))
 		return (0);
-	render(prog);
+	if (key_changes_scene(keycode))
+		render(prog);
 	return (0);
 }
 
