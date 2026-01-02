@@ -5,14 +5,14 @@ static void	lint_unique(char *line, t_scene *scene)
 	if (ft_strncmp(line, "A ", 2) == 0)
 	{
 		if (scene->ambient_light.is_set)
-			erorr(scene, line, "Error: Duplicate Ambient.");
+			erorr(scene, NULL, "Error: Duplicate Ambient.");
 		lint_ambient(line, scene);
 		scene->ambient_light.is_set = true;
 	}
 	else if (ft_strncmp(line, "C ", 2) == 0)
 	{
 		if (scene->camera.is_set)
-			erorr(scene, line, "Error: Duplicate Camera.");
+			erorr(scene, NULL, "Error: Duplicate Camera.");
 		lint_camera(line, scene);
 		scene->camera.is_set = true;
 	}

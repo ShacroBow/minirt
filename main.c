@@ -53,7 +53,7 @@ int	key_hook(int keycode, t_program *prog)
 
 static void	init_mlx(t_program *prog)
 {
-	prog->mlx.mlx_ptr = NULL; // mlx_init();
+	prog->mlx.mlx_ptr = mlx_init();
 	if (!prog->mlx.mlx_ptr)
 		exit_cleanup(prog, "Error: Failed to initialize MiniLibX.");
 	prog->mlx.win_ptr = mlx_new_window(prog->mlx.mlx_ptr, WIDTH, HEIGHT, \

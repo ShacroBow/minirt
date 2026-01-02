@@ -55,7 +55,7 @@ bool	parse_vector(char *str, t_vec3 *vec)
 		return (false);
 	tmp_str = ft_strdup(str);
 	if (!tmp_str)
-		return ((void)!write(2, "Error: Allocation failed\n", 25), false);
+		return ((void) !write(2, "Error: Allocation failed\n", 25), false);
 	if (!split3_in_place(tmp_str, &a, &b, &c))
 	{
 		free(tmp_str);
@@ -85,27 +85,11 @@ bool	is_ignorable(const char *s)
 	return (s[i] == '\0' || s[i] == '#');
 }
 
-void    validate_object_extra_args(t_object *obj, t_scene *scene,
-            const char *name)
+void	validate_object_extra_args(t_object *obj, t_scene *scene,
+			const char *name)
 {
-    if (obj->has_checkerboard && obj->has_texture)
-        obj->checker_enabled = false;
-    if (obj->has_bump && !obj->has_texture)
-        erorrf(scene, NULL, name, " bump map without texture.");
-}
-
-double	compute_uv_scale(double size_m, int tex_dim_pixels)
-{
-	if (tex_dim_pixels <= 0)
-		return (1.0);
-	/* Adjusted heuristic to reduce excessive repeats for typical textures.
-	   Use a larger divisor so a 512px texture on a ~1m object doesn't repeat
-	   many times by default. Also allow scales < 1.0 so textures can stretch
-	   when appropriate, but clamp to a small positive lower bound. */
-	// double scale = size_m * (double)tex_dim_pixels / 1000.0;
-	// if (scale < 0.25)
-	// 	return (0.25);
-	(void)size_m;
-	double scale = 0.4;
-	return (scale);
+	if (obj->has_checkerboard && obj->has_texture)
+		obj->checker_enabled = false;
+	if (obj->has_bump && !obj->has_texture)
+		erorrf(scene, NULL, name, " bump map without texture.");
 }

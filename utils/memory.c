@@ -27,7 +27,7 @@ static void	free_objects(t_object *objects)
 			free_texture(current->texture);
 		if (current->has_bump)
 			free_texture(current->bump);
-        free(current->name);
+		free(current->name);
 		free(current->shape_data);
 		free(current);
 		current = next;

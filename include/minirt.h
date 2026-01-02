@@ -270,15 +270,17 @@ void		read_file(int fd, char *content, t_scene *scene);
 void		lint_scene(char *file_content, size_t line_count, t_scene *scene);
 bool		is_ignorable(const char *s);
 void		validate_object_extra_args(t_object *obj, t_scene *scene,
-            	const char *name);
+				const char *name);
 
 /* Linter Arg Validation */
-void	    validate_reflectivity(char *str, t_scene *scene, const char *obj_name);
-void	    validate_checker_color(char *str, t_scene *scene, const char *obj_name);
-void        validate_texture(char *str, t_scene *scene, const char *obj_name);
-void        validate_bumpmap(char *str, t_scene *scene, const char *obj_name);
-void        validate_u_scale(char *str, t_scene *scene, const char *obj_name);
-void        validate_v_scale(char *str, t_scene *scene, const char *obj_name);
+void		validate_reflectivity(char *str, t_scene *scene,
+				const char *obj_name);
+void		validate_checker_color(char *str, t_scene *scene,
+				const char *obj_name);
+void		validate_texture(char *str, t_scene *scene, const char *obj_name);
+void		validate_bumpmap(char *str, t_scene *scene, const char *obj_name);
+void		validate_u_scale(char *str, t_scene *scene, const char *obj_name);
+void		validate_v_scale(char *str, t_scene *scene, const char *obj_name);
 void		check_arg(char *arg, char **valid_args, t_scene *scene,
 				const char *obj_name);
 
@@ -403,7 +405,7 @@ NR void		exit_cleanup(t_program *prog, const char *message);
 void		cleanup(t_program *prog);
 void		free_scene(t_scene *scene);
 NR void		erorr(t_scene *scene, void *ptr, const char *message);
-NR void		erorrf(t_scene *scene, void *ptr,const char *f,
+NR void		erorrf(t_scene *scene, void *ptr, const char *f,
 				const char *message);
 bool		has_extension(const char *filename, const char *ext);
 
@@ -417,7 +419,6 @@ t_color		sample_texture(const t_texture *tex, double u, double v);
 int			ppm_header(const char *s, int *i, int *w, int *h);
 double		clamp01(double x);
 int			compute_uv(const t_hit_record *rec, double *u, double *v);
-double		compute_uv_scale(double size_m, int tex_dim_pixels);
 /* Bump mapping */
 void		apply_bump(t_hit_record *rec, const t_ray *ray);
 

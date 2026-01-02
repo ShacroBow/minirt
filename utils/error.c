@@ -24,11 +24,14 @@ void	erorr(t_scene *scene, void *ptr, const char *message)
 	exit(EXIT_FAILURE);
 }
 
-void    erorrf(t_scene *scene, void *ptr, const char *f, const char *message)
+void	erorrf(t_scene *scene, void *ptr, const char *f, const char *message)
 {
-    (void)!write(2, "Error: ", 7);
-    (void)!write(2, f, ft_strlen(f));
-    erorr(scene, ptr, message);
+	if (f)
+	{
+		(void)!write(2, "Error: ", 7);
+		(void)!write(2, f, ft_strlen(f));
+	}
+	erorr(scene, ptr, message);
 }
 
 void	cleanup(t_program *prog)

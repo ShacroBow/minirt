@@ -1,8 +1,7 @@
 #include "../include/minirt.h"
 
-static void	init_cone_obj(t_object *obj, t_cone *co)
+static void	init_cone_obj(t_object *obj, t_cone *co, t_scene *scene)
 {
-	ft_bzero(obj, sizeof(t_object));
 	obj->type = CONE;
 	obj->shape_data = co;
 	obj->reflectivity = 0.0;
@@ -10,15 +9,15 @@ static void	init_cone_obj(t_object *obj, t_cone *co)
 	obj->scale_v = 1.0;
 	obj->name = ft_strdup("Cone");
 	if (!obj->name)
-		erorr(NULL, NULL, "Error: allocation failed.\n");
+		erorr(scene, NULL, "Error: allocation failed.");
 }
 
 static void	parse_cone_struct(char *line, t_cone *co, t_scene *scene)
 {
-	if (parse_vector(index_split(line, 1), &co->center)
-		|| parse_vector(index_split(line, 2), &co->normal))
-		erorr(scene, NULL, "Error parsing vector\n");
-	co->normal = vec_normalize(co->normal); // DON'T WE ALREADY DECLINE NORMALS THAT ARE NOT NORMALIZED IN LINTING ??????
+	if (!parse_vector(index_split(line, 1), &co->center)
+		|| !parse_vector(index_split(line, 2), &co->normal))
+		erorr(scene, NULL, "Error parsing vector cone");
+	co->normal = vec_normalize(co->normal);
 	co->diameter = ft_atof(index_split(line, 3));
 	co->height = ft_atof(index_split(line, 4));
 	co->apex = vec_add(co->center, \
@@ -27,14 +26,16 @@ static void	parse_cone_struct(char *line, t_cone *co, t_scene *scene)
 		vec_mult(co->normal, co->height / 2));
 }
 
-static void	parse_cone_extra_args(char *line, size_t count, t_object *obj, t_scene *scene)
+static void	parse_cone_extra_args(char *line, size_t count, t_object *obj,
+				t_scene *scene)
 {
-	size_t  i;
+	size_t	i;
+	char	*arg;
 
 	i = CONE_MIN_ARGS;
 	while (i < count)
 	{
-		char *arg = index_split(line, i);
+		arg = index_split(line, i);
 		if (ft_strncmp(arg, "r=", 2) == 0)
 			parse_reflectivity(arg + 2, obj, scene);
 		else if (ft_strncmp(arg, "ch=", 3) == 0)
@@ -61,15 +62,16 @@ void	parse_cone(t_scene *scene, char *line)
 	count = ft_split_inplace(line, ' ');
 	co = malloc(sizeof(t_cone));
 	if (!co)
-		erorr(scene, NULL, "Error: Allocation failed.\n");
+		erorr(scene, NULL, "Error: Allocation failed.");
 	new_obj = malloc(sizeof(t_object));
 	if (!new_obj)
-		erorr(scene, co, "Error: Allocation failed.\n");
+		erorr(scene, co, "Error: Allocation failed.");
+	ft_bzero(new_obj, sizeof(t_object));
 	add_object(scene, new_obj);
-	init_cone_obj(new_obj, co);
+	init_cone_obj(new_obj, co, scene);
 	parse_cone_struct(line, co, scene);
-	if (parse_vector(index_split(line, 5), &new_obj->color))
-		erorr(scene, NULL, "Error parsing color\n");
+	if (!parse_vector(index_split(line, 5), &new_obj->color))
+		erorr(scene, NULL, "Error parsing color");
 	if (count > CONE_MIN_ARGS)
 		parse_cone_extra_args(line, count, new_obj, scene);
 }

@@ -4,14 +4,16 @@ static void	lint_plane_extra(char *line, t_scene *scene, size_t count)
 {
 	size_t	i;
 	char	*arg;
-	char	*valid_args[5];
+	char	*valid_args[7];
 
 	i = 4;
 	valid_args[0] = "r=";
 	valid_args[1] = "ch=";
 	valid_args[2] = "tx=";
 	valid_args[3] = "bump=";
-	valid_args[4] = NULL;
+	valid_args[4] = "u=";
+	valid_args[5] = "v=";
+	valid_args[6] = NULL;
 	while (i < count)
 	{
 		arg = index_split(line, i);
