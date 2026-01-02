@@ -85,7 +85,7 @@ void	camera_handle_key(int keycode, t_program *prog, \
 		move_element(*is_cam, *object, prog, keycode);
 	else if (keycode == KEY_LEFT || keycode == KEY_RIGHT || \
 			keycode == KEY_UP || keycode == KEY_DOWN)
-		handle_camera_rotation(cam, keycode);
+		handle_arrow_keys(*is_cam, *object, cam, keycode);
 	else if (keycode == KEY_PLUS || keycode == KEY_MINUS)
 		handle_speed_change(prog, keycode);
 	else if (keycode == KEY_X)

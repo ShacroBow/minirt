@@ -22,7 +22,8 @@ void		move_element(int is_cam, t_object *object, t_program *prog, \
 						int keycode);
 void		camera_keystuffing(int keycode, t_program *prog, \
 								t_object **object, int *is_cam);
-void		handle_camera_rotation(t_camera *cam, int keycode);
+void		handle_arrow_keys(int is_cam, t_object *object, t_camera *cam,
+				int keycode);
 void		handle_speed_change(t_program *prog, int keycode);
 void		handle_bump_action(t_object **object, int *is_cam);
 void		handle_scaling_action(int keycode, t_object **object, int *is_cam);

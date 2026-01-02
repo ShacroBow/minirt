@@ -347,6 +347,7 @@ t_vec3		cone_coeffs(const t_cone *cy, const t_ray *ray);
 bool		quadratic(double a, double b, double c, double *t);
 
 /* --- Render --- */
+double		clamp(double value, double min, double max);
 int			color_to_int(t_color color);
 void		render(t_program *prog);
 t_color		trace_ray(const t_ray *ray, t_program *prog);

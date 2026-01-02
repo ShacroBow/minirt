@@ -1,15 +1,30 @@
 #include "../include/minirt.h"
 
-void	handle_camera_rotation(t_camera *cam, int keycode)
+void	handle_arrow_keys(int is_cam, t_object *object, t_camera *cam,
+			int keycode)
 {
-	if (keycode == KEY_LEFT)
-		rotate_camera(cam, 0, ROT_SPEED);
-	else if (keycode == KEY_RIGHT)
-		rotate_camera(cam, 0, -ROT_SPEED);
-	else if (keycode == KEY_UP)
-		rotate_camera(cam, ROT_SPEED, 0);
-	else if (keycode == KEY_DOWN)
-		rotate_camera(cam, -ROT_SPEED, 0);
+	if (is_cam)
+	{
+		if (keycode == KEY_LEFT)
+			rotate_camera(cam, 0, ROT_SPEED);
+		else if (keycode == KEY_RIGHT)
+			rotate_camera(cam, 0, -ROT_SPEED);
+		else if (keycode == KEY_UP)
+			rotate_camera(cam, ROT_SPEED, 0);
+		else if (keycode == KEY_DOWN)
+			rotate_camera(cam, -ROT_SPEED, 0);
+	}
+	else
+	{
+		if (keycode == KEY_UP)
+			scale_object_hor(object, 0.2);
+		else if (keycode == KEY_DOWN)
+			scale_object_hor(object, -0.2);
+		else if (keycode == KEY_RIGHT)
+			scale_object_ver(object, 0.2);
+		else if (keycode == KEY_LEFT)
+			scale_object_ver(object, -0.2);
+	}
 }
 
 void	handle_speed_change(t_program *prog, int keycode)

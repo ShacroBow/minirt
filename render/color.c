@@ -1,6 +1,6 @@
 #include "../include/minirt.h"
 
-static double	clamp(double value, double min, double max)
+double	clamp(double value, double min, double max)
 {
 	if (value < min)
 		return (min);
