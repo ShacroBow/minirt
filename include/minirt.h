@@ -41,8 +41,8 @@
 # include <stddef.h>
 
 /* --- Constants (single source of truth) --- */
-# define WIDTH 512  // 1024
-# define HEIGHT 512 // 768
+# define WIDTH 1920  // 1024
+# define HEIGHT 1080 // 768
 # define EPSILON 1e-6 // 0.000001
 # define FILE_SIZE 4096 // scene.rt
 # define TEXTURE_FILE_SIZE 4000000 // texture.ppm
@@ -194,6 +194,7 @@ typedef struct s_object
 	double				scale_u;
 	double				scale_v;
 	struct s_object		*next;
+	struct s_object		*prev;
 }	t_object;
 
 /* Texture structure (PPM loader) */
@@ -228,6 +229,7 @@ typedef struct s_scene
 	t_camera		camera;
 	t_light			*lights;
 	t_object		*objects;
+	t_object		*objects_last;
 	char			*file_content;
 	char			*line_copy;
 }	t_scene;
@@ -237,6 +239,10 @@ typedef struct s_mlx_data
 	void	*mlx_ptr;
 	void	*win_ptr;
 	void	*img_ptr;
+	bool	tab_active;
+	void	*tab_img_ptr;
+	void	*tab_img_addr;
+	int		tab_line_length;
 	char	*addr;
 	int		bits_per_pixel;
 	int		line_length;

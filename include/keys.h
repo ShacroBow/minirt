@@ -58,6 +58,7 @@
 #  define KEY_RIGHT		XK_Right //65363
 
 //ADDITIONAL STUFF
+#  define KEY_TAB		XK_Tab //65289
 #  define KEY_PLUS		XK_equal //61
 #  define KEY_MINUS		XK_minus //45
 #  define KEY_SPACE		XK_space //32

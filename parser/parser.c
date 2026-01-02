@@ -50,6 +50,22 @@ static void	read_scene_content(const char *filename, t_scene *scene)
 	read_file(fd, scene->file_content, scene);
 }
 
+void	set_objects_prevs(t_scene **scene)
+{
+	t_object	*object;
+	t_object	*prev;
+
+	object = (*scene)->objects;
+	prev = NULL;
+	while (object)
+	{
+		object->prev = prev;
+		prev = object;
+		object = object->next;
+	}
+	(*scene)->objects_last = prev;
+}
+
 void	parse_scene(const char *filename, t_scene **scene)
 {
 	size_t		line_count;
@@ -62,4 +78,5 @@ void	parse_scene(const char *filename, t_scene **scene)
 	line_count = ft_split_inplace((*scene)->file_content, '\n');
 	lint_scene((*scene)->file_content, line_count, *scene);
 	parse_loop((*scene)->file_content, line_count, *scene);
+	set_objects_prevs(scene);
 }
