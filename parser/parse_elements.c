@@ -43,7 +43,7 @@ void	parse_light(t_scene *scene, char *line)
 		erorr(scene, nlight, "Error: Allocation failed.");
 	ft_bzero(obj, sizeof(t_object));
 	add_light(scene, nlight);
-	add_object(scene, obj);	
+	add_object(scene, obj);
 	init_light_obj(scene, obj, nlight);
 	if (!parse_vector(index_split(line, 1), &nlight->center)
 		|| !parse_vector(index_split(line, 3), &nlight->color))
