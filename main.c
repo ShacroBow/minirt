@@ -17,13 +17,13 @@ static bool	key_changes_scene(int k)
 		return (true);
 	if (k == KEY_LEFT || k == KEY_RIGHT || k == KEY_UP || k == KEY_DOWN)
 		return (true);
-	if (k == KEY_X || k == KEY_B || k == KEY_PG_UP || k == KEY_PG_DOWN)
+	if (k == KEY_X || k == KEY_SPACE || k == KEY_PG_UP || k == KEY_PG_DOWN)
 		return (true);
 	if (k == KEY_4 || k == KEY_5 || k == KEY_6 || k == KEY_7)
 		return (true);
 	if (k == KEY_O || k == KEY_1 || k == KEY_2)
 		return (true);
-	if (k == XK_Return)
+	if (k == KEY_9)
 		return (true);
 	return (false);
 }
