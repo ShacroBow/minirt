@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   texture.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kmashkoo <kmashkoo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/02 18:17:43 by kmashkoo          #+#    #+#             */
+/*   Updated: 2026/01/02 18:17:44 by kmashkoo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minirt.h"
 
 static void	get_checker_indices(const t_hit_record *rec, double u, double v, \
@@ -19,11 +31,6 @@ static void	get_checker_indices(const t_hit_record *rec, double u, double v, \
 		indices[1] = floor(v * 2);
 	}
 }
-
-// if (DEBUG)
-// 	printf("[DEBUG] sample_texture: obj_type=%d " 
-// "has_texture=%d bump_enabled=%d u_s=%f v_s=%f\n", 
-// rec->type, rec->obj->has_texture, rec->obj->bump_enabled, u_s, v_s);
 
 t_color	get_checker_color(const t_hit_record *rec)
 {

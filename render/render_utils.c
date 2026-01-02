@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kmashkoo <kmashkoo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/02 18:17:07 by kmashkoo          #+#    #+#             */
+/*   Updated: 2026/01/02 18:17:11 by kmashkoo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minirt.h"
 
 double	fast_rand(unsigned long *seed)
@@ -20,7 +32,6 @@ t_ray	create_ray(const t_camera *cam, double u, double v)
 	r.direction = vec_normalize(r.direction);
 	return (r);
 }
-// normalize not necessary. r.direction = vec_normalize(r.direction);
 
 t_color	get_aa_sample(t_render_ctx *ctx, int x, int y)
 {

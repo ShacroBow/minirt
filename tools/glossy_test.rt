@@ -36,7 +36,7 @@ cy 0,12,-5 1,0,0 1.5 22 180,180,180
 # --- The Altar ---
 
 # Altar Base (Dark Stone Cylinder)
-cy 0,1,2 0,1,0 6 2 60,60,60 0.5
+cy 0,1,2 0,1,0 6 2 60,60,60 r=0.5
 
 # The Orb (Glowing Cyan Sphere - High Reflectivity)
-sp 0,4,2 4 0,255,255 0.7
+sp 0,4,2 4 0,255,255 r=0.7

@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minirt.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kmashkoo <kmashkoo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/02 18:15:31 by kmashkoo          #+#    #+#             */
+/*   Updated: 2026/01/02 18:15:32 by kmashkoo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINIRT_H
 # define MINIRT_H
 
 // # define _GNU_SOURCE //M_PI macro (only for vscode c/c++ extension)
-# define M_PI 3.14159265358979323846264338327950288 //unneeded.
+//# define M_PI 3.14159265358979323846264338327950288 //unneeded.
 # define DEBUG 1
 
 # define NR _Noreturn
@@ -41,8 +53,8 @@
 # include <stddef.h>
 
 /* --- Constants (single source of truth) --- */
-# define WIDTH 512  // 1024
-# define HEIGHT 512 // 768
+# define WIDTH 255  // 1024
+# define HEIGHT 255 // 768
 # define EPSILON 1e-6 // 0.000001
 # define FILE_SIZE 4096 // scene.rt
 # define TEXTURE_FILE_SIZE 4000000 // texture.ppm
@@ -51,7 +63,7 @@
 # define MOVE_SPEED_BASE 0.4
 # define SHININESS 32.0
 # define GRID 3 //for render_utils
-# define INV_GRID 0.33333333333333 //for render_utils
+# define INV_GRID 0.3333333333333333333333333333 //for render_utils
 # define SPHERE_MIN_ARGS 4
 # define PLANE_MIN_ARGS 4
 # define CYLINDER_MIN_ARGS 6
@@ -66,7 +78,7 @@
 
 # define ENABLE_BG 1
 
-# define ENABLE_REFLECTIONS 0
+# define ENABLE_REFLECTIONS 1
 # define MAX_REFLECTION_DEPTH 1
 
 # define ENABLE_PIXEL_STEP 1 //downscaling

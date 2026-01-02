@@ -10,12 +10,12 @@ C 1,0,-2.5 0,0,1 90
 L 0,4,-1 0.2 255,255,255
 
 # 6 planes forming a unit cube centered at origin with highly reflective walls
-pl 3.5,0,0 -1,0,0 65,65,65 0.6
-pl -3.5,0,0 1,0,0 65,65,65 0.6
-pl 0,10,0 0,-1,0 170,190,170 0.1
-pl 0,-1.5,0 0,1,0 170,190,170 0.1
-pl 0,0,3.5 0,0,-1 65,65,65 0.6
-pl 0,0,-3.5 0,0,1 65,65,65 0.6
+pl 3.5,0,0 -1,0,0 65,65,65 r=0.6
+pl -3.5,0,0 1,0,0 65,65,65 r=0.6
+pl 0,10,0 0,-1,0 170,190,170 r=0.1
+pl 0,-1.5,0 0,1,0 170,190,170 r=0.1
+pl 0,0,3.5 0,0,-1 65,65,65 r=0.6
+pl 0,0,-3.5 0,0,1 65,65,65 r=0.6
 
 # A bunch of spheres placed at the exact same position (center of the cube)
 # Each has the same center; this intentionally creates overlapping objects
