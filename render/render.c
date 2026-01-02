@@ -1,6 +1,6 @@
 #include "../include/minirt.h"
 
-static void	debug_progress(t_program *prog, int y)
+void	debug_progress(t_program *prog, int y)
 {
 	long		current_time;
 	long		elapsed_ms;
@@ -29,8 +29,8 @@ t_color	trace_ray_recursive(const t_ray *ray, t_program *prog, \
 	t_color			local;
 	long			t_start;
 
-	if (DEBUG)
-		prog->ray_count++;
+	if (DEBUG && g_thread_stats)
+		g_thread_stats->ray_count++;
 	if (DEBUG)
 		t_start = get_time_us();
 	if (hit(prog->scene->objects, ray, INFINITY, &rec))
@@ -56,7 +56,7 @@ t_color	trace_ray_recursive(const t_ray *ray, t_program *prog, \
 	return (bg_color_from_dir(prog->scene, &ray->direction));
 }
 
-static void	pixel_block(t_program *prog, int x, int y, int color)
+void	pixel_block(t_program *prog, int x, int y, int color)
 {
 	int		i;
 	int		j;
@@ -89,26 +89,14 @@ t_color	trace_ray(const t_ray *ray, t_program *prog)
 
 void	render(t_program *prog)
 {
-	int				x;
-	int				y;
-	int				every_while;
 	t_render_ctx	ctx;
 
 	init_render_utils(prog, &ctx);
-	y = 0;
-	every_while = HEIGHT / 100;
-	while (y < HEIGHT)
-	{
-		x = 0;
-		if (DEBUG)
-			debug_progress(prog, y);
-		while (x < WIDTH)
-		{
-			pixel_block(prog, x, y, color_to_int(render_pixel(&ctx, x, y)));
-			x += prog->pixel_step;
-		}
-		y += prog->pixel_step;
-	}
+	if (DEBUG)
+		prog->render_start_time = get_time_us();
+	launch_render_threads(prog, &ctx);
+	if (DEBUG)
+		debug_progress(prog, HEIGHT - 1);
 	mlx_put_image_to_window(prog->mlx.mlx_ptr, prog->mlx.win_ptr, \
-							prog->mlx.img_ptr, 0, 0);
+								prog->mlx.img_ptr, 0, 0);
 }

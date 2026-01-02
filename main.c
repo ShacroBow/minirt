@@ -78,6 +78,7 @@ int	main(int argc, char **argv)
 	t_program	prog;
 
 	ft_bzero(&prog, sizeof(t_program));
+	init_threading(&prog);
 	if (argc != 2)
 		exit_cleanup(&prog, "Usage: ./miniRT <scene_file.rt>");
 	if (!has_extension(argv[1], ".rt"))

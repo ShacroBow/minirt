@@ -18,14 +18,17 @@ long	get_time_us(void)
 
 void	update_render_stats(t_program *prog, long *t_start, bool is_shading)
 {
-	if (DEBUG)
-	{
-		if (is_shading)
-			prog->shading_time += (get_time_us() - *t_start);
-		else
-			prog->intersect_time += (get_time_us() - *t_start);
-		*t_start = get_time_us();
-	}
+	long	delta;
+
+	(void)prog;
+	if (!DEBUG || !g_thread_stats)
+		return ;
+	delta = get_time_us() - *t_start;
+	if (is_shading)
+		g_thread_stats->shading_time += delta;
+	else
+		g_thread_stats->intersect_time += delta;
+	*t_start = get_time_us();
 }
 
 t_color	handle_reflection(const t_ray *ray, t_hit_record *rec, \

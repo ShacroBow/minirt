@@ -26,6 +26,11 @@ void	erorr(t_scene *scene, void *ptr, const char *message)
 
 void	cleanup(t_program *prog)
 {
+	if (prog->threads > 0)
+	{
+		pthread_mutex_destroy(&prog->work_mutex);
+		pthread_mutex_destroy(&prog->stats_mutex);
+	}
 	if (prog->mlx.img_ptr)
 		mlx_destroy_image(prog->mlx.mlx_ptr, prog->mlx.img_ptr);
 	if (prog->mlx.win_ptr)

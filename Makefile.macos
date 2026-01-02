@@ -13,7 +13,8 @@ SRCS_INTERSECTIONS =	intersections/hit_sphere.c intersections/hit_plane.c \
 						intersections/hit_cone2.c intersections/intersections.c
 SRCS_RENDER =			render/render.c render/render_utils.c render/shading.c \
 						render/shading_utils.c render/color_ops.c render/color.c \
-						render/background.c render/bump.c render/shadows.c
+					render/background.c render/bump.c render/shadows.c \
+					render/render_threads.c
 SRCS_TEXTURE =			texture/texture.c texture/texture_loader.c texture/texture_loader_utils.c \
 						texture/uv_mapping.c
 SRCS_UTILS =			utils/error.c utils/memory.c utils/string_utils.c utils/utils.c
@@ -29,8 +30,8 @@ DEPS_BONUS = $(OBJ_BONUS:.o=.d)
 LIBFT_PATH = ./libft/
 LIBFT = libft.a
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -O3 -flto -march=native -g -I./include -I./.mlx_macos
-LIBFLAGS = -L. $(LIBFT_PATH)$(LIBFT) -lmlx -lm
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -O3 -flto -march=native -g -I./include -I./.mlx_macos -pthread
+LIBFLAGS = -L. $(LIBFT_PATH)$(LIBFT) -lmlx -lm -pthread
 
 MLX_MAC_PATH = ./.mlx_macos/
 MLX_MAC = libmlx.dylib

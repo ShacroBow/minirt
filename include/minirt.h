@@ -33,6 +33,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 # include <mlx.h>
+# include <pthread.h>
 # include "../libft/libft.h"
 # include "keys.h"
 # include "camera.h"
@@ -41,8 +42,8 @@
 # include <stddef.h>
 
 /* --- Constants (single source of truth) --- */
-# define WIDTH 512  // 1024
-# define HEIGHT 512 // 768
+# define WIDTH 1024  // 1024
+# define HEIGHT 768 // 768
 # define EPSILON 1e-6 // 0.000001
 # define FILE_SIZE 4096 // scene.rt
 # define TEXTURE_FILE_SIZE 4000000 // texture.ppm
@@ -64,17 +65,17 @@
 
 # define ENABLE_REFLECTIONS 1
 # define ENABLE_TRANSPARENCY 1
-# define MAX_DEPTH 2
+# define MAX_DEPTH 10
 
 # define ENABLE_SOFT_SHADOWS 1
-# define SOFT_SHADOW_SAMPLES 3
-# define LIGHT_RADIUS 3
+# define SOFT_SHADOW_SAMPLES 15
+# define LIGHT_RADIUS 1.6
 
 /* Soft shadow transmission through transparent objects */
 # define ENABLE_TINTED_SHADOWS 1
 # define ENABLE_BEER_LAMBERT 1
-# define SHADOW_ABSORPTION_STRENGTH 0.04
-# define SHADOW_TINT_INTENSITY 0.4
+# define SHADOW_ABSORPTION_STRENGTH 0.14
+# define SHADOW_TINT_INTENSITY 0.6
 
 
 # define ENABLE_PIXEL_STEP 1 //downscaling
@@ -82,7 +83,7 @@
 # define PIXEL_STEP_MAX 100
 # define PIXEL_STEP_MIN 1
 
-# define ROT_SPEED 0.4
+# define ROT_SPEED 0.2
 
 /* --- Core Data Structures --- */
 
@@ -234,6 +235,13 @@ typedef struct s_hit_record
 	bool			front_face;
 }	t_hit_record;
 
+typedef struct s_render_stats
+{
+	long	ray_count;
+	long	shading_time;
+	long	intersect_time;
+}	t_render_stats;
+
 /* Main Scene/Program Structure */
 typedef struct s_scene
 {
@@ -270,6 +278,10 @@ typedef struct s_program
 	long		ray_count;
 	long		shading_time;
 	long		intersect_time;
+	int		threads;
+	int		next_line;
+	pthread_mutex_t	work_mutex;
+	pthread_mutex_t	stats_mutex;
 }	t_program;
 
 /* --- Function Prototypes --- */
@@ -360,6 +372,7 @@ t_color		trace_ray_recursive(const t_ray *ray, t_program *prog, int depth);
 t_color		handle_transparency(const t_ray *ray, t_hit_record *rec, \
 								t_program *prog, int depth);
 t_color		get_checker_color(const t_hit_record *rec);
+void			debug_progress(t_program *prog, int y);
 /* Texture loader / sampler (PPM, clamp behaviour) */
 t_texture	*load_ppm(const char *path);
 void		free_texture(t_texture *tex);
@@ -374,7 +387,13 @@ typedef struct s_render_ctx
 	double		inv_w;
 	double		inv_h;
 	double		inv_aa_samples;
+	t_render_stats	*stats;
 }	t_render_ctx;
+
+void			pixel_block(t_program *prog, int x, int y, int color);
+void			init_threading(t_program *prog);
+void			launch_render_threads(t_program *prog, t_render_ctx *ctx);
+extern __thread t_render_stats	*g_thread_stats;
 
 long		get_time_ms(void);
 long		get_time_us(void);
@@ -382,11 +401,11 @@ double		fast_rand(unsigned long *seed);
 t_color		get_aa_sample(t_render_ctx *ctx, int x, int y);
 t_color		render_pixel(t_render_ctx *ctx, int x, int y);
 void		init_render_utils(t_program *prog, t_render_ctx *ctx);
+
 void		update_render_stats(t_program *prog, long *t_start, \
 								bool is_shading);
 t_color		handle_reflection(const t_ray *ray, t_hit_record *rec, \
 				t_program *prog, int depth);
-t_color		trace_ray_recursive(const t_ray *ray, t_program *prog, int depth);
 
 /* Shading / Rays */
 t_color		phong_shading(const t_hit_record *rec, const t_scene *scene, \
