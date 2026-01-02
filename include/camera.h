@@ -27,4 +27,6 @@ void		handle_arrow_keys(int is_cam, t_object *object, t_camera *cam,
 void		handle_speed_change(t_program *prog, int keycode);
 void		handle_bump_action(t_object **object, int *is_cam);
 void		handle_scaling_action(int keycode, t_object **object, int *is_cam);
+void		scale_object_hor(t_object *object, double amount);
+void		scale_object_ver(t_object *object, double amount);
 #endif
