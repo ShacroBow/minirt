@@ -13,7 +13,8 @@ void    parse_checker_color(char *str, t_object *obj, t_scene *scene)
 	{
 		obj->has_checkerboard = true;
 		obj->checker_enabled = true;
-		parse_vector(str, &obj->checker_color);
+		if (parse_vector(str, &obj->checker_color))
+			erorrf(scene, NULL, NULL, "Error\n");
 	}
 	else
 		erorrf(scene, NULL, obj->name, " checker color or texture invalid.");

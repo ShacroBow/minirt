@@ -31,7 +31,7 @@ DEPS_BONUS = $(OBJ_BONUS:.o=.d)
 LIBFT_PATH = ./libft/
 LIBFT = libft.a
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -O3 -flto -march=native -g -I./include -I./.mlx_macos
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -O0 -flto -march=native -g -I./include -I./.mlx_macos
 LIBFLAGS = -L. $(LIBFT_PATH)$(LIBFT) -lmlx -lm
 
 MLX_MAC_PATH = ./.mlx_macos/

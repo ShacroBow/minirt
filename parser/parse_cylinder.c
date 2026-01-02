@@ -1,6 +1,6 @@
 #include "../include/minirt.h"
 
-static void	init_cylinder_obj(t_object *obj, t_cylinder *cy)
+static void	init_cylinder_obj(t_object *obj, t_cylinder *cy, t_scene *scene)
 {
 	ft_bzero(obj, sizeof(t_object));
 	obj->type = CYLINDER;
@@ -10,13 +10,14 @@ static void	init_cylinder_obj(t_object *obj, t_cylinder *cy)
 	obj->scale_v = 1.0;
 	obj->name = ft_strdup("Cylinder");
 	if (!obj->name)
-		erorr(NULL, cy, "Error: allocation failed.\n"); // COULD BE TROUBLE FREEING cy HERE ???!!!!!!!!! double free?
+		erorr(scene, NULL, "Error: allocation failed.\n");
 }
 
-static void	parse_cylinder_struct(char *line, t_cylinder *cy)
+static void	parse_cylinder_struct(char *line, t_cylinder *cy, t_scene *scene)
 {
-	parse_vector(index_split(line, 1), &cy->center);
-	parse_vector(index_split(line, 2), &cy->normal);
+	if (parse_vector(index_split(line, 1), &cy->center)
+		|| parse_vector(index_split(line, 2), &cy->normal))
+		erorr(scene, NULL, "Error parsing vector\n");
 	cy->normal = vec_normalize(cy->normal);
 	cy->diameter = ft_atof(index_split(line, 3));
 	cy->height = ft_atof(index_split(line, 4));
@@ -60,10 +61,11 @@ void	parse_cylinder(t_scene *scene, char *line)
 	new_obj = malloc(sizeof(t_object));
 	if (!new_obj)
 		erorr(scene, cy, "Error: Allocation failed.\n");
-	init_cylinder_obj(new_obj, cy);
 	add_object(scene, new_obj);
-	parse_cylinder_struct(line, cy);
-	parse_vector(index_split(line, 5), &new_obj->color);
+	init_cylinder_obj(new_obj, cy, scene);
+	parse_cylinder_struct(line, cy, scene);
+	if (parse_vector(index_split(line, 5), &new_obj->color))
+		erorr(scene, NULL, "Error parsing color\n");
 	if (count > CYLINDER_MIN_ARGS)
 		parse_cylinder_extra_args(line, count, new_obj, scene);
 }

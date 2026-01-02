@@ -1,6 +1,6 @@
 #include "../include/minirt.h"
 
-static void	init_plane_obj(t_object *obj, t_plane *pl)
+static void	init_plane_obj(t_object *obj, t_plane *pl, t_scene *scene)
 {
 	ft_bzero(obj, sizeof(t_object));
 	obj->type = PLANE;
@@ -10,7 +10,7 @@ static void	init_plane_obj(t_object *obj, t_plane *pl)
 	obj->scale_v = 1.0;
 	obj->name = ft_strdup("Plane");
 	if (!obj->name)
-		erorr(NULL, pl, "Error: allocation failed.\n");
+		erorr(scene, NULL, "Error: allocation failed.\n");
 }
 
 static void	parse_plane_extra_args(char *line, size_t count, t_object *obj, t_scene *scene)
@@ -51,11 +51,12 @@ void	parse_plane(t_scene *scene, char *line)
 	new_obj = malloc(sizeof(t_object));
 	if (!new_obj)
 		erorr(scene, pl, "Error: allocation failed.\n");
-	init_plane_obj(new_obj, pl);
 	add_object(scene, new_obj);
-	parse_vector(index_split(line, 1), &pl->point);
-	parse_vector(index_split(line, 2), &pl->normal);
-	parse_vector(index_split(line, 3), &new_obj->color);
+	init_plane_obj(new_obj, pl, scene);
+	if (parse_vector(index_split(line, 1), &pl->point)
+		|| parse_vector(index_split(line, 2), &pl->normal)
+		|| parse_vector(index_split(line, 3), &new_obj->color))
+		erorr(scene, NULL, NULL);
 	if (count > PLANE_MIN_ARGS)
 		parse_plane_extra_args(line, count, new_obj, scene);
 }

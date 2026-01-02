@@ -31,7 +31,7 @@ DEPS_BONUS = $(OBJ_BONUS:.o=.d)
 LIBFT_PATH = ./libft/
 LIBFT = libft.a
 CC = cc #-fsanitize=address,bounds,undefined,float-divide-by-zero
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -I./include -g -O3 -flto -march=native
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -I./include -g -O0 -flto -march=native
 LIBFLAGS = -L. $(LIBFT_PATH)$(LIBFT) -lmlx -lX11 -lXext -lm
 
 

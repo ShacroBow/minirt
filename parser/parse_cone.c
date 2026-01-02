@@ -1,18 +1,5 @@
 #include "../include/minirt.h"
 
-static void	parse_cone_struct(char *line, t_cone *co)
-{
-	parse_vector(index_split(line, 1), &co->center);
-	parse_vector(index_split(line, 2), &co->normal);
-	co->normal = vec_normalize(co->normal); // DON'T WE ALREADY DECLINE NORMALS THAT ARE NOT NORMALIZED IN LINTING ??????
-	co->diameter = ft_atof(index_split(line, 3));
-	co->height = ft_atof(index_split(line, 4));
-	co->apex = vec_add(co->center, \
-		vec_mult(co->normal, co->height / 2));
-	co->center = vec_sub(co->center, \
-		vec_mult(co->normal, co->height / 2));
-}
-
 static void	init_cone_obj(t_object *obj, t_cone *co)
 {
 	ft_bzero(obj, sizeof(t_object));
@@ -23,7 +10,21 @@ static void	init_cone_obj(t_object *obj, t_cone *co)
 	obj->scale_v = 1.0;
 	obj->name = ft_strdup("Cone");
 	if (!obj->name)
-		erorr(NULL, co, "Error: allocation failed.\n");
+		erorr(NULL, NULL, "Error: allocation failed.\n");
+}
+
+static void	parse_cone_struct(char *line, t_cone *co, t_scene *scene)
+{
+	if (parse_vector(index_split(line, 1), &co->center)
+		|| parse_vector(index_split(line, 2), &co->normal))
+		erorr(scene, NULL, "Error parsing vector\n");
+	co->normal = vec_normalize(co->normal); // DON'T WE ALREADY DECLINE NORMALS THAT ARE NOT NORMALIZED IN LINTING ??????
+	co->diameter = ft_atof(index_split(line, 3));
+	co->height = ft_atof(index_split(line, 4));
+	co->apex = vec_add(co->center, \
+		vec_mult(co->normal, co->height / 2));
+	co->center = vec_sub(co->center, \
+		vec_mult(co->normal, co->height / 2));
 }
 
 static void	parse_cone_extra_args(char *line, size_t count, t_object *obj, t_scene *scene)
@@ -64,10 +65,11 @@ void	parse_cone(t_scene *scene, char *line)
 	new_obj = malloc(sizeof(t_object));
 	if (!new_obj)
 		erorr(scene, co, "Error: Allocation failed.\n");
-	init_cone_obj(new_obj, co);
 	add_object(scene, new_obj);
-	parse_cone_struct(line, co);
-	parse_vector(index_split(line, 5), &new_obj->color);
+	init_cone_obj(new_obj, co);
+	parse_cone_struct(line, co, scene);
+	if (parse_vector(index_split(line, 5), &new_obj->color))
+		erorr(scene, NULL, "Error parsing color\n");
 	if (count > CONE_MIN_ARGS)
 		parse_cone_extra_args(line, count, new_obj, scene);
 }

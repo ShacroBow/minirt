@@ -1,6 +1,6 @@
 #include "../include/minirt.h"
 
-static void	init_sphere_obj(t_object *obj, t_sphere *sp)
+static void	init_sphere_obj(t_object *obj, t_sphere *sp, t_scene *scene)
 {
 	ft_bzero(obj, sizeof(t_object));
 	obj->type = SPHERE;
@@ -10,10 +10,11 @@ static void	init_sphere_obj(t_object *obj, t_sphere *sp)
 	obj->scale_v = 1.0;
 	obj->name = ft_strdup("Sphere");
 	if (!obj->name)
-		erorr(NULL, sp, "Error: allocation failed.\n");
+		erorr(scene, NULL, "Error: allocation failed.\n");
 }
 
-static void	parse_sphere_extra_args(char *line, size_t count, t_object *obj, t_scene *scene)
+static void	parse_sphere_extra_args(char *line, size_t count, t_object *obj,
+				t_scene *scene)
 {
 	size_t  i;
 
@@ -51,11 +52,12 @@ void	parse_sphere(t_scene *scene, char *line)
 	new_obj = malloc(sizeof(t_object));
 	if (!new_obj)
 		erorr(scene, sp, "Error: allocation failed.\n");
-	init_sphere_obj(new_obj, sp);
 	add_object(scene, new_obj);
-	parse_vector(index_split(line, 1), &sp->center);
+	init_sphere_obj(new_obj, sp, scene);
+	if (parse_vector(index_split(line, 1), &sp->center)
+		|| parse_vector(index_split(line, 3), &new_obj->color))
+		erorr(scene, NULL, NULL);
 	sp->diameter = ft_atof(index_split(line, 2));
-	parse_vector(index_split(line, 3), &new_obj->color);
 	if (count > SPHERE_MIN_ARGS)
 		parse_sphere_extra_args(line, count, new_obj, scene);
 }

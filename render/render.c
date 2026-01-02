@@ -11,10 +11,10 @@ static void	debug_progress(t_program *prog, int y)
 	{
 		current_time = get_time_us();
 		elapsed_ms = (current_time - prog->render_start_time) / 1000;
-		// printf("\r[DEBUG] Progress: %2d%% | Rays: %7ld | Total: %4ldms | "\
-		// 	"Shading: %3ldms | Intersect: %3ldms", (y * 100) / HEIGHT,
-		// 	prog->ray_count, elapsed_ms, prog->shading_time / 1000,
-		// 	prog->intersect_time / 1000);
+		printf("\r[DEBUG] Progress: %2d%% | Rays: %7ld | Total: %4ldms | "\
+			"Shading: %3ldms | Intersect: %3ldms", (y * 100) / HEIGHT,
+			prog->ray_count, elapsed_ms, prog->shading_time / 1000,
+			prog->intersect_time / 1000);
 	}
 	if (y == HEIGHT - 1)
 		printf("\n");

@@ -23,9 +23,9 @@ static void	free_objects(t_object *objects)
 	while (current)
 	{
 		next = current->next;
-		if (current->has_texture && current->texture)
+		if (current->has_texture)
 			free_texture(current->texture);
-		if (current->has_bump && current->bump)
+		if (current->has_bump)
 			free_texture(current->bump);
         free(current->name);
 		free(current->shape_data);
