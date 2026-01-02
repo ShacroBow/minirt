@@ -33,7 +33,6 @@ run_test() {
         echo -e "${RED}FAILED${NC} (Program did not exit with error)"
         echo "Output:" >> $LOG_FILE
         echo "$output" >> $LOG_FILE
-		pwd
         return 1
     fi
 
@@ -55,6 +54,32 @@ run_test() {
         echo "$output" >> $LOG_FILE
         return 1
     fi
+}
+
+run_success_test() {
+    local file=$1
+    local desc=$2
+
+    echo -n "Testing: $desc ... "
+
+    output=$($VALGRIND $MINIRT "$file" 2>&1)
+    exit_code=$?
+
+    if [ $exit_code -eq 42 ]; then
+        echo -e "${RED}MEMORY LEAK DETECTED${NC}"
+        echo "Valgrind Output for $desc:" >> $LOG_FILE
+        echo "$output" >> $LOG_FILE
+        return 1
+    fi
+
+    if [ $exit_code -ne 0 ]; then
+        echo -e "${RED}FAILED${NC} (Program exited with error)"
+        echo "Output:" >> $LOG_FILE
+        echo "$output" >> $LOG_FILE
+        return 1
+    fi
+
+    echo -e "${GREEN}PASSED${NC}"
 }
 
 # --- 1. File Errors ---
@@ -174,6 +199,25 @@ run_test "test.rt" "Plane: Invalid normal" "Error: Plane normal invalid."
 echo "pl 0,0,0 0,1,0 255,0,300" > test.rt
 run_test "test.rt" "Plane: Invalid color" "Error: Plane color invalid."
 
+# --- Cone Errors ---
+echo "co 0,0,0 0,0,1" > test.rt
+run_test "test.rt" "Cone: Missing args" "Error: Cone args count."
+
+echo "co 0,0,0 0,1,0 2 3 255,0,0 extra extra extra extra extra extra extra" > test.rt
+run_test "test.rt" "Cone: Extra args" "Error: Cone args count."
+
+echo "co 0,0,0 0,2,0 2 3 255,0,0" > test.rt
+run_test "test.rt" "Cone: Invalid normal" "Error: Cone normal invalid."
+
+echo "co 0,0,0 0,1,0 -2 3 255,0,0" > test.rt
+run_test "test.rt" "Cone: Negative diameter" "Error: Cone diameter invalid."
+
+echo "co 0,0,0 0,1,0 2 -3 255,0,0" > test.rt
+run_test "test.rt" "Cone: Negative height" "Error: Cone height invalid."
+
+echo "co 0,0,0 0,1,0 2 3 300,0,0" > test.rt
+run_test "test.rt" "Cone: Invalid color" "Error: Cone color invalid."
+
 # --- Cylinder Errors ---
 echo "cy 0,0,0" > test.rt
 run_test "test.rt" "Cylinder: Missing args" "Error: Cylinder args count."
@@ -192,6 +236,28 @@ run_test "test.rt" "Cylinder: Negative height" "Error: Cylinder height invalid."
 
 echo "cy 0,0,0 0,1,0 10 20 255,0,300" > test.rt
 run_test "test.rt" "Cylinder: Invalid color" "Error: Cylinder color invalid."
+
+# --- Keypair/Extra Argument Errors ---
+echo "sp 0,0,0 2 255,0,0 unknown=1" > test.rt
+run_test "test.rt" "Keypair: Unknown key" "Error: Sphere argument invalid."
+
+echo "sp 0,0,0 2 255,0,0 r=1.5" > test.rt
+run_test "test.rt" "Keypair: Reflectivity > 1" "Error: Sphere reflectivity invalid."
+
+echo "sp 0,0,0 2 255,0,0 ch=256,0,0" > test.rt
+run_test "test.rt" "Keypair: Invalid checker color" "Error: Sphere checker color invalid."
+
+echo "sp 0,0,0 2 255,0,0 tx=image.png" > test.rt
+run_test "test.rt" "Keypair: Invalid texture extension" "Error: Sphere texture invalid."
+
+echo "sp 0,0,0 2 255,0,0 bump=texture.ppm" > test.rt
+run_test "test.rt" "Keypair: Invalid bump extension" "Error: Sphere bump map invalid."
+
+echo "sp 0,0,0 2 255,0,0 u=0" > test.rt
+run_test "test.rt" "Keypair: Zero u-scale" "Error: Sphere u scale invalid."
+
+echo "sp 0,0,0 2 255,0,0 v=-1" > test.rt
+run_test "test.rt" "Keypair: Negative v-scale" "Error: Sphere v scale invalid."
 
 # --- Scene Validation Errors ---
 # Missing Ambient
@@ -214,5 +280,8 @@ run_test "test.rt" "Vector: Multiple dots" "Error: Sphere center invalid."
 
 # Cleanup
 rm -f test.rt
+
+# --- Valid Scene Smoke Test ---
+run_success_test "tools/scene.rt" "Keypair scene loads without errors"
 
 echo -e "${YELLOW}Tests Completed. Check $LOG_FILE for details.${NC}"

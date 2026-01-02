@@ -1,5 +1,5 @@
 A 0.2 255,255,255
-C 1,1,0 0,0,-1 120
+C 1,1,0 0,0,-1 90
 
 L 0,1,1 0.3 255,255,255
 
@@ -7,12 +7,12 @@ L 0,1,1 0.3 255,255,255
 
 # Sphere with PPM texture
 # sp 0,1,0 .5 255,255,255 0
-# co 2,0,35 0,1,0 1 5 255,0,0 0 face.ppm face.bump.ppm
-cy 0,1,-1.5 0,1,0 1.5 2 255,0,0 0 face.ppm face.bump.ppm 0.8 0.8
+# co 2,0,35 0,1,0 1 5 255,0,0 r=0 tx=tools/face.ppm bump=tools/face.bump.ppm
+cy 0,1,-1.5 0,1,0 1.5 2 255,0,0 r=0 tx=tools/face.ppm bump=tools/face.bump.ppm u=2.5 v=1
 pl 0,-2,0 0,1,0 255,255,255
 pl 0,2,0 0,-1,0 255,255,255
 
-pl 0,0,-2 0,0,1 255,255,255 0 tools/texture_brick.ppm tools/texture_normal.bump.ppm
-pl 0,0,2 0,0,-1 255,255,255 0
-pl 2,0,0 -1,0,0 255,255,255 0
-pl -2,-2,0 1,0,0 255,255,255 0
+pl 0,0,-2 0,0,1 255,255,255 r=0 tx=tools/texture_brick.ppm bump=tools/texture_normal.bump.ppm
+pl 0,0,2 0,0,-1 255,255,255 r=0
+pl 2,0,0 -1,0,0 255,255,255 r=0
+pl -2,-2,0 1,0,0 255,255,255 r=0
