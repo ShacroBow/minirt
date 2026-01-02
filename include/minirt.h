@@ -134,7 +134,8 @@ typedef enum e_object_type
 	SPHERE,
 	PLANE,
 	CYLINDER,
-	CONE
+	CONE,
+	LIGHT
 }	t_object_type;
 
 typedef struct s_sphere

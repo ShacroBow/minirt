@@ -12,6 +12,8 @@ static void	debug_helper(int *is_cam, t_object **object)
 		printf("selected PLANE\n");
 	else if (*object && (*object)->type == CONE)
 		printf("selected CONE\n");
+	else if (*object && (*object)->type == LIGHT)
+		printf("selected LIGHT\n");
 }
 
 void	select_element(int *is_cam, t_object **object, int keycode, \
@@ -57,6 +59,11 @@ void	move_object(t_object *object, t_vec3 direction, double speed)
 			vec_add(((t_cone *)object->shape_data)->center, move);
 		((t_cone *)object->shape_data)->apex = \
 			vec_add(((t_cone *)object->shape_data)->apex, move);
+	}
+	else if (object->type == LIGHT)
+	{
+		((t_light *)object->shape_data)->center = \
+			vec_add(((t_cone *)object->shape_data)->center, move);
 	}
 }
 
