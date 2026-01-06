@@ -30,9 +30,11 @@ DEPS_BONUS = $(OBJ_BONUS:.o=.d)
 
 LIBFT_PATH = ./libft/
 LIBFT = libft.a
+MLX_PATH = ./.mlx_linux/
+MLX = libmlx.a
 CC = cc #-fsanitize=address,bounds,undefined,float-divide-by-zero
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -I./include -g -O0 -flto -march=native
-LIBFLAGS = -L. $(LIBFT_PATH)$(LIBFT) -lmlx -lX11 -lXext -lm
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -I./include -I$(MLX_PATH) -g -O3 -flto -march=native
+LIBFLAGS = -L$(LIBFT_PATH) -lft -L$(MLX_PATH) -lmlx -lX11 -lXext -lm
 
 
 all: $(NAME)

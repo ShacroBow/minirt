@@ -30,18 +30,17 @@ DEPS_BONUS = $(OBJ_BONUS:.o=.d)
 
 LIBFT_PATH = ./libft/
 LIBFT = libft.a
+MLX_PATH = ./.mlx_macos/
+MLX = libmlx.dylib
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -O0 -flto -march=native -g -I./include -I./.mlx_macos
-LIBFLAGS = -L. $(LIBFT_PATH)$(LIBFT) -lmlx -lm
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -O3 -flto -march=native -g -I./include -I$(MLX_PATH)
+LIBFLAGS = -L$(LIBFT_PATH) -lft -L$(MLX_PATH) -lmlx -framework OpenGL -framework AppKit -lm
 
-MLX_MAC_PATH = ./.mlx_macos/
-MLX_MAC = libmlx.dylib
-
-all: $(MLX_MAC) $(NAME)
+all: $(NAME)
 
 #bonus: $(NAME_BONUS)
 
-$(NAME): $(OBJ_DIR) $(OBJ) $(LIBFT_PATH)$(LIBFT)
+$(NAME): $(OBJ_DIR) $(OBJ) $(LIBFT_PATH)$(LIBFT) $(MLX_PATH)$(MLX)
 	$(CC) $(OBJ) $(CFLAGS) -o $(NAME) $(LIBFLAGS)
 
 $(NAME_BONUS): $(OBJ_DIR) $(OBJ_BONUS) $(LIBFT_PATH)$(LIBFT)
@@ -55,11 +54,10 @@ $(OBJ_DIR):
 	mkdir -p $@
 
 $(LIBFT_PATH)$(LIBFT):
-	make -C $(LIBFT_PATH) all -j8
+	make -C $(LIBFT_PATH) all -j
 
-$(MLX_MAC):
-	make -C $(MLX_MAC_PATH)
-	mv $(MLX_MAC_PATH)$(MLX_MAC) .
+$(MLX_PATH)$(MLX):
+	make -C $(MLX_PATH)
 
 clean:
 	rm -rf $(OBJ) $(DEPS)
@@ -68,8 +66,7 @@ clean:
 	make -C $(MLX_MAC_PATH) clean
 
 fclean: clean
-	rm -rf $(NAME) $(NAME_BONUS) a.out $(OBJ_DIR) files.supp $(MLX_MAC)
-	make -C $(LIBFT_PATH) fclean
+	rm -rf $(NAME) $(NAME_BONUS) a.out $(OBJ_DIR) minirt
 
 re: fclean all
 

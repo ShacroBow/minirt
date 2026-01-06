@@ -5,27 +5,28 @@
 # define M_PI 3.14159265358979323846264338327950288 //unneeded.
 # define DEBUG 1
 
-# define NR _Noreturn
-// # ifndef NORETURN
-// #  if defined(__cplusplus)
-// #   ifdef __has_cpp_attribute
-// #    if __has_cpp_attribute(noreturn)
-// #     define NORETURN [[noreturn]]
-// #    endif
-// #   endif
-// #  else
-// #   ifdef __has_c_attribute
-// #    if __has_c_attribute(noreturn)
-// #     define NORETURN [[noreturn]]
-// #    endif
-// #   endif
-// #  endif
-// #  if defined(__GNUC__) || defined(__clang__)
-// #   define NORETURN __attribute__((noreturn))
-// #  else
-// #   define NORETURN
-// #  endif
-// # endif
+# ifndef NR // this whole thing is for scan-build from clang.
+#  if defined(__cplusplus)
+#   ifdef __has_cpp_attribute
+#    if __has_cpp_attribute(noreturn)
+#     define NR [[noreturn]]
+#    endif
+#   endif
+#  else
+#   ifdef __has_c_attribute
+#    if __has_c_attribute(noreturn)
+#     define NR [[noreturn]]
+#    endif
+#   endif
+#  endif
+#  ifndef NR
+#   if defined(__GNUC__) || defined(__clang__)
+#    define NR __attribute__((noreturn))
+#   else
+#    define NR _Noreturn
+#   endif
+#  endif
+# endif
 
 # include <stdlib.h>
 # include <stdbool.h>
@@ -41,8 +42,8 @@
 # include <stddef.h>
 
 /* --- Constants (single source of truth) --- */
-# define WIDTH 512  // 1024
-# define HEIGHT 512 // 768
+# define WIDTH 1024  // 1024
+# define HEIGHT 768 // 768
 # define EPSILON 1e-6 // 0.000001
 # define FILE_SIZE 4096 // scene.rt
 # define TEXTURE_FILE_SIZE 4000000 // texture.ppm
@@ -59,14 +60,14 @@
 
 /* Could be made changable while running */
 # define ENABLE_AA 0
-# define AA_SAMPLES 8
+# define AA_SAMPLES 32
 
 # define ENABLE_GAMMA 1
 # define DISPLAY_GAMMA 0.6
 
 # define ENABLE_BG 1
 
-# define ENABLE_REFLECTIONS 0
+# define ENABLE_REFLECTIONS 1
 # define MAX_REFLECTION_DEPTH 1
 
 # define ENABLE_PIXEL_STEP 1 //downscaling
