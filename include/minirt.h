@@ -33,7 +33,7 @@
 # include <math.h>
 # include <fcntl.h>
 # include <unistd.h>
-# include <mlx.h>
+# include "mlx.h"
 # include "../libft/libft.h"
 # include "keys.h"
 # include "camera.h"

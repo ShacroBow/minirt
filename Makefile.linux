@@ -32,7 +32,7 @@ LIBFT_PATH = ./libft/
 LIBFT = libft.a
 MLX_PATH = ./.mlx_linux/
 MLX = libmlx.a
-CC = cc #-fsanitize=address,bounds,undefined,float-divide-by-zero
+CC = cc -std=gnu11 #-fsanitize=address,bounds,undefined,float-divide-by-zero
 CFLAGS = -Wall -Wextra -Werror -MMD -MP -I./include -I$(MLX_PATH) -g -O3 -flto -march=native
 LIBFLAGS = -L$(LIBFT_PATH) -lft -L$(MLX_PATH) -lmlx -lX11 -lXext -lm
 
@@ -41,7 +41,7 @@ all: $(NAME)
 
 #bonus: $(NAME_BONUS)
 
-$(NAME): $(OBJ_DIR) $(OBJ) $(LIBFT_PATH)$(LIBFT)
+$(NAME): $(OBJ_DIR) $(OBJ) $(LIBFT_PATH)$(LIBFT) $(MLX_PATH)$(MLX)
 	$(CC) $(OBJ) $(CFLAGS) -o $(NAME) $(LIBFLAGS)
 
 $(NAME_BONUS): $(OBJ_DIR) $(OBJ_BONUS) $(LIBFT_PATH)$(LIBFT)
@@ -57,10 +57,14 @@ $(OBJ_DIR):
 $(LIBFT_PATH)$(LIBFT):
 	make -C $(LIBFT_PATH) all -j
 
+$(MLX_PATH)$(MLX):
+	make -C $(MLX_PATH)
+
 clean:
 	rm -rf $(OBJ) $(DEPS)
 	rm -rf $(OBJ_BONUS) $(DEPS_BONUS)
 	make -C $(LIBFT_PATH) clean
+	make -C $(MLX_PATH) clean
 
 fclean: clean
 	rm -rf $(NAME) $(NAME_BONUS) a.out $(OBJ_DIR) minirt
