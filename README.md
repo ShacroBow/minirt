@@ -122,6 +122,16 @@ Check `tools/` for scene files:
 
 to see transparancy and soft shadows + tinted shadows git switch into the experimental branch.
 
+## Screenshots
+
+<div style="display:flex; flex-wrap:wrap; gap:12px;">
+	<img src="tools/Screenshot%20from%202026-01-02%2018-37-48.png" alt="Render 2026-01-02 18:37:48" width="48%">
+	<img src="tools/Screenshot%20from%202026-01-02%2018-31-21.png" alt="Render 2026-01-02 18:31:21" width="48%">
+	<img src="tools/Screenshot%20from%202026-01-02%2018-27-52.png" alt="Render 2026-01-02 18:27:52" width="48%">
+	<img src="tools/Screenshot%20from%202026-01-02%2001-07-40.png" alt="Render 2026-01-02 01:07:40" width="48%">
+	<img src="tools/Screenshot%20from%202026-01-01%2023-13-24.png" alt="Render 2026-01-01 23:13:24" width="48%">
+</div>
+
 ### your own textures.
 Textures need to be PPM format. Use ImageMagick to convert:
 ```bash
