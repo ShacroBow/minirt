@@ -31,15 +31,6 @@ sudo apt-get install build-essential libx11-dev libxext-dev
 make
 ```
 
-If you did not clone recursively, initialize the submodule once:
-```bash
-git submodule update --init --recursive
-```
-To update it later:
-```bash
-git submodule update --remote --merge .mlx_linux
-```
-
 ### macOS
 ```bash
 xcode-select --install
