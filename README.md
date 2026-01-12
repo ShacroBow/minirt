@@ -16,10 +16,28 @@ Ray tracer in C. Renders spheres, planes, cylinders, and cones with textures, re
 
 ## Building
 
+### First time
+```bash
+git clone --recursive <repo-url>
+```
+If you already cloned without `--recursive`, run once:
+```bash
+git submodule update --init --recursive
+```
+
 ### Linux
 ```bash
 sudo apt-get install build-essential libx11-dev libxext-dev
 make
+```
+
+If you did not clone recursively, initialize the submodule once:
+```bash
+git submodule update --init --recursive
+```
+To update it later:
+```bash
+git submodule update --remote --merge .mlx_linux
 ```
 
 ### macOS
