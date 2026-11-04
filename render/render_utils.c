@@ -72,6 +72,7 @@ void	init_render_utils(t_program *prog, t_render_ctx *ctx)
 	ctx->inv_w = 1.0 / (double)WIDTH;
 	ctx->inv_h = 1.0 / (double)HEIGHT;
 	ctx->inv_aa_samples = 1.0 / (double)AA_SAMPLES;
+	ctx->stats = NULL;
 	if (DEBUG)
 	{
 		prog->ray_count = 0;

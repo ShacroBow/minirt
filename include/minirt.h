@@ -33,6 +33,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 # include <mlx.h>
+# include <pthread.h>
 # include "../libft/libft.h"
 # include "keys.h"
 # include "camera.h"
@@ -41,14 +42,14 @@
 # include <stddef.h>
 
 /* --- Constants (single source of truth) --- */
-# define WIDTH 512  // 1024
-# define HEIGHT 512 // 768
+# define WIDTH 1024  // 1024
+# define HEIGHT 768 // 768
 # define EPSILON 1e-6 // 0.000001
 # define FILE_SIZE 4096 // scene.rt
 # define TEXTURE_FILE_SIZE 4000000 // texture.ppm
 # define WIN_TITLE "minirt"
 # define SPEED_INCREMENT 0.2
-# define MOVE_SPEED_BASE 0.4
+# define MOVE_SPEED_BASE 0.8
 # define SHININESS 32.0
 # define GRID 3 //for render_utils
 # define INV_GRID 0.33333333333333 //for render_utils
@@ -59,15 +60,27 @@
 
 /* Could be made changable while running */
 # define ENABLE_AA 0
-# define AA_SAMPLES 8
+# define AA_SAMPLES 32
 
 # define ENABLE_GAMMA 1
 # define DISPLAY_GAMMA 0.6
 
 # define ENABLE_BG 1
 
-# define ENABLE_REFLECTIONS 0
-# define MAX_REFLECTION_DEPTH 1
+# define ENABLE_REFLECTIONS 1
+# define ENABLE_TRANSPARENCY 1
+# define MAX_DEPTH 10
+
+# define ENABLE_SOFT_SHADOWS 1
+# define SOFT_SHADOW_SAMPLES 15
+# define LIGHT_RADIUS 1.6
+
+/* Soft shadow transmission through transparent objects */
+# define ENABLE_TINTED_SHADOWS 1
+# define ENABLE_BEER_LAMBERT 1
+# define SHADOW_ABSORPTION_STRENGTH 0.14
+# define SHADOW_TINT_INTENSITY 0.6
+
 
 # define ENABLE_PIXEL_STEP 1 //downscaling
 # define PIXEL_STEP_INC 1
@@ -88,6 +101,11 @@ typedef struct s_vec3
 
 typedef t_vec3	t_point;
 typedef t_vec3	t_color;
+
+/* --- Color Ops --- */
+t_color		color_add(t_color c1, t_color c2);
+t_color		color_mult(t_color c1, t_color c2);
+t_color		color_scale(t_color c, double scalar);
 
 /* Ray */
 typedef struct s_ray
@@ -183,6 +201,8 @@ typedef struct s_object
 	t_color				color;
 	bool				reflectivity_enabled;
 	double				reflectivity;
+	double				transparency;
+	double				refractive_index;
 	bool				has_checkerboard;
 	bool				checker_enabled;
 	t_color				checker_color;
@@ -213,6 +233,8 @@ typedef struct s_hit_record
 	t_vec3			normal;
 	t_color			color;
 	double			reflect;
+	double			transparency;
+	double			refractive_index;
 	bool			has_checkerboard;
 	t_color			checker_color;
 	int				type;
@@ -221,6 +243,13 @@ typedef struct s_hit_record
 	double			t;
 	bool			front_face;
 }	t_hit_record;
+
+typedef struct s_render_stats
+{
+	long	ray_count;
+	long	shading_time;
+	long	intersect_time;
+}	t_render_stats;
 
 /* Main Scene/Program Structure */
 typedef struct s_scene
@@ -258,6 +287,10 @@ typedef struct s_program
 	long		ray_count;
 	long		shading_time;
 	long		intersect_time;
+	int		threads;
+	int		next_line;
+	pthread_mutex_t	work_mutex;
+	pthread_mutex_t	stats_mutex;
 }	t_program;
 
 /* --- Function Prototypes --- */
@@ -330,11 +363,22 @@ double		vec_lensqrt(t_vec3 v);
 double		vec_len(t_vec3 v);
 t_vec3		vec_normalize(t_vec3 v);
 t_vec3		vec_reflect(t_vec3 v, t_vec3 n);
+t_vec3		vec_refract(t_vec3 uv, t_vec3 n, double etai_over_etat);
+double		schlick(double cosine, double ref_idx);
+double		vec_len_squared(t_vec3 v);
 
 /* --- Intersections --- */
 bool		hit(const t_object *world, const t_ray *ray, double t_max, \
 				t_hit_record *rec);
 bool		hit_any(const t_object *world, const t_ray *ray, double t_max);
+bool		hit_any_cached(const t_object *world, const t_ray *ray, \
+				double t_max, const t_object **cache);
+
+double		shadow_transmittance(const t_object *world, const t_ray *ray, \
+				double t_max);
+
+t_color		shadow_transmittance_color(const t_object *world, const t_ray *ray, \
+				double t_max);
 bool		hit_sphere(const t_sphere *sp, const t_ray *ray, double t_max, \
 				t_hit_record *rec);
 bool		hit_plane(const t_plane *pl, const t_ray *ray, double t_max, \
@@ -351,7 +395,11 @@ double		clamp(double value, double min, double max);
 int			color_to_int(t_color color);
 void		render(t_program *prog);
 t_color		trace_ray(const t_ray *ray, t_program *prog);
+t_color		trace_ray_recursive(const t_ray *ray, t_program *prog, int depth);
+t_color		handle_transparency(const t_ray *ray, t_hit_record *rec, \
+								t_program *prog, int depth);
 t_color		get_checker_color(const t_hit_record *rec);
+void			debug_progress(t_program *prog, int y);
 /* Texture loader / sampler (PPM, clamp behaviour) */
 t_texture	*load_ppm(const char *path);
 void		free_texture(t_texture *tex);
@@ -366,7 +414,13 @@ typedef struct s_render_ctx
 	double		inv_w;
 	double		inv_h;
 	double		inv_aa_samples;
+	t_render_stats	*stats;
 }	t_render_ctx;
+
+void			pixel_block(t_program *prog, int x, int y, int color);
+void			init_threading(t_program *prog);
+void			launch_render_threads(t_program *prog, t_render_ctx *ctx);
+extern __thread t_render_stats	*g_thread_stats;
 
 long		get_time_ms(void);
 long		get_time_us(void);
@@ -374,14 +428,16 @@ double		fast_rand(unsigned long *seed);
 t_color		get_aa_sample(t_render_ctx *ctx, int x, int y);
 t_color		render_pixel(t_render_ctx *ctx, int x, int y);
 void		init_render_utils(t_program *prog, t_render_ctx *ctx);
+
 void		update_render_stats(t_program *prog, long *t_start, \
 								bool is_shading);
 t_color		handle_reflection(const t_ray *ray, t_hit_record *rec, \
 				t_program *prog, int depth);
-t_color		trace_ray_recursive(const t_ray *ray, t_program *prog, int depth);
 
 /* Shading / Rays */
 t_color		phong_shading(const t_hit_record *rec, const t_scene *scene, \
+						const t_vec3 *ray_dir);
+t_color		get_specular_only(const t_hit_record *rec, const t_scene *scene, \
 						const t_vec3 *ray_dir);
 t_ray		create_ray(const t_camera *cam, double u, double v);
 
@@ -410,6 +466,11 @@ NR void		erorr(t_scene *scene, void *ptr, const char *message);
 NR void		erorrf(t_scene *scene, void *ptr, const char *f,
 				const char *message);
 bool		has_extension(const char *filename, const char *ext);
+bool		is_valid_float(char *str);
+bool		check_color_fmt(char *str);
+bool		check_vector_fmt(char *str);
+bool		check_normalized(char *str);
+bool		check_range(double val, double min, double max);
 
 /* Debug helpers */
 void		print_objects_status(const t_scene *scene);
