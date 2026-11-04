@@ -92,9 +92,10 @@ void	render(t_program *prog)
 	t_render_ctx	ctx;
 
 	init_render_utils(prog, &ctx);
+	prog->scene->progressive = false;
 	if (DEBUG)
 		prog->render_start_time = get_time_us();
-	launch_render_threads(prog, &ctx);
+	launch_render_threads(prog, &ctx, 0, HEIGHT);
 	if (DEBUG)
 		debug_progress(prog, HEIGHT - 1);
 	mlx_put_image_to_window(prog->mlx.mlx_ptr, prog->mlx.win_ptr, \

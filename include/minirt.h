@@ -89,6 +89,13 @@
 
 # define ROT_SPEED 0.2
 
+/* Progressive rendering: one sample per pixel per pass, averaged while
+** nothing moves. A pass is split into bands of rows of about
+** FRAME_BUDGET_MS each so key presses stay responsive. */
+# define PROGRESSIVE_MAX_SAMPLES 1024
+# define PREVIEW_STEP 8
+# define FRAME_BUDGET_MS 40
+
 /* --- Core Data Structures --- */
 
 /* Vector / Point / Color */
@@ -266,6 +273,8 @@ typedef struct s_scene
 	t_object		*objects;
 	char			*file_content;
 	char			*line_copy;
+	bool			progressive;
+	int				sample;
 }	t_scene;
 
 typedef struct s_mlx_data
@@ -297,6 +306,13 @@ typedef struct s_program
 	int				next_line;
 	pthread_mutex_t	work_mutex;
 	pthread_mutex_t	stats_mutex;
+	int				line_end;
+	t_color			*accum;
+	int				*row_samples;
+	int				pass_row;
+	int				band;
+	bool			preview;
+	long			pass_start;
 }	t_program;
 
 /* --- Function Prototypes --- */
@@ -423,6 +439,15 @@ t_color		sample_texture(const t_texture *tex, double u, double v);
 
 /* Render utils */
 
+/* CLASSIC: full quality in one go (P key, harness). PREVIEW / ACCUM:
+** progressive passes, shown directly or averaged into prog->accum. */
+typedef enum e_render_mode
+{
+	RENDER_CLASSIC,
+	RENDER_PREVIEW,
+	RENDER_ACCUM
+}	t_render_mode;
+
 /* Render context: cache per-frame values to avoid repeated computation */
 typedef struct s_render_ctx
 {
@@ -431,11 +456,31 @@ typedef struct s_render_ctx
 	double			inv_h;
 	double			inv_aa_samples;
 	t_render_stats	*stats;
+	t_render_mode	mode;
 }	t_render_ctx;
+
+typedef struct s_thread_task
+{
+	t_program		*prog;
+	t_render_ctx	ctx;
+	t_render_stats	stats;
+}	t_thread_task;
 
 void		pixel_block(t_program *prog, int x, int y, int color);
 void		init_threading(t_program *prog);
-void		launch_render_threads(t_program *prog, t_render_ctx *ctx);
+void		launch_render_threads(t_program *prog, t_render_ctx *ctx,
+				int first, int end);
+void		progressive_init(t_program *prog);
+void		progressive_reset(t_program *prog);
+int			progressive_hook(void *param);
+void		render_preview(t_program *prog);
+void		render_band(t_program *prog);
+void		progressive_row(t_render_ctx *ctx, int y, bool accumulate);
+size_t		mix_seed(size_t h);
+size_t		pixel_seed(int x, int y, int sample);
+size_t		point_hash(const t_point *p);
+void		render_final(t_program *prog);
+double		point_random(const t_point *p, int sample);
 extern __thread t_render_stats	*g_thread_stats;
 
 long		get_time_ms(void);

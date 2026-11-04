@@ -1,10 +1,5 @@
 #include "../include/minirt.h"
 
-static t_color	mix_colors(t_color c1, t_color c2, double t)
-{
-	return (color_add(color_scale(c1, t), color_scale(c2, 1.0 - t)));
-}
-
 static void	setup_refraction(t_hit_record *rec, double *etai, t_vec3 *normal)
 {
 	*normal = rec->normal;
@@ -40,27 +35,44 @@ static t_color	calc_refraction(t_hit_record *rec, t_vec3 unit_dir, \
 	return (trace_ray_recursive(&scattered, prog, (int)rec->reflect_depth - 1));
 }
 
-t_color	handle_transparency(const t_ray *ray, t_hit_record *rec, \
-							t_program *prog, int depth)
+/**
+ * Fresnel: how much of the light is reflected (1 = total reflection).
+ */
+static double	reflect_chance(t_hit_record *rec, t_vec3 unit_dir,
+					t_vec3 *normal)
+{
+	double	etai;
+	double	cos_theta;
+
+	setup_refraction(rec, &etai, normal);
+	cos_theta = fmin(vec_dot(vec_mult(unit_dir, -1.0), *normal), 1.0);
+	if (etai * sqrt(1.0 - cos_theta * cos_theta) > 1.0)
+		return (1.0);
+	return (schlick(cos_theta, etai));
+}
+
+/**
+ * Glass: mix of the reflected and refracted ray. Progressive passes follow
+ * only one of them, picked at random with the Fresnel weight, so a ray
+ * never splits; the average over the passes gives the same mix.
+ */
+t_color	handle_transparency(const t_ray *ray, t_hit_record *rec,
+	t_program *prog, int depth)
 {
 	t_vec3	unit_dir;
-	double	etai;
 	t_vec3	normal;
-	double	cos_theta;
-	double	reflect_prob;
+	double	p;
 
 	rec->reflect_depth = depth;
 	unit_dir = vec_normalize(ray->direction);
-	setup_refraction(rec, &etai, &normal);
-	cos_theta = fmin(vec_dot(vec_mult(unit_dir, -1.0), normal), 1.0);
-	if (etai * sqrt(1.0 - cos_theta * cos_theta) > 1.0)
-		reflect_prob = 1.0;
-	else
-		reflect_prob = schlick(cos_theta, etai);
-	if (reflect_prob > 0.999)
+	p = reflect_chance(rec, unit_dir, &normal);
+	if (prog->scene->progressive)
+		p = (point_random(&rec->point, prog->scene->sample) < p);
+	if (p > 0.999)
 		return (calc_reflection(rec, unit_dir, normal, prog));
-	if (reflect_prob < 0.001)
+	if (p < 0.001)
 		return (calc_refraction(rec, unit_dir, normal, prog));
-	return (mix_colors(calc_reflection(rec, unit_dir, normal, prog), \
-			calc_refraction(rec, unit_dir, normal, prog), reflect_prob));
+	return (color_add(
+			color_scale(calc_reflection(rec, unit_dir, normal, prog), p),
+			color_scale(calc_refraction(rec, unit_dir, normal, prog), 1 - p)));
 }

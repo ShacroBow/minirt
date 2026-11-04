@@ -47,5 +47,7 @@ void	cleanup(t_program *prog)
 		mlx_destroy_window(prog->mlx.mlx_ptr, prog->mlx.win_ptr);
 	if (prog->mlx.mlx_ptr)
 		platform_destroy_mlx(prog->mlx.mlx_ptr);
+	free(prog->accum);
+	free(prog->row_samples);
 	free_scene(prog->scene);
 }

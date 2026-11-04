@@ -14,7 +14,7 @@ Ray tracer in C. Renders spheres, planes, cylinders, cones and `.obj` models wit
 - Checkerboard patterns
 - Texture mapping from PPM files
 - Bump maps
-- Anti-aliasing
+- Progressive rendering: the image refines itself while nothing moves (anti-aliasing and smooth soft shadows included)
 - Multithreaded rendering
 - Move camera and objects around in real-time
 
@@ -62,10 +62,10 @@ git submodule update --init
 - macOS: should just work.
 
 **Performance**
-- Use `1` to increase pixel size for smoother movement.
-- Use `P` only when you want a final screenshot-quality render.
+- The window shows a quick blocky preview after every change, then adds one sample per pixel per pass and averages them (up to `PROGRESSIVE_MAX_SAMPLES`, 1024). The terminal shows the samples per pixel so far.
+- Use `1` to increase pixel size if passes are too slow for your scene.
+- `P` renders one full quality frame the old way (all soft shadow samples, every glass ray split) and keeps it. On glass scenes this can take minutes.
 - Fewer lights/objects = faster.
-- Glass is the expensive part: rays split into reflection and refraction up to `MAX_DEPTH` (10) times. Lower it in `include/minirt.h` for faster previews.
 
 ## Running
 
@@ -133,8 +133,7 @@ obj tools/models/torus_knot.obj 0,1,0 3 220,80,55 r=0.25 rot=10,0,0
 
 **Rendering:**
 - `1`/`2` - decrease/increase resolution (pixel size)
-- `O` - toggle anti-aliasing (always on/off)
-- `P` - single high-quality render with AA
+- `P` - single full quality render with AA (stops the refining until something changes)
 - `Enter` - render again
 - `ESC` - quit
 

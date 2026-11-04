@@ -19,12 +19,13 @@ SRCS_RENDER			=	render/render.c render/render_utils.c render/render_threads.c \
 						render/shading.c render/shading_utils.c render/shadows.c \
 						render/specular_only.c render/transparency.c \
 						render/color_ops.c render/color.c render/background.c \
-						render/display.c
+						render/display.c render/progressive.c \
+						render/progressive_pass.c render/progressive_pixel.c
 SRCS_TEXTURE		=	texture/texture.c texture/texture_loader.c \
 						texture/texture_loader_utils.c texture/uv_mapping.c \
 						texture/bump.c
 SRCS_UTILS			=	utils/error.c utils/memory.c utils/string_utils.c \
-						utils/utils.c utils/read_file.c
+						utils/utils.c utils/read_file.c utils/random.c
 SRCS_CAMERA			=	camera/camera.c camera/camera_utils.c camera/camera_utils2.c \
 						camera/camera_creation.c camera/camera_actions.c
 SRCS_MESH			=	mesh/obj_load.c mesh/obj_read.c mesh/obj_array.c \

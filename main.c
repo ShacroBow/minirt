@@ -34,7 +34,6 @@ int	key_hook(int keycode, void *param)
 {
 	static t_object		*object = NULL;
 	static int			is_cam = 1;
-	int					tmp;
 	t_program			*prog;
 
 	prog = (t_program *)param;
@@ -42,12 +41,7 @@ int	key_hook(int keycode, void *param)
 		close_window(prog);
 	else if (keycode == KEY_P)
 	{
-		prog->aa_enabled = 1;
-		tmp = prog->pixel_step;
-		prog->pixel_step = 1;
-		render(prog);
-		prog->pixel_step = tmp;
-		prog->aa_enabled = 0;
+		render_final(prog);
 		return (0);
 	}
 	else
@@ -55,7 +49,7 @@ int	key_hook(int keycode, void *param)
 	if ((keycode == KEY_0 || keycode == KEY_3))
 		return (0);
 	if (key_changes_scene(keycode))
-		render(prog);
+		progressive_reset(prog);
 	return (0);
 }
 
@@ -99,7 +93,8 @@ int	main(int argc, char **argv)
 	mlx_hook(prog.mlx.win_ptr, 17, 0, close_window, &prog);
 	mlx_key_hook(prog.mlx.win_ptr, key_hook, &prog);
 	mlx_expose_hook(prog.mlx.win_ptr, expose_hook, &prog);
-	render(&prog);
+	progressive_init(&prog);
+	mlx_loop_hook(prog.mlx.mlx_ptr, progressive_hook, &prog);
 	mlx_loop(prog.mlx.mlx_ptr);
 	cleanup(&prog);
 	return (0);
