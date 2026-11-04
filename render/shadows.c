@@ -38,9 +38,7 @@ static t_color	shadow_filter_from_hit(const t_hit_record *rec)
 	base.x = 1.0 - tint + tint * base.x;
 	base.y = 1.0 - tint + tint * base.y;
 	base.z = 1.0 - tint + tint * base.z;
-	return ((t_color){(1.0 - alpha) + alpha * base.x,
-		(1.0 - alpha) + alpha * base.y,
-		(1.0 - alpha) + alpha * base.z});
+	return ((t_color){alpha * base.x, alpha * base.y, alpha * base.z});
 }
 
 static t_color	beer_lambert(t_color trans, double dist)
