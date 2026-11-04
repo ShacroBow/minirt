@@ -4,7 +4,7 @@ static void	lint_cylinder_extra(char *line, t_scene *scene, size_t count)
 {
 	size_t	i;
 	char	*arg;
-	char	*valid_args[7];
+	char	*valid_args[9];
 
 	i = 6;
 	valid_args[0] = "r=";
@@ -13,7 +13,9 @@ static void	lint_cylinder_extra(char *line, t_scene *scene, size_t count)
 	valid_args[3] = "bump=";
 	valid_args[4] = "u=";
 	valid_args[5] = "v=";
-	valid_args[6] = NULL;
+	valid_args[6] = "tr=";
+	valid_args[7] = "ior=";
+	valid_args[8] = NULL;
 	while (i < count)
 	{
 		arg = index_split(line, i);
@@ -27,7 +29,7 @@ void	lint_cylinder(char *line, t_scene *scene)
 	size_t	count;
 
 	count = ft_split_inplace(line, ' ');
-	if (count < 6 || count > 12)
+	if (count < 6 || count > 14)
 		erorr(scene, NULL, "Error: Cylinder args count.");
 	if (!check_vector_fmt(index_split(line, 1)))
 		erorr(scene, NULL, "Error: Cylinder center invalid.");

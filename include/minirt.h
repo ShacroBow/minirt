@@ -315,6 +315,10 @@ void		validate_texture(char *str, t_scene *scene, const char *obj_name);
 void		validate_bumpmap(char *str, t_scene *scene, const char *obj_name);
 void		validate_u_scale(char *str, t_scene *scene, const char *obj_name);
 void		validate_v_scale(char *str, t_scene *scene, const char *obj_name);
+void		validate_transparency(char *str, t_scene *scene,
+				const char *obj_name);
+void		validate_ior(char *str, t_scene *scene, const char *obj_name);
+void		validate_arg_value(char *arg, t_scene *scene, const char *obj_name);
 void		check_arg(char *arg, char **valid_args, t_scene *scene,
 				const char *obj_name);
 
@@ -347,6 +351,7 @@ void		parse_reflectivity(char *str, t_object *obj, t_scene *scene);
 void		parse_checker_color(char *str, t_object *obj, t_scene *scene);
 void		parse_texture(char *str, t_object *obj, t_scene *scene);
 void		parse_bumpmap(char *str, t_object *obj, t_scene *scene);
+void		parse_extra_arg(char *arg, t_object *obj, t_scene *scene);
 /* Parser Utils */
 bool		parse_vector(char *str, t_vec3 *vec);
 void		add_light(t_scene *scene, t_light *new_light);

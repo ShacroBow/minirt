@@ -48,18 +48,7 @@ void	check_arg(char *arg, char **valid_args, t_scene *scene,
 	{
 		if (ft_strncmp(arg, valid_args[i], ft_strlen(valid_args[i])) == 0)
 		{
-			if (ft_strncmp(arg, "r=", 2) == 0)
-				validate_reflectivity(arg + 2, scene, obj_name);
-			else if (ft_strncmp(arg, "ch=", 3) == 0)
-				validate_checker_color(arg + 3, scene, obj_name);
-			else if (ft_strncmp(arg, "tx=", 3) == 0)
-				validate_texture(arg + 3, scene, obj_name);
-			else if (ft_strncmp(arg, "bump=", 5) == 0)
-				validate_bumpmap(arg + 5, scene, obj_name);
-			else if (ft_strncmp(arg, "u=", 2) == 0)
-				validate_u_scale(arg + 2, scene, obj_name);
-			else if (ft_strncmp(arg, "v=", 2) == 0)
-				validate_v_scale(arg + 2, scene, obj_name);
+			validate_arg_value(arg, scene, obj_name);
 			return ;
 		}
 	}

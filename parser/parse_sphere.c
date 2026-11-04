@@ -7,6 +7,7 @@ static void	init_sphere_obj(t_object *obj, t_sphere *sp, t_scene *scene)
 	obj->reflectivity = 0.0;
 	obj->scale_u = 1.0;
 	obj->scale_v = 1.0;
+	obj->refractive_index = 1.5;
 	obj->name = ft_strdup("Sphere");
 	if (!obj->name)
 		erorr(scene, NULL, "Error: allocation failed.");
@@ -22,18 +23,7 @@ static void	parse_sphere_extra_args(char *line, size_t count, t_object *obj,
 	while (i < count)
 	{
 		arg = index_split(line, i);
-		if (ft_strncmp(arg, "r=", 2) == 0)
-			parse_reflectivity(arg + 2, obj, scene);
-		else if (ft_strncmp(arg, "ch=", 3) == 0)
-			parse_checker_color(arg + 3, obj, scene);
-		else if (ft_strncmp(arg, "tx=", 3) == 0)
-			parse_texture(arg + 3, obj, scene);
-		else if (ft_strncmp(arg, "bump=", 5) == 0)
-			parse_bumpmap(arg + 5, obj, scene);
-		else if (ft_strncmp(arg, "u=", 2) == 0)
-			obj->scale_u = ft_atof(arg + 2);
-		else if (ft_strncmp(arg, "v=", 2) == 0)
-			obj->scale_v = ft_atof(arg + 2);
+		parse_extra_arg(arg, obj, scene);
 		i++;
 	}
 	validate_object_extra_args(obj, scene, "Sphere");
