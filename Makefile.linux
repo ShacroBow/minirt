@@ -1,10 +1,21 @@
-# Linux: X11 based MiniLibX (minilibx-linux), installed as libmlx.a in the
-# project root or in the default library / include paths.
+# Linux: X11 based MiniLibX from the .mlx_linux git submodule
+# (git clone --recursive, or once: git submodule update --init).
+#
+# The MLX is built with -std=gnu11 too: compilers that default to C23
+# (GCC 15+) reject its old style function declarations.
 
-MLX					=
-MLX_LDLIBS			=	-L. -lmlx -lX11 -lXext
+MLX_PATH			=	.mlx_linux/
+MLX					=	$(MLX_PATH)libmlx.a
+CFLAGS				+=	-I$(MLX_PATH)
+MLX_LDLIBS			=	-L$(MLX_PATH) -lmlx -lX11 -lXext
 SRCS_PLATFORM		=	utils/platform_linux.c
 
-mlx_clean:
+$(MLX):
+	@test -f $(MLX_PATH)Makefile || { echo "$(MLX_PATH) is empty, run:" \
+		"git submodule update --init"; exit 1; }
+	$(MAKE) -C $(MLX_PATH) CC="cc -std=gnu11"
 
-mlx_fclean:
+mlx_clean:
+	@if [ -f $(MLX_PATH)Makefile ]; then $(MAKE) -C $(MLX_PATH) clean; fi
+
+mlx_fclean: mlx_clean

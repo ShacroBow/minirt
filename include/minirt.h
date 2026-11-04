@@ -5,34 +5,35 @@
 # define M_PI 3.14159265358979323846264338327950288 //unneeded.
 # define DEBUG 1
 
-# define NR _Noreturn
-// # ifndef NORETURN
-// #  if defined(__cplusplus)
-// #   ifdef __has_cpp_attribute
-// #    if __has_cpp_attribute(noreturn)
-// #     define NORETURN [[noreturn]]
-// #    endif
-// #   endif
-// #  else
-// #   ifdef __has_c_attribute
-// #    if __has_c_attribute(noreturn)
-// #     define NORETURN [[noreturn]]
-// #    endif
-// #   endif
-// #  endif
-// #  if defined(__GNUC__) || defined(__clang__)
-// #   define NORETURN __attribute__((noreturn))
-// #  else
-// #   define NORETURN
-// #  endif
-// # endif
+# ifndef NR // this whole thing is for scan-build from clang.
+#  if defined(__cplusplus)
+#   ifdef __has_cpp_attribute
+#    if __has_cpp_attribute(noreturn)
+#     define NR [[noreturn]]
+#    endif
+#   endif
+#  else
+#   ifdef __has_c_attribute
+#    if __has_c_attribute(noreturn)
+#     define NR [[noreturn]]
+#    endif
+#   endif
+#  endif
+#  ifndef NR
+#   if defined(__GNUC__) || defined(__clang__)
+#    define NR __attribute__((noreturn))
+#   else
+#    define NR _Noreturn
+#   endif
+#  endif
+# endif
 
 # include <stdlib.h>
 # include <stdbool.h>
 # include <math.h>
 # include <fcntl.h>
 # include <unistd.h>
-# include <mlx.h>
+# include "mlx.h"
 # include <pthread.h>
 # include "../libft/libft.h"
 # include "keys.h"

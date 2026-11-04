@@ -68,7 +68,7 @@ SRC					+=	$(SRCS_PLATFORM)
 OBJ					=	$(SRC:%.c=$(OBJ_DIR)%.o)
 DEPS				=	$(OBJ:.o=.d)
 
-$(NAME): $(OBJ) $(LIBFT) $(MLX)
+$(NAME): $(MLX) $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $@ $(LDLIBS) $(MLX_LDLIBS)
 
 $(OBJ_DIR)%.o: %.c

@@ -22,6 +22,8 @@ void	parse_checker_color(char *str, t_object *obj, t_scene *scene)
 
 void	parse_texture(char *str, t_object *obj, t_scene *scene)
 {
+	if (obj->texture)
+		erorrf(scene, NULL, obj->name, " multiple textures.");
 	obj->texture = load_ppm(str);
 	if (!obj->texture)
 		erorrf(scene, NULL, obj->name, " texture invalid.");
@@ -31,6 +33,8 @@ void	parse_texture(char *str, t_object *obj, t_scene *scene)
 
 void	parse_bumpmap(char *str, t_object *obj, t_scene *scene)
 {
+	if (obj->bump)
+		erorrf(scene, NULL, obj->name, " multiple textures.");
 	obj->bump = load_ppm(str);
 	if (!obj->bump)
 		erorrf(scene, NULL, obj->name, " bump texture invalid.");
