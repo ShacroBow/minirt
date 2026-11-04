@@ -1,9 +1,11 @@
 #include "include/minirt.h"
 
-int	close_window(t_program *prog)
+int	close_window(void *param)
 {
-	long	end_time;
+	t_program	*prog;
+	long		end_time;
 
+	prog = (t_program *)param;
 	end_time = get_time_ms();
 	printf("\nProgram lifetime: %ldms\n", end_time - prog->program_start_time);
 	cleanup(prog);
@@ -17,23 +19,25 @@ static bool	key_changes_scene(int k)
 		return (true);
 	if (k == KEY_LEFT || k == KEY_RIGHT || k == KEY_UP || k == KEY_DOWN)
 		return (true);
-	if (k == KEY_X || k == KEY_SPACE || k == KEY_PG_UP || k == KEY_PG_DOWN)
+	if (k == KEY_X || k == KEY_B || k == KEY_PG_UP || k == KEY_PG_DOWN)
 		return (true);
 	if (k == KEY_4 || k == KEY_5 || k == KEY_6 || k == KEY_7)
 		return (true);
 	if (k == KEY_O || k == KEY_1 || k == KEY_2)
 		return (true);
-	if (k == KEY_9)
+	if (k == KEY_ENTER)
 		return (true);
 	return (false);
 }
 
-int	key_hook(int keycode, t_program *prog)
+int	key_hook(int keycode, void *param)
 {
 	static t_object		*object = NULL;
 	static int			is_cam = 1;
 	int					tmp;
+	t_program			*prog;
 
+	prog = (t_program *)param;
 	if (keycode == KEY_ESC)
 		close_window(prog);
 	else if (keycode == KEY_P)
@@ -94,6 +98,8 @@ int	main(int argc, char **argv)
 	prog.program_start_time = get_time_ms();
 	mlx_hook(prog.mlx.win_ptr, 17, 0, close_window, &prog);
 	mlx_key_hook(prog.mlx.win_ptr, key_hook, &prog);
+	mlx_expose_hook(prog.mlx.win_ptr, expose_hook, &prog);
+	render(&prog);
 	mlx_loop(prog.mlx.mlx_ptr);
 	cleanup(&prog);
 	return (0);

@@ -394,6 +394,7 @@ bool		quadratic(double a, double b, double c, double *t);
 double		clamp(double value, double min, double max);
 int			color_to_int(t_color color);
 void		render(t_program *prog);
+int			expose_hook(void *param);
 t_color		trace_ray(const t_ray *ray, t_program *prog);
 t_color		trace_ray_recursive(const t_ray *ray, t_program *prog, int depth);
 t_color		handle_transparency(const t_ray *ray, t_hit_record *rec, \
@@ -461,6 +462,7 @@ t_color		color_gamma(t_color c, double gamma);
 /* --- Utils --- */
 NR void		exit_cleanup(t_program *prog, const char *message);
 void		cleanup(t_program *prog);
+void		platform_destroy_mlx(void *mlx_ptr);
 void		free_scene(t_scene *scene);
 NR void		erorr(t_scene *scene, void *ptr, const char *message);
 NR void		erorrf(t_scene *scene, void *ptr, const char *f,

@@ -23,8 +23,17 @@ dir/
 
 # Libraries
 libft/libft.a
+libmlx.dylib
+libmlx.a
 
-.DS_store
+# MiniLibX (macOS) build outputs, rebuilt by make
+.mlx_macos/*.o
+.mlx_macos/*.swiftmodule
+.mlx_macos/*.swiftdoc
+.mlx_macos/*.swiftsourceinfo
+.mlx_macos/*.abi.json
+
+.DS_Store
 
 .gitignore
 

@@ -90,7 +90,7 @@ void	camera_handle_key(int keycode, t_program *prog, \
 		handle_speed_change(prog, keycode);
 	else if (keycode == KEY_X)
 		prog->scene->camera = prog->default_camera;
-	else if (keycode == KEY_SPACE)
+	else if (keycode == KEY_B)
 		handle_bump_action(object, is_cam);
 	else if (keycode == KEY_4 || keycode == KEY_5 || \
 			keycode == KEY_6 || keycode == KEY_7)

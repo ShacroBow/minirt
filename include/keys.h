@@ -7,6 +7,7 @@
 
 #  define KEY_ESC		53
 #  define KEY_P			35
+#  define KEY_ENTER		36
 
 #  define KEY_PG_UP		116
 #  define KEY_PG_DOWN	121
@@ -24,6 +25,7 @@
 #  define KEY_SPACE		49
 #  define KEY_O			31
 #  define KEY_X			7
+#  define KEY_B			11
 #  define KEY_0			29
 #  define KEY_1			18
 #  define KEY_2			19
@@ -44,6 +46,7 @@
 #  define KEY_ESC		XK_Escape //65307
 #  define KEY_O			XK_o //0x006f
 #  define KEY_P			XK_p //70
+#  define KEY_ENTER		XK_Return
 
 //NAVIGATE
 #  define KEY_PG_UP		XK_Page_Up //65365
