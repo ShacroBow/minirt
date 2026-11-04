@@ -49,4 +49,6 @@ void	validate_arg_value(char *arg, t_scene *scene, const char *obj_name)
 		validate_transparency(arg + 3, scene, obj_name);
 	else if (ft_strncmp(arg, "ior=", 4) == 0)
 		validate_ior(arg + 4, scene, obj_name);
+	else if (ft_strncmp(arg, "rot=", 4) == 0)
+		validate_rotation(arg + 4, scene, obj_name);
 }

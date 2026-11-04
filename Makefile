@@ -8,7 +8,8 @@ SRCS_PARSER			=	parser/parser.c parser/parser_utils.c parser/parser_read.c \
 						parser/linter.c parser/linter_elements.c parser/linter_utils.c \
 						parser/linter_arg_validation.c parser/linter_arg_validation_2.c \
 						parser/lint_sphere.c parser/lint_plane.c \
-						parser/lint_cylinder.c parser/lint_cone.c
+						parser/lint_cylinder.c parser/lint_cone.c \
+						parser/parse_mesh.c parser/lint_mesh.c
 SRCS_VECTORS		=	vectors/vec_operations_1.c vectors/vec_operations_2.c \
 						vectors/vec_operations_3.c
 SRCS_INTERSECTIONS	=	intersections/hit_sphere.c intersections/hit_plane.c \
@@ -23,12 +24,22 @@ SRCS_TEXTURE		=	texture/texture.c texture/texture_loader.c \
 						texture/texture_loader_utils.c texture/uv_mapping.c \
 						texture/bump.c
 SRCS_UTILS			=	utils/error.c utils/memory.c utils/string_utils.c \
-						utils/utils.c
+						utils/utils.c utils/read_file.c
 SRCS_CAMERA			=	camera/camera.c camera/camera_utils.c camera/camera_utils2.c \
 						camera/camera_creation.c camera/camera_actions.c
+SRCS_MESH			=	mesh/obj_load.c mesh/obj_read.c mesh/obj_array.c \
+						mesh/obj_lex.c mesh/obj_number.c mesh/obj_parse.c \
+						mesh/obj_face.c mesh/obj_triangle.c \
+						mesh/mtl_load.c mesh/mtl_parse.c \
+						mesh/mesh_adjacency.c mesh/mesh_normals.c mesh/mesh_build.c \
+						mesh/bvh_aabb.c mesh/bvh_split.c mesh/bvh_partition.c \
+						mesh/bvh_build.c mesh/bvh_walk.c mesh/tri_hit.c \
+						mesh/mesh_hit.c mesh/mesh_shade.c mesh/mesh_transform.c \
+						mesh/mesh_free.c
 
 SRC					=	main.c $(SRCS_PARSER) $(SRCS_VECTORS) $(SRCS_INTERSECTIONS) \
-						$(SRCS_RENDER) $(SRCS_TEXTURE) $(SRCS_UTILS) $(SRCS_CAMERA)
+						$(SRCS_RENDER) $(SRCS_TEXTURE) $(SRCS_UTILS) $(SRCS_CAMERA) \
+						$(SRCS_MESH)
 
 OBJ_DIR				=	./dir/
 LIBFT_PATH			=	./libft/

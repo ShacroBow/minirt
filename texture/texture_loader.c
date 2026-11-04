@@ -1,21 +1,5 @@
 #include "../include/minirt.h"
 
-static int	read_file_to_buf(const char *path, char *buf)
-{
-	int		fd;
-	ssize_t	n;
-
-	fd = open(path, O_RDONLY);
-	if (fd < 0)
-		return (-1);
-	n = read(fd, buf, TEXTURE_FILE_SIZE);
-	close(fd);
-	if (n <= 0)
-		return (-1);
-	buf[n] = 0;
-	return (n);
-}
-
 static t_texture	*create_texture(int w, int h, unsigned char *data)
 {
 	t_texture	*tex;
@@ -33,7 +17,7 @@ static t_texture	*create_texture(int w, int h, unsigned char *data)
 	return (tex);
 }
 
-static t_texture	*parse_ppm_buf(char *buf, int n)
+static t_texture	*parse_ppm_buf(char *buf, size_t n)
 {
 	int				i;
 	int				dims[2];
@@ -43,7 +27,7 @@ static t_texture	*parse_ppm_buf(char *buf, int n)
 	if (!ppm_header(buf, &i, &dims[0], &dims[1]))
 		return (NULL);
 	if (dims[0] <= 0 || dims[1] <= 0
-		|| (size_t)n < (size_t)i + (size_t)dims[0] * dims[1] * 3)
+		|| n < (size_t)i + (size_t)dims[0] * dims[1] * 3)
 		return (NULL);
 	data = malloc((size_t)dims[0] * dims[1] * 3);
 	if (!data)
@@ -55,18 +39,12 @@ static t_texture	*parse_ppm_buf(char *buf, int n)
 t_texture	*load_ppm(const char *path)
 {
 	char		*buf;
-	int			n;
+	size_t		n;
 	t_texture	*tex;
 
-	buf = malloc(TEXTURE_FILE_SIZE + 1);
+	buf = read_whole_file(path, &n);
 	if (!buf)
 		return (NULL);
-	n = read_file_to_buf(path, buf);
-	if (n < 0)
-	{
-		free(buf);
-		return (NULL);
-	}
 	tex = parse_ppm_buf(buf, n);
 	free(buf);
 	return (tex);

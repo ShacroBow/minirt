@@ -1,0 +1,24 @@
+# Cube with one material per side: +x red, -x green, +y blue,
+# -y yellow, +z white, -z purple.
+mtllib cube_colors.mtl
+o cube
+v -1 -1 -1
+v 1 -1 -1
+v 1 1 -1
+v -1 1 -1
+v -1 -1 1
+v 1 -1 1
+v 1 1 1
+v -1 1 1
+usemtl right
+f 2 3 7 6
+usemtl left
+f 1 5 8 4
+usemtl top
+f -5 -1 -2 -6
+usemtl bottom
+f 1 2 6 5
+usemtl front
+f 5 6 7 8
+usemtl back
+f 1 4 3 2

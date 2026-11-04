@@ -10,7 +10,7 @@ int	expose_hook(void *param)
 
 	prog = (t_program *)param;
 	if (prog->mlx.mlx_ptr && prog->mlx.win_ptr && prog->mlx.img_ptr)
-		mlx_put_image_to_window(prog->mlx.mlx_ptr, prog->mlx.win_ptr, \
+		mlx_put_image_to_window(prog->mlx.mlx_ptr, prog->mlx.win_ptr,
 			prog->mlx.img_ptr, 0, 0);
 	return (0);
 }

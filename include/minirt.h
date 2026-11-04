@@ -46,7 +46,6 @@
 # define HEIGHT 768 // 768
 # define EPSILON 1e-6 // 0.000001
 # define FILE_SIZE 4096 // scene.rt
-# define TEXTURE_FILE_SIZE 4000000 // texture.ppm
 # define WIN_TITLE "minirt"
 # define SPEED_INCREMENT 0.2
 # define MOVE_SPEED_BASE 0.8
@@ -57,6 +56,7 @@
 # define PLANE_MIN_ARGS 4
 # define CYLINDER_MIN_ARGS 6
 # define CONE_MIN_ARGS 6
+# define MESH_MIN_ARGS 5
 
 /* Could be made changable while running */
 # define ENABLE_AA 0
@@ -81,7 +81,6 @@
 # define SHADOW_ABSORPTION_STRENGTH 0.14
 # define SHADOW_TINT_INTENSITY 0.6
 
-
 # define ENABLE_PIXEL_STEP 1 //downscaling
 # define PIXEL_STEP_INC 1
 # define PIXEL_STEP_MAX 100
@@ -99,8 +98,9 @@ typedef struct s_vec3
 	double	z;
 }	t_vec3;
 
-typedef t_vec3	t_point;
-typedef t_vec3	t_color;
+typedef t_vec3			t_point;
+typedef t_vec3			t_color;
+typedef struct s_mesh	t_mesh;
 
 /* --- Color Ops --- */
 t_color		color_add(t_color c1, t_color c2);
@@ -153,7 +153,8 @@ typedef enum e_object_type
 	PLANE,
 	CYLINDER,
 	CONE,
-	LIGHT
+	LIGHT,
+	MESH
 }	t_object_type;
 
 typedef struct s_sphere
@@ -242,6 +243,10 @@ typedef struct s_hit_record
 	double			reflect_depth;
 	double			t;
 	bool			front_face;
+	double			tex_u;
+	double			tex_v;
+	bool			has_tex_uv;
+	int				mat_id;
 }	t_hit_record;
 
 typedef struct s_render_stats
@@ -275,20 +280,20 @@ typedef struct s_mlx_data
 
 typedef struct s_program
 {
-	t_scene		*scene;
-	t_mlx_data	mlx;
-	int			aa_enabled;
-	double		move_speed;
-	int			pixel_step;
-	t_camera	default_camera;
-	char		*scene_file;
-	long		program_start_time;
-	long		render_start_time;
-	long		ray_count;
-	long		shading_time;
-	long		intersect_time;
-	int		threads;
-	int		next_line;
+	t_scene			*scene;
+	t_mlx_data		mlx;
+	int				aa_enabled;
+	double			move_speed;
+	int				pixel_step;
+	t_camera		default_camera;
+	char			*scene_file;
+	long			program_start_time;
+	long			render_start_time;
+	long			ray_count;
+	long			shading_time;
+	long			intersect_time;
+	int				threads;
+	int				next_line;
 	pthread_mutex_t	work_mutex;
 	pthread_mutex_t	stats_mutex;
 }	t_program;
@@ -337,6 +342,8 @@ void		lint_sphere(char *line, t_scene *scene);
 void		lint_plane(char *line, t_scene *scene);
 void		lint_cylinder(char *line, t_scene *scene);
 void		lint_cone(char *line, t_scene *scene);
+void		lint_mesh(char *line, t_scene *scene);
+void		validate_rotation(char *str, t_scene *scene, const char *obj_name);
 
 /* --- Vectors --- */
 void		parse_ambient(t_scene *scene, char *line);
@@ -346,6 +353,7 @@ void		parse_sphere(t_scene *scene, char *line);
 void		parse_plane(t_scene *scene, char *line);
 void		parse_cylinder(t_scene *scene, char *line);
 void		parse_cone(t_scene *scene, char *line);
+void		parse_mesh(t_scene *scene, char *line);
 /* Parser Extra Args */
 void		parse_reflectivity(char *str, t_object *obj, t_scene *scene);
 void		parse_checker_color(char *str, t_object *obj, t_scene *scene);
@@ -376,8 +384,6 @@ double		vec_len_squared(t_vec3 v);
 bool		hit(const t_object *world, const t_ray *ray, double t_max, \
 				t_hit_record *rec);
 bool		hit_any(const t_object *world, const t_ray *ray, double t_max);
-bool		hit_any_cached(const t_object *world, const t_ray *ray, \
-				double t_max, const t_object **cache);
 
 double		shadow_transmittance(const t_object *world, const t_ray *ray, \
 				double t_max);
@@ -393,6 +399,9 @@ bool		hit_cylinder(const t_cylinder *cy, const t_ray *ray,
 bool		hit_cone(const t_cone *cy, const t_ray *ray, double t_max, \
 				t_hit_record *rec);
 t_vec3		cone_coeffs(const t_cone *cy, const t_ray *ray);
+bool		hit_mesh(const t_mesh *m, const t_ray *ray, double t_max,
+				t_hit_record *rec);
+void		mesh_apply_material(const t_object *obj, t_hit_record *rec);
 bool		quadratic(double a, double b, double c, double *t);
 
 /* --- Render --- */
@@ -405,7 +414,7 @@ t_color		trace_ray_recursive(const t_ray *ray, t_program *prog, int depth);
 t_color		handle_transparency(const t_ray *ray, t_hit_record *rec, \
 								t_program *prog, int depth);
 t_color		get_checker_color(const t_hit_record *rec);
-void			debug_progress(t_program *prog, int y);
+void		debug_progress(t_program *prog, int y);
 /* Texture loader / sampler (PPM, clamp behaviour) */
 t_texture	*load_ppm(const char *path);
 void		free_texture(t_texture *tex);
@@ -416,16 +425,16 @@ t_color		sample_texture(const t_texture *tex, double u, double v);
 /* Render context: cache per-frame values to avoid repeated computation */
 typedef struct s_render_ctx
 {
-	t_program	*prog;
-	double		inv_w;
-	double		inv_h;
-	double		inv_aa_samples;
+	t_program		*prog;
+	double			inv_w;
+	double			inv_h;
+	double			inv_aa_samples;
 	t_render_stats	*stats;
 }	t_render_ctx;
 
-void			pixel_block(t_program *prog, int x, int y, int color);
-void			init_threading(t_program *prog);
-void			launch_render_threads(t_program *prog, t_render_ctx *ctx);
+void		pixel_block(t_program *prog, int x, int y, int color);
+void		init_threading(t_program *prog);
+void		launch_render_threads(t_program *prog, t_render_ctx *ctx);
 extern __thread t_render_stats	*g_thread_stats;
 
 long		get_time_ms(void);
@@ -469,10 +478,14 @@ NR void		exit_cleanup(t_program *prog, const char *message);
 void		cleanup(t_program *prog);
 void		platform_destroy_mlx(void *mlx_ptr);
 void		free_scene(t_scene *scene);
+void		free_mesh(t_mesh *m);
+void		mesh_translate(t_mesh *m, t_vec3 move);
+void		mesh_arrow_key(t_object *obj, int keycode);
 NR void		erorr(t_scene *scene, void *ptr, const char *message);
 NR void		erorrf(t_scene *scene, void *ptr, const char *f,
 				const char *message);
 bool		has_extension(const char *filename, const char *ext);
+char		*read_whole_file(const char *path, size_t *len);
 bool		is_valid_float(char *str);
 bool		check_color_fmt(char *str);
 bool		check_vector_fmt(char *str);

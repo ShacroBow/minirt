@@ -1,0 +1,13 @@
+# one color per side of the cube
+newmtl right
+Kd 0.85 0.10 0.10
+newmtl left
+Kd 0.10 0.65 0.20
+newmtl top
+Kd 0.15 0.30 0.90
+newmtl bottom
+Kd 0.95 0.80 0.10
+newmtl front
+Kd 0.95 0.95 0.95
+newmtl back
+Kd 0.70 0.15 0.70

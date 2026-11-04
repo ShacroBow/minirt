@@ -51,9 +51,9 @@ int	ppm_header(const char *s, int *i, int *w, int *h)
 		return (0);
 	if (!parse_int(s, i, &max))
 		return (0);
-	if (max <= 0 || max > 255)
+	if (max <= 0 || max > 255 || !is_ws(s[*i]))
 		return (0);
-	*i = skip_ws_and_comments(s, *i);
+	(*i)++;
 	return (1);
 }
 

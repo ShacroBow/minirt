@@ -79,6 +79,11 @@ int	compute_uv(const t_hit_record *rec, double *u, double *v)
 		get_cylinder_uv(rec, u, v);
 	else if (rec->type == CONE)
 		get_cone_uv(rec, u, v);
+	else if (rec->type == MESH && rec->has_tex_uv)
+	{
+		*u = rec->tex_u;
+		*v = rec->tex_v;
+	}
 	else
 		return (0);
 	return (1);

@@ -13,6 +13,11 @@ static void	get_checker_indices(const t_hit_record *rec, double u, double v, \
 		indices[0] = floor(u * 10);
 		indices[1] = floor(v * 7);
 	}
+	else if (rec->type == MESH)
+	{
+		indices[0] = floor(u * 8);
+		indices[1] = floor(v * 8);
+	}
 	else
 	{
 		indices[0] = floor(u * 10);

@@ -34,6 +34,8 @@ static void	lint_line(char *line, t_scene *scene)
 		lint_cylinder(line, scene);
 	else if (ft_strncmp(line, "co ", 3) == 0)
 		lint_cone(line, scene);
+	else if (ft_strncmp(line, "obj ", 4) == 0)
+		lint_mesh(line, scene);
 	else
 		erorr(scene, NULL, "Error: Invalid identifier.");
 }

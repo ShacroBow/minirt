@@ -14,6 +14,8 @@ void	handle_arrow_keys(int is_cam, t_object *object, t_camera *cam,
 		else if (keycode == KEY_DOWN)
 			rotate_camera(cam, -ROT_SPEED, 0);
 	}
+	else if (object->type == MESH)
+		mesh_arrow_key(object, keycode);
 	else
 	{
 		if (keycode == KEY_UP)

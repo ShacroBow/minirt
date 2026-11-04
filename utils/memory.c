@@ -14,7 +14,10 @@ static void	free_objects(t_object *objects)
 		if (current->has_bump)
 			free_texture(current->bump);
 		free(current->name);
-		free(current->shape_data);
+		if (current->type == MESH)
+			free_mesh(current->shape_data);
+		else
+			free(current->shape_data);
 		free(current);
 		current = next;
 	}

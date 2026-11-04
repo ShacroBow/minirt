@@ -1,0 +1,4 @@
+newmtl bricks
+Kd 1 1 1
+# texture paths are relative to this file
+map_Kd ../texture_brick.ppm

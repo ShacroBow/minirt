@@ -1,0 +1,5 @@
+newmtl glass
+Kd 0.85 0.95 1.0
+# d = opacity, Ni = index of refraction
+d 0.15
+Ni 1.5

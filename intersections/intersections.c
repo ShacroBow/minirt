@@ -28,6 +28,20 @@ bool	quadratic(double a, double b, double c, double *t)
 	return (false);
 }
 
+static void	set_hit_object(const t_object *obj, t_hit_record *out)
+{
+	out->color = obj->color;
+	out->reflect = obj->reflectivity;
+	out->transparency = obj->transparency;
+	out->refractive_index = obj->refractive_index;
+	out->has_checkerboard = obj->has_checkerboard;
+	out->checker_color = obj->checker_color;
+	out->type = obj->type;
+	out->obj = (t_object *)obj;
+	if (obj->type == MESH)
+		mesh_apply_material(obj, out);
+}
+
 static bool	try_hit_object(const t_object *obj, const t_ray *ray,
 			double t_max, t_hit_record *out)
 {
@@ -42,17 +56,10 @@ static bool	try_hit_object(const t_object *obj, const t_ray *ray,
 		hit = hit_cylinder(obj->shape_data, ray, t_max, out);
 	else if (obj->type == CONE)
 		hit = hit_cone(obj->shape_data, ray, t_max, out);
+	else if (obj->type == MESH)
+		hit = hit_mesh(obj->shape_data, ray, t_max, out);
 	if (hit && out)
-	{
-		out->color = obj->color;
-		out->reflect = obj->reflectivity;
-		out->transparency = obj->transparency;
-		out->refractive_index = obj->refractive_index;
-		out->has_checkerboard = obj->has_checkerboard;
-		out->checker_color = obj->checker_color;
-		out->type = obj->type;
-		out->obj = (t_object *)obj;
-	}
+		set_hit_object(obj, out);
 	return (hit);
 }
 
@@ -89,36 +96,6 @@ bool	hit_any(const t_object *world, const t_ray *ray, double t_max)
 		{
 			if (cur->transparency < 1.0)
 				return (true);
-		}
-		cur = cur->next;
-	}
-	return (false);
-}
-
-bool	hit_any_cached(const t_object *world, const t_ray *ray, \
-			double t_max, const t_object **cache)
-{
-	const t_object	*cur;
-
-	if (cache && *cache)
-	{
-		if (try_hit_object(*cache, ray, t_max, NULL))
-		{
-			if ((*cache)->transparency < 1.0)
-				return (true);
-		}
-	}
-	cur = world;
-	while (cur)
-	{
-		if (try_hit_object(cur, ray, t_max, NULL))
-		{
-			if (cur->transparency < 1.0)
-			{
-				if (cache)
-					*cache = cur;
-				return (true);
-			}
 		}
 		cur = cur->next;
 	}

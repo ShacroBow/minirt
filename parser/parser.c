@@ -18,6 +18,8 @@ static void	parse_line(char *line, t_scene *scene)
 		parse_cylinder(scene, line);
 	else if (ft_strncmp(line, "co ", 3) == 0)
 		parse_cone(scene, line);
+	else if (ft_strncmp(line, "obj ", 4) == 0)
+		parse_mesh(scene, line);
 	else
 		erorr(scene, NULL, "Error: Invalid identifier in scene file.");
 }

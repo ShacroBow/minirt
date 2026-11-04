@@ -47,7 +47,8 @@ void	print_objects_status(const t_scene *scene)
 {
 	const t_object	*cur;
 	int				i;
-	static char		*t[] = {"SPHERE", "PLANE", "CYLINDER", "CONE", "LIGHT"};
+	static char		*t[] = {"SPHERE", "PLANE", "CYLINDER", "CONE", "LIGHT",
+		"MESH"};
 
 	if (!scene)
 		return ;
