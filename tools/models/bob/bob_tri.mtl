@@ -1,0 +1,4 @@
+# Bob ships without a .mtl; this one maps its texture (as a binary .ppm)
+newmtl feathers
+Kd 1 1 1
+map_Kd bob_diffuse.ppm

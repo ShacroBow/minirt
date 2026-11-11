@@ -1,0 +1,39 @@
+# miniRT showcase: most features in one scene. Leave it still for a few
+# seconds and it refines itself (progressive rendering).
+
+A 0.12 200,210,255
+C 0,2.8,10.5 0,-0.17,-1 50
+
+# warm key light, cool fill, white back light
+L 7,9,7 0.42 255,214,170
+L -8,5,6 0.25 140,170,255
+L 0,7,-3 0.15 255,255,255
+
+# polished checkered floor, brick wall with a bump map
+pl 0,0,0 0,1,0 150,145,140 ch=45,42,40 r=0.12
+pl 0,0,-7 0,0,1 255,255,255 tx=tools/texture_brick.ppm bump=tools/texture_normal.bump.ppm u=0.2 v=0.2
+
+# Spot the cow (.obj, texture from the scene file)
+obj tools/models/spot/spot.obj 0,1.09,0 2.2 255,255,255 tx=tools/models/spot/spot_texture.ppm rot=0,150,0
+
+# Bob the duck (.obj, texture from its .mtl)
+obj tools/models/bob/bob_tri.obj 2.2,0.47,3 1.8 255,255,255 rot=0,150,0
+
+# Earth on a pedestal
+cy 4.3,0.6,-1.5 0,1,0 1.8 1.2 235,230,220 ch=170,160,150
+sp 4.3,2.25,-1.5 2.1 255,255,255 tx=tools/earth.ppm
+
+# glass ball, chrome ball, red glass marble, glass drop (.obj, glass .mtl)
+sp -3.4,1.1,1.2 2.2 255,255,255 tr=0.95 ior=1.5 r=0.05
+sp -5.6,1.3,-2.5 2.6 40,40,50 r=0.9
+sp 1.1,0.42,2.3 0.84 255,40,40 tr=0.6 r=0.1
+obj tools/models/glass_drop.obj -1.1,0.65,3.6 1.3 255,255,255
+
+# floating copper knot
+obj tools/models/torus_knot.obj -0.4,4.7,-3.6 3 230,120,70 r=0.35 rot=70,0,0
+
+# pillars with golden cones on top
+cy 8,2.5,-5.5 0,1,0 1 5 200,190,175 ch=150,140,125
+co 8,5.6,-5.5 0,1,0 1.4 1.2 215,170,60 r=0.4
+cy -8,2.5,-5.5 0,1,0 1 5 200,190,175 ch=150,140,125
+co -8,5.6,-5.5 0,1,0 1.4 1.2 215,170,60 r=0.4

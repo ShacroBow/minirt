@@ -120,7 +120,7 @@ obj tools/models/torus_knot.obj 0,1,0 3 220,80,55 r=0.25 rot=10,0,0
 - Models without normals are smoothed automatically, edges sharper than 60 degrees stay sharp.
 - `tx=`, `ch=` and `bump=` use the model's texture coordinates (`vt`).
 - Textures (`map_Kd`, `tx=`) have to be binary PPM files, see below.
-- `tools/models/` has example models (made by `generate_models.py`), `tools/obj_test.rt` shows them.
+- `tools/models/` has example models (made by `generate_models.py`) and two public domain models, Spot and Bob, see `tools/models/CREDITS.md`. `tools/obj_test.rt` and `tools/showcase.rt` show them.
 
 ## Controls
 
@@ -150,6 +150,7 @@ obj tools/models/torus_knot.obj 0,1,0 3 220,80,55 r=0.25 rot=10,0,0
 ## Example scenes
 
 Check `tools/` for scene files:
+- `showcase.rt` - most features in one scene, start here (`./minirt tools/showcase.rt`)
 - `scene.rt` - basic shapes
 - `checker_test.rt` - checkerboard demo
 - `texture_test.rt` - textures
