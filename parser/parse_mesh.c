@@ -13,6 +13,22 @@ static void	init_mesh_obj(t_object *obj, t_mesh *mesh, t_scene *scene)
 	mesh_set_rotation(mesh, (t_vec3){0.0, 0.0, 0.0});
 }
 
+/**
+ * The object is called like its file ("spot.obj") in the help panel.
+ */
+static void	mesh_name(t_object *obj, const char *path, t_scene *scene)
+{
+	const char	*slash;
+
+	slash = ft_strrchr(path, '/');
+	if (slash)
+		path = slash + 1;
+	free(obj->name);
+	obj->name = ft_strdup(path);
+	if (!obj->name)
+		erorr(scene, NULL, "Error: allocation failed.");
+}
+
 static void	parse_mesh_extra_args(char *line, size_t count, t_object *obj,
 				t_scene *scene)
 {
@@ -60,6 +76,7 @@ void	parse_mesh(t_scene *scene, char *line)
 		|| !parse_vector(index_split(line, 4), &obj->color))
 		erorr(scene, NULL, "Error parsing vector mesh");
 	mesh->size = ft_atof(index_split(line, 3));
+	mesh_name(obj, index_split(line, 1), scene);
 	if (count > MESH_MIN_ARGS)
 		parse_mesh_extra_args(line, count, obj, scene);
 	load_obj(scene, mesh, index_split(line, 1));

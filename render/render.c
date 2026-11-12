@@ -98,6 +98,5 @@ void	render(t_program *prog)
 	launch_render_threads(prog, &ctx, 0, HEIGHT);
 	if (DEBUG)
 		debug_progress(prog, HEIGHT - 1);
-	mlx_put_image_to_window(prog->mlx.mlx_ptr, prog->mlx.win_ptr, \
-								prog->mlx.img_ptr, 0, 0);
+	display_frame(prog);
 }

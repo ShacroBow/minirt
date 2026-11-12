@@ -56,3 +56,8 @@ void	mesh_translate(t_mesh *m, t_vec3 move)
 {
 	m->center = vec_add(m->center, move);
 }
+
+t_vec3	mesh_center(const t_mesh *m)
+{
+	return (m->center);
+}

@@ -96,6 +96,22 @@
 # define PREVIEW_STEP 8
 # define FRAME_BUDGET_MS 40
 
+/* Help panel (H) and mouse selection */
+# define HUD_X 12
+# define HUD_Y 12
+# define HUD_PAD 10
+# define HUD_COLS 32
+# define HUD_ROWS 19
+# define HUD_KEY_COLS 11
+# define PICK_RADIUS 16
+# define FONT_W 10
+# define FONT_H 20
+# define COLOR_TEXT 0xE8E8E8
+# define COLOR_KEY 0x7FD4FF
+# define COLOR_DIM 0x9A9A9A
+# define COLOR_SELECTED 0xFFD24A
+# define COLOR_MARKER 0x7CFF8A
+
 /* --- Core Data Structures --- */
 
 /* Vector / Point / Color */
@@ -313,6 +329,15 @@ typedef struct s_program
 	int				band;
 	bool			preview;
 	long			pass_start;
+	t_object		*selected;
+	int				is_cam;
+	bool			hud;
+	bool			final_shown;
+	void			*panel_img;
+	char			*panel_addr;
+	int				panel_line;
+	int				panel_w;
+	int				panel_h;
 }	t_program;
 
 /* --- Function Prototypes --- */
@@ -439,6 +464,14 @@ t_color		sample_texture(const t_texture *tex, double u, double v);
 
 /* Render utils */
 
+/* Where and in which color the help panel writes the next character */
+typedef struct s_pen
+{
+	int	x;
+	int	y;
+	int	color;
+}	t_pen;
+
 /* CLASSIC: full quality in one go (P key, harness). PREVIEW / ACCUM:
 ** progressive passes, shown directly or averaged into prog->accum. */
 typedef enum e_render_mode
@@ -480,6 +513,28 @@ size_t		mix_seed(size_t h);
 size_t		pixel_seed(int x, int y, int sample);
 size_t		point_hash(const t_point *p);
 void		render_final(t_program *prog);
+
+/* Window, mouse selection and help panel */
+int			close_window(void *param);
+int			key_hook(int keycode, void *param);
+int			mouse_hook(int button, int x, int y, void *param);
+void		ui_init(t_program *prog);
+void		display_frame(t_program *prog);
+void		select_object(t_program *prog, t_object *obj);
+bool		project_point(const t_camera *cam, t_point p, int *sx, int *sy);
+t_object	*pick_light(t_program *prog, int x, int y);
+t_object	*pick_object(t_program *prog, int x, int y);
+t_vec3		object_center(const t_object *obj);
+int			light_number(const t_scene *scene, const t_object *obj);
+void		hud_draw(t_program *prog);
+void		hud_text(t_program *prog, int row, int color, char *text);
+void		hud_text_value(t_program *prog, int row, int color, char *text);
+unsigned int	font_row(char c, int row);
+void		hud_rows(t_program *prog);
+void		hud_append_num(char *buf, double v);
+void		hud_append_int(char *buf, long n);
+void		hud_selection(t_program *prog, char *name, char *where);
+t_vec3		mesh_center(const t_mesh *m);
 double		point_random(const t_point *p, int sample);
 extern __thread t_render_stats	*g_thread_stats;
 

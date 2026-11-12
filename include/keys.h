@@ -8,6 +8,12 @@
 #  define KEY_ESC		53
 #  define KEY_P			35
 #  define KEY_ENTER		36
+#  define KEY_H			4
+#  define KEY_TAB		48
+
+/* labels drawn with mlx_string_put: 10 x 20 glyphs, y is the baseline */
+#  define HUD_CHAR_W	10
+#  define HUD_ASCENT	15
 
 #  define KEY_PG_UP		116
 #  define KEY_PG_DOWN	121
@@ -47,6 +53,13 @@
 #  define KEY_O			XK_o //0x006f
 #  define KEY_P			XK_p //70
 #  define KEY_ENTER		XK_Return
+#  define KEY_H			XK_h
+#  define KEY_TAB		XK_Tab
+
+/* labels drawn with mlx_string_put: X11 "fixed" font, 6 x 13 glyphs,
+** y is the baseline */
+#  define HUD_CHAR_W	6
+#  define HUD_ASCENT	11
 
 //NAVIGATE
 #  define KEY_PG_UP		XK_Page_Up //65365

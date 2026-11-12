@@ -38,9 +38,12 @@ SRCS_MESH			=	mesh/obj_load.c mesh/obj_read.c mesh/obj_array.c \
 						mesh/mesh_hit.c mesh/mesh_shade.c mesh/mesh_transform.c \
 						mesh/mesh_free.c
 
+SRCS_UI				=	ui/ui.c ui/pick.c ui/hud.c ui/hud_text.c ui/hud_format.c \
+						ui/hud_glyph.c ui/hud_font.c
+
 SRC					=	main.c $(SRCS_PARSER) $(SRCS_VECTORS) $(SRCS_INTERSECTIONS) \
 						$(SRCS_RENDER) $(SRCS_TEXTURE) $(SRCS_UTILS) $(SRCS_CAMERA) \
-						$(SRCS_MESH)
+						$(SRCS_MESH) $(SRCS_UI)
 
 OBJ_DIR				=	./dir/
 LIBFT_PATH			=	./libft/

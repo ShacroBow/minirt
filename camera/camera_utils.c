@@ -23,7 +23,7 @@ void	select_element(int *is_cam, t_object **object, int keycode, \
 {
 	if (keycode == KEY_0)
 		*is_cam = 1;
-	else if (keycode == KEY_3)
+	else if (keycode == KEY_3 || keycode == KEY_TAB)
 	{
 		*is_cam = 0;
 		if (!*object)

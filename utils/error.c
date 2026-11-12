@@ -43,6 +43,8 @@ void	cleanup(t_program *prog)
 	}
 	if (prog->mlx.img_ptr)
 		mlx_destroy_image(prog->mlx.mlx_ptr, prog->mlx.img_ptr);
+	if (prog->panel_img)
+		mlx_destroy_image(prog->mlx.mlx_ptr, prog->panel_img);
 	if (prog->mlx.win_ptr)
 		mlx_destroy_window(prog->mlx.mlx_ptr, prog->mlx.win_ptr);
 	if (prog->mlx.mlx_ptr)

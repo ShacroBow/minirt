@@ -32,24 +32,21 @@ static bool	key_changes_scene(int k)
 
 int	key_hook(int keycode, void *param)
 {
-	static t_object		*object = NULL;
-	static int			is_cam = 1;
-	t_program			*prog;
+	t_program	*prog;
 
 	prog = (t_program *)param;
 	if (keycode == KEY_ESC)
 		close_window(prog);
 	else if (keycode == KEY_P)
-	{
 		render_final(prog);
-		return (0);
-	}
+	else if (keycode == KEY_H)
+		prog->hud = !prog->hud;
 	else
-		camera_handle_key(keycode, prog, &object, &is_cam);
-	if ((keycode == KEY_0 || keycode == KEY_3))
-		return (0);
+		camera_handle_key(keycode, prog, &prog->selected, &prog->is_cam);
 	if (key_changes_scene(keycode))
 		progressive_reset(prog);
+	else
+		display_frame(prog);
 	return (0);
 }
 
@@ -90,11 +87,8 @@ int	main(int argc, char **argv)
 	prog.default_camera = prog.scene->camera;
 	init_mlx(&prog);
 	prog.program_start_time = get_time_ms();
-	mlx_hook(prog.mlx.win_ptr, 17, 0, close_window, &prog);
-	mlx_key_hook(prog.mlx.win_ptr, key_hook, &prog);
-	mlx_expose_hook(prog.mlx.win_ptr, expose_hook, &prog);
 	progressive_init(&prog);
-	mlx_loop_hook(prog.mlx.mlx_ptr, progressive_hook, &prog);
+	ui_init(&prog);
 	mlx_loop(prog.mlx.mlx_ptr);
 	cleanup(&prog);
 	return (0);

@@ -137,8 +137,12 @@ obj tools/models/torus_knot.obj 0,1,0 3 220,80,55 r=0.25 rot=10,0,0
 - `Enter` - render again
 - `ESC` - quit
 
+**Help panel:**
+- `H` - show / hide the panel with all keys, the selected object and the render progress. Lights are marked `L1`, `L2`, ... and the selected object is labeled in the scene.
+
 **Objects:**
-- `3` - select next object (shapes, lights, models)
+- `Click` - select the object under the mouse (or a light by its `L1`, `L2`... marker); right click selects the camera
+- `Tab` or `3` - select next object (shapes, lights, models)
 - `0` - select camera
 - `WASD`, `PG UP/DOWN` - move the selected object
 - `Arrow keys` - resize the selected shape (a light: `UP`/`DOWN` brightness), a model: `UP`/`DOWN` scale, `LEFT`/`RIGHT` turn

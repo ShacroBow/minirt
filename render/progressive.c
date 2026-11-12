@@ -31,6 +31,7 @@ void	progressive_reset(t_program *prog)
 	prog->scene->sample = 0;
 	prog->pass_row = 0;
 	prog->preview = true;
+	prog->final_shown = false;
 }
 
 /**
@@ -51,8 +52,7 @@ int	progressive_hook(void *param)
 		usleep(10000);
 		return (0);
 	}
-	mlx_put_image_to_window(prog->mlx.mlx_ptr, prog->mlx.win_ptr,
-		prog->mlx.img_ptr, 0, 0);
+	display_frame(prog);
 	return (0);
 }
 
@@ -71,4 +71,6 @@ void	render_final(t_program *prog)
 	prog->pixel_step = step;
 	prog->aa_enabled = 0;
 	prog->scene->sample = PROGRESSIVE_MAX_SAMPLES;
+	prog->final_shown = true;
+	display_frame(prog);
 }
