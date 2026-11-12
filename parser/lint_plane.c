@@ -4,7 +4,7 @@ static void	lint_plane_extra(char *line, t_scene *scene, size_t count)
 {
 	size_t	i;
 	char	*arg;
-	char	*valid_args[9];
+	char	*valid_args[10];
 
 	i = 4;
 	valid_args[0] = "r=";
@@ -15,7 +15,8 @@ static void	lint_plane_extra(char *line, t_scene *scene, size_t count)
 	valid_args[5] = "v=";
 	valid_args[6] = "tr=";
 	valid_args[7] = "ior=";
-	valid_args[8] = NULL;
+	valid_args[8] = "em=";
+	valid_args[9] = NULL;
 	while (i < count)
 	{
 		arg = index_split(line, i);
@@ -29,7 +30,7 @@ void	lint_plane(char *line, t_scene *scene)
 	size_t	count;
 
 	count = ft_split_inplace(line, ' ');
-	if (count < 4 || count > 12)
+	if (count < 4 || count > 13)
 		erorr(scene, NULL, "Error: Plane args count.");
 	if (!check_vector_fmt(index_split(line, 1)))
 		erorr(scene, NULL, "Error: Plane point invalid.");

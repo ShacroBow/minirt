@@ -109,4 +109,6 @@ void	mtl_statement(t_objfile *f, const char *path, int *cur, char *line)
 		mtl_real(rest, &m->ior, false);
 	else if (is_keyword(line, "map_Kd", &rest))
 		mtl_map_kd(f, path, m, rest);
+	else
+		mtl_shine(m, line);
 }

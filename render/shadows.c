@@ -68,7 +68,8 @@ t_color	shadow_transmittance_color(const t_object *world, const t_ray *ray, \
 	{
 		if (!hit(world, &step_ray, remaining, &rec))
 			return (beer_lambert(trans, t_max - remaining));
-		trans = mul_color01(trans, shadow_filter_from_hit(&rec));
+		if (rec.obj->emission <= 0.0)
+			trans = mul_color01(trans, shadow_filter_from_hit(&rec));
 		if (trans.x < 0.001 && trans.y < 0.001 && trans.z < 0.001)
 			return ((t_color){0.0, 0.0, 0.0});
 		step_ray.origin = vec_add(rec.point, vec_mult(step_ray.direction, 0.001));

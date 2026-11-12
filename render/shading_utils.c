@@ -7,6 +7,11 @@ t_color	calculate_ambient(const t_ambient_light *ambient, \
 				ambient->ratio));
 }
 
+/**
+ * Diffuse light. Scene objects also get some of the light's own color
+ * (tint), a softer look. The tint follows how bright the surface is, so
+ * dark surfaces stay dark; .mtl materials keep exactly their Kd color.
+ */
 t_color	diffuse(const t_light *light,
 		const t_hit_record *rec, const t_vec3 *light_dir)
 {
@@ -16,7 +21,9 @@ t_color	diffuse(const t_light *light,
 	t_color		mixed;
 
 	diffuse_intensity = fmax(0.0, vec_dot(rec->normal, *light_dir));
-	tint = 0.8;
+	tint = 0.8 * fmax(rec->color.x, fmax(rec->color.y, rec->color.z)) / 255.0;
+	if (rec->type == MESH && rec->mat_id >= 0)
+		tint = 0.0;
 	mat_mult = color_mult(rec->color, color_add(light->color,
 				(t_vec3){1, 1, 1}));
 	mixed = color_add(mat_mult, color_scale(light->color, tint));

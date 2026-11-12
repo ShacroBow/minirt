@@ -5,7 +5,8 @@ Ray tracer in C. Renders spheres, planes, cylinders, cones and `.obj` models wit
 ## What it does
 
 - Renders basic shapes (sphere, plane, cylinder, cone)
-- Wavefront `.obj` models with `.mtl` materials and textures (BVH accelerated)
+- Wavefront `.obj` models with `.mtl` materials: colors, textures, glass, mirror and clear coat reflections, glow (BVH accelerated)
+- Glowing objects (`em=`), also seen in reflections
 - Multiple lights with colors
 - Phong shading
 - Soft shadows, tinted by transparent objects
@@ -113,14 +114,16 @@ obj tools/models/torus_knot.obj 0,1,0 3 220,80,55 r=0.25 rot=10,0,0
 - `tr=<value>` - Transparency (0.0 to 1.0, 1 = clear glass)
 - `ior=<value>` - Index of refraction of transparent objects (default 1.5, glass)
 - `rot=x,y,z` - Rotation in degrees around x, then y, then z (`obj` only)
+- `em=<value>` - Glow (0 to 10): the object shines in its own color whatever the lighting, and shows up in reflections. Glowing objects cast no shadows; put a light next to one to light the scene around it.
 
 ### .obj models
 - Supports `v`, `vt`, `vn`, faces with any number of corners (`v`, `v/vt`, `v//vn`, `v/vt/vn`) and negative indices.
-- Materials from `.mtl` files: `Kd` color, `d`/`Tr` transparency, `Ni`, `map_Kd` texture. The color on the `obj` line tints them, use `255,255,255` to keep them as they are.
+- Materials from `.mtl` files: `Kd` color, `d`/`Tr` transparency, `Ni`, `map_Kd` texture, `Ke` glow, and `Ks` reflection with `illum` 3 to 7 (5 and 7 reflect more at grazing angles, like car paint). The color on the `obj` line tints them, use `255,255,255` to keep them as they are.
 - Models without normals are smoothed automatically, edges sharper than 60 degrees stay sharp.
 - `tx=`, `ch=` and `bump=` use the model's texture coordinates (`vt`).
 - Textures (`map_Kd`, `tx=`) have to be binary PPM files, see below.
-- `tools/models/` has example models (made by `generate_models.py`) and two public domain models, Spot and Bob, see `tools/models/CREDITS.md`. `tools/obj_test.rt` and `tools/showcase.rt` show them.
+- `tools/models/` has example models (made by `generate_models.py`), two public domain models, Spot and Bob, and a concept car (CC BY 4.0), see `tools/models/CREDITS.md`. `tools/obj_test.rt`, `tools/showcase.rt` and `tools/car.rt` show them.
+- `tools/models/gltf_to_obj.py` converts glTF 2.0 models (`.gltf`, `.glb`) to `.obj` + `.mtl`; the comment at its top lists the options.
 
 ## Controls
 
@@ -155,6 +158,7 @@ obj tools/models/torus_knot.obj 0,1,0 3 220,80,55 r=0.25 rot=10,0,0
 
 Check `tools/` for scene files:
 - `showcase.rt` - most features in one scene, start here (`./minirt tools/showcase.rt`)
+- `car.rt` - a concept car on a turntable under hexagon lights: glowing objects, clear coat paint, chrome, glass, textures and a bump mapped concrete wall (`./minirt tools/car.rt`)
 - `scene.rt` - basic shapes
 - `checker_test.rt` - checkerboard demo
 - `texture_test.rt` - textures

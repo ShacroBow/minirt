@@ -38,8 +38,13 @@ static void	set_hit_object(const t_object *obj, t_hit_record *out)
 	out->checker_color = obj->checker_color;
 	out->type = obj->type;
 	out->obj = (t_object *)obj;
+	out->emission = (t_color){0.0, 0.0, 0.0};
+	out->fresnel = false;
 	if (obj->type == MESH)
 		mesh_apply_material(obj, out);
+	if (obj->emission > 0.0)
+		out->emission = color_add(out->emission,
+				color_scale(out->color, obj->emission));
 }
 
 static bool	try_hit_object(const t_object *obj, const t_ray *ray,

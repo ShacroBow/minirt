@@ -9,7 +9,8 @@ SRCS_PARSER			=	parser/parser.c parser/parser_utils.c parser/parser_read.c \
 						parser/linter_arg_validation.c parser/linter_arg_validation_2.c \
 						parser/lint_sphere.c parser/lint_plane.c \
 						parser/lint_cylinder.c parser/lint_cone.c \
-						parser/parse_mesh.c parser/lint_mesh.c
+						parser/parse_mesh.c parser/lint_mesh.c \
+						parser/linter_arg_validation_3.c
 SRCS_VECTORS		=	vectors/vec_operations_1.c vectors/vec_operations_2.c \
 						vectors/vec_operations_3.c
 SRCS_INTERSECTIONS	=	intersections/hit_sphere.c intersections/hit_plane.c \
@@ -20,7 +21,8 @@ SRCS_RENDER			=	render/render.c render/render_utils.c render/render_threads.c \
 						render/specular_only.c render/transparency.c \
 						render/color_ops.c render/color.c render/background.c \
 						render/display.c render/progressive.c \
-						render/progressive_pass.c render/progressive_pixel.c
+						render/progressive_pass.c render/progressive_pixel.c \
+						render/secondary.c
 SRCS_TEXTURE		=	texture/texture.c texture/texture_loader.c \
 						texture/texture_loader_utils.c texture/uv_mapping.c \
 						texture/bump.c
@@ -31,7 +33,7 @@ SRCS_CAMERA			=	camera/camera.c camera/camera_utils.c camera/camera_utils2.c \
 SRCS_MESH			=	mesh/obj_load.c mesh/obj_read.c mesh/obj_array.c \
 						mesh/obj_lex.c mesh/obj_number.c mesh/obj_parse.c \
 						mesh/obj_face.c mesh/obj_triangle.c \
-						mesh/mtl_load.c mesh/mtl_parse.c \
+						mesh/mtl_load.c mesh/mtl_parse.c mesh/mtl_shine.c \
 						mesh/mesh_adjacency.c mesh/mesh_normals.c mesh/mesh_build.c \
 						mesh/bvh_aabb.c mesh/bvh_split.c mesh/bvh_partition.c \
 						mesh/bvh_build.c mesh/bvh_walk.c mesh/tri_hit.c \

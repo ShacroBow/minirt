@@ -63,4 +63,6 @@ void	parse_extra_arg(char *arg, t_object *obj, t_scene *scene)
 		obj->transparency = ft_atof(arg + 3);
 	else if (ft_strncmp(arg, "ior=", 4) == 0)
 		obj->refractive_index = ft_atof(arg + 4);
+	else if (ft_strncmp(arg, "em=", 3) == 0)
+		obj->emission = ft_atof(arg + 3);
 }

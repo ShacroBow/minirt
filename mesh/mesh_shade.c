@@ -92,4 +92,5 @@ void	mesh_apply_material(const t_object *obj, t_hit_record *rec)
 		if (mat->ior >= 1.0)
 			rec->refractive_index = mat->ior;
 	}
+	mtl_apply_shine(mat, obj, rec);
 }

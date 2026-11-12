@@ -52,9 +52,12 @@ static double	reflect_chance(t_hit_record *rec, t_vec3 unit_dir,
 }
 
 /**
- * Glass: mix of the reflected and refracted ray. Progressive passes follow
- * only one of them, picked at random with the Fresnel weight, so a ray
- * never splits; the average over the passes gives the same mix.
+ * Glass: mix of the reflected and refracted ray. Glass seen directly is
+ * always split into both rays (picking one at random leaves visible noise
+ * where a bright reflection meets a dark inside, like a car windshield).
+ * Deeper bounces in progressive passes follow only one of them, picked at
+ * random with the Fresnel weight; the average over the passes gives the
+ * same mix.
  */
 t_color	handle_transparency(const t_ray *ray, t_hit_record *rec,
 	t_program *prog, int depth)
@@ -66,7 +69,7 @@ t_color	handle_transparency(const t_ray *ray, t_hit_record *rec,
 	rec->reflect_depth = depth;
 	unit_dir = vec_normalize(ray->direction);
 	p = reflect_chance(rec, unit_dir, &normal);
-	if (prog->scene->progressive)
+	if (prog->scene->progressive && depth < MAX_DEPTH)
 		p = (point_random(&rec->point, prog->scene->sample) < p);
 	if (p > 0.999)
 		return (calc_reflection(rec, unit_dir, normal, prog));

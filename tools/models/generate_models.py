@@ -8,6 +8,7 @@ Each model exercises a different part of the .obj loader:
   crate        per-face texture coordinates and a map_Kd texture (.ppm)
   torus_knot   no normals at all: smooth normals are computed on load
   glass_drop   smoothing groups, a hard crease and a transparent material
+  hex_lights   ceiling grid of hexagon light bars (glows with em= in a scene)
 """
 import math
 import os
@@ -146,9 +147,50 @@ def glass_drop(segments=48):
     write("glass_drop.obj", lines)
 
 
+def hex_lights(cols=9, rows=9, radius=0.5, width=0.05, thick=0.04):
+    """Pointy-top hexagons in the xz plane, every edge one thin box."""
+    edges = {}
+    step = math.sqrt(3) * radius
+    for r in range(rows):
+        for c in range(cols):
+            cx = (c + 0.5 * (r % 2) - (cols - 0.5) / 2) * step
+            cz = (r - (rows - 1) / 2) * 1.5 * radius
+            pts = [(cx + radius * math.cos(math.radians(90 + 60 * k)),
+                    cz + radius * math.sin(math.radians(90 + 60 * k)))
+                   for k in range(6)]
+            for k in range(6):
+                a, b = pts[k], pts[(k + 1) % 6]
+                key = tuple(sorted((round(a[0], 4), round(a[1], 4),
+                                    round(b[0], 4), round(b[1], 4))))
+                edges[key] = (a, b)
+    lines = ["# Hexagon light grid: %d bars, one box each" % len(edges)]
+    n = 0
+    for a, b in edges.values():
+        dx, dz = b[0] - a[0], b[1] - a[1]
+        ln = math.hypot(dx, dz)
+        dx, dz = dx / ln, dz / ln
+        ex, ez = dx * width / 2, dz * width / 2   # overlap at the joints
+        px, pz = -dz * width / 2, dx * width / 2
+        ends = [(a[0] - ex, a[1] - ez), (b[0] + ex, b[1] + ez)]
+        for (x, z) in ends:
+            for sx, sz in ((px, pz), (-px, -pz)):
+                for y in (-thick / 2, thick / 2):
+                    lines.append("v %.4f %.4f %.4f" % (x + sx, y, z + sz))
+        v = [n + i + 1 for i in range(8)]   # end, side, height
+        lines += ["f %d %d %d %d" % (v[0], v[4], v[6], v[2]),
+                  "f %d %d %d %d" % (v[1], v[3], v[7], v[5]),
+                  "f %d %d %d %d" % (v[0], v[1], v[5], v[4]),
+                  "f %d %d %d %d" % (v[2], v[6], v[7], v[3]),
+                  "f %d %d %d %d" % (v[0], v[2], v[3], v[1]),
+                  "f %d %d %d %d" % (v[4], v[5], v[7], v[6])]
+        n += 8
+    write("hex_lights.obj", lines)
+
+
 if __name__ == "__main__":
     cube_colors()
     crate()
     torus_knot()
     glass_drop()
+    hex_lights()
     print("models written to", HERE)

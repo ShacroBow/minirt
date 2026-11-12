@@ -9,7 +9,7 @@ void	validate_rotation(char *str, t_scene *scene, const char *obj_name)
 static void	lint_mesh_extra(char *line, t_scene *scene, size_t count)
 {
 	size_t	i;
-	char	*valid_args[10];
+	char	*valid_args[11];
 
 	valid_args[0] = "r=";
 	valid_args[1] = "ch=";
@@ -20,7 +20,8 @@ static void	lint_mesh_extra(char *line, t_scene *scene, size_t count)
 	valid_args[6] = "tr=";
 	valid_args[7] = "ior=";
 	valid_args[8] = "rot=";
-	valid_args[9] = NULL;
+	valid_args[9] = "em=";
+	valid_args[10] = NULL;
 	i = MESH_MIN_ARGS;
 	while (i < count)
 	{
@@ -30,14 +31,14 @@ static void	lint_mesh_extra(char *line, t_scene *scene, size_t count)
 }
 
 /**
- * obj <file.obj> <center> <size> <color> [rot=x,y,z] [r= ch= tx= ...]
+ * obj <file.obj> <center> <size> <color> [rot=x,y,z] [r= ch= tx= em= ...]
  */
 void	lint_mesh(char *line, t_scene *scene)
 {
 	size_t	count;
 
 	count = ft_split_inplace(line, ' ');
-	if (count < MESH_MIN_ARGS || count > MESH_MIN_ARGS + 9)
+	if (count < MESH_MIN_ARGS || count > MESH_MIN_ARGS + 10)
 		erorr(scene, NULL, "Error: Mesh args count.");
 	if (!has_extension(index_split(line, 1), ".obj"))
 		erorr(scene, NULL, "Error: Mesh file must have a .obj extension.");

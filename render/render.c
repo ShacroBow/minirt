@@ -39,18 +39,8 @@ t_color	trace_ray_recursive(const t_ray *ray, t_program *prog, \
 		apply_bump(&rec, ray);
 		local = phong_shading(&rec, prog->scene, &ray->direction);
 		update_render_stats(prog, &t_start, true);
-		if (depth > 0)
-		{
-			if (ENABLE_TRANSPARENCY && rec.transparency > 0.0)
-				local = color_add(color_add(color_scale(handle_transparency(ray, &rec, \
-					prog, depth), rec.transparency), \
-					color_scale(local, 1.0 - rec.transparency)), \
-					get_specular_only(&rec, prog->scene, &ray->direction));
-			if (ENABLE_REFLECTIONS && rec.reflect > 0.0)
-				local = color_add(local, \
-					handle_reflection(ray, &rec, prog, depth));
-		}
-		return (local);
+		rec.reflect_depth = depth;
+		return (shade_secondary(ray, &rec, prog, local));
 	}
 	update_render_stats(prog, &t_start, false);
 	return (bg_color_from_dir(prog->scene, &ray->direction));

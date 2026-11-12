@@ -228,6 +228,7 @@ typedef struct s_object
 	double				reflectivity;
 	double				transparency;
 	double				refractive_index;
+	double				emission;
 	bool				has_checkerboard;
 	bool				checker_enabled;
 	t_color				checker_color;
@@ -271,6 +272,8 @@ typedef struct s_hit_record
 	double			tex_v;
 	bool			has_tex_uv;
 	int				mat_id;
+	t_color			emission;
+	bool			fresnel;
 }	t_hit_record;
 
 typedef struct s_render_stats
@@ -365,6 +368,7 @@ void		validate_v_scale(char *str, t_scene *scene, const char *obj_name);
 void		validate_transparency(char *str, t_scene *scene,
 				const char *obj_name);
 void		validate_ior(char *str, t_scene *scene, const char *obj_name);
+void		validate_emission(char *str, t_scene *scene, const char *obj_name);
 void		validate_arg_value(char *arg, t_scene *scene, const char *obj_name);
 void		check_arg(char *arg, char **valid_args, t_scene *scene,
 				const char *obj_name);
@@ -549,6 +553,8 @@ void		update_render_stats(t_program *prog, long *t_start, \
 								bool is_shading);
 t_color		handle_reflection(const t_ray *ray, t_hit_record *rec, \
 				t_program *prog, int depth);
+t_color		shade_secondary(const t_ray *ray, t_hit_record *rec,
+				t_program *prog, t_color local);
 
 /* Shading / Rays */
 t_color		phong_shading(const t_hit_record *rec, const t_scene *scene, \

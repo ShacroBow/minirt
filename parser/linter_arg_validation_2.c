@@ -51,4 +51,6 @@ void	validate_arg_value(char *arg, t_scene *scene, const char *obj_name)
 		validate_ior(arg + 4, scene, obj_name);
 	else if (ft_strncmp(arg, "rot=", 4) == 0)
 		validate_rotation(arg + 4, scene, obj_name);
+	else if (ft_strncmp(arg, "em=", 3) == 0)
+		validate_emission(arg + 3, scene, obj_name);
 }

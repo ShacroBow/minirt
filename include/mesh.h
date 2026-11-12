@@ -52,7 +52,9 @@ typedef struct s_bvh_node
 	int		count;
 }	t_bvh_node;
 
-/* Subset of a .mtl material. kd is 0..255 like every other color. */
+/* Subset of a .mtl material. kd and ke are 0..255 like every other color
+** (ke, the glow, may go above). ks is the reflected share (used with
+** illum 3 to 7, see mtl_shine.c). */
 typedef struct s_material
 {
 	char		*name;
@@ -60,6 +62,9 @@ typedef struct s_material
 	double		dissolve;
 	double		ior;
 	t_texture	*map_kd;
+	double		ks;
+	int			illum;
+	t_color		ke;
 }	t_material;
 
 typedef struct s_mesh
@@ -212,6 +217,9 @@ void		mtl_load(t_objfile *f, const char *path);
 void		mtl_statement(t_objfile *f, const char *path, int *cur,
 				char *line);
 void		obj_warn(const char *path, const char *msg, const char *what);
+void		mtl_shine(t_material *m, char *line);
+void		mtl_apply_shine(const t_material *mat, const t_object *obj,
+				t_hit_record *rec);
 
 /* BVH helpers */
 bool		find_split(t_bvh_build *b, const t_bvh_node *n, t_bvh_split *best);
